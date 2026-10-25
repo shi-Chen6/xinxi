@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软件操作 · 知识库</title>
+<style>
+:root {
+  --bg: #f8f9fb;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #5a5d6e;
+  --text-muted: #9498a8;
+  --border: #e8eaef;
+  --accent: #4f46e5;
+  --accent-light: #eef0ff;
+  --success: #059669;
+  --success-light: #ecfdf5;
+  --warning: #d97706;
+  --warning-light: #fffbeb;
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --info: #2563eb;
+  --info-light: #eff6ff;
+  --tag-bg: #f1f5f9;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-sidebar: #1e293b;
+  --text: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #334155;
+  --accent: #818cf8;
+  --accent-light: #1e1b4b;
+  --tag-bg: #334155;
+  --shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.4;
+}
+
+.sidebar-header .subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+}
+
+.chapter-group {
+  margin-bottom: 4px;
+}
+
+.chapter-title {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: background var(--transition);
+}
+
+.chapter-title:hover { background: var(--accent-light); }
+.chapter-title .arrow {
+  font-size: 10px;
+  transition: transform var(--transition);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.chapter-title.open .arrow { transform: rotate(90deg); }
+.chapter-title .count {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.section-list {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+}
+
+.section-list.open { max-height: 500px; }
+
+.section-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.section-item:hover { background: var(--accent-light); color: var(--accent); }
+.section-item.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+
+.section-item .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.section-item.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.section-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all var(--transition);
+  border-radius: var(--radius-xs);
+  margin: 1px 8px;
+  width: calc(100% - 16px);
+}
+
+.section-row:hover { background: var(--accent-light); color: var(--accent); }
+.section-row.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+.section-row .section-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.section-row .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.section-row.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.mini-quiz-btn {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.mini-quiz-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-bar-wrap { margin-bottom: 4px; }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text-muted); margin-bottom: 6px;
+}
+.progress-bar {
+  height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease;
+}
+
+.sidebar-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: var(--radius-xs);
+  font-size: 12px; color: var(--text-secondary); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg-card);
+  transition: all var(--transition);
+  width: 100%;
+}
+
+.sidebar-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sidebar-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+
+.top-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 50;
+}
+
+.breadcrumb {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.breadcrumb span { color: var(--text); font-weight: 500; }
+
+.search-box {
+  margin-left: auto;
+  position: relative;
+}
+
+.search-box input {
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-size: 13px; width: 240px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.search-box input:focus { border-color: var(--accent); }
+.search-box .search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); font-size: 14px;
+}
+
+.content-area {
+  padding: 24px;
+  max-width: 900px;
+}
+
+.tab-bar {
+  display: flex; gap: 4px; margin-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  font-size: 14px; font-weight: 500; color: var(--text-muted);
+  border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn .badge {
+  font-size: 11px; background: var(--tag-bg); color: var(--text-secondary);
+  padding: 1px 8px; border-radius: 10px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 20px; font-weight: 700; color: var(--text);
+  margin-bottom: 4px;
+}
+
+.section-header .meta {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; gap: 16px;
+}
+
+.knowledge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--transition);
+}
+
+.knowledge-card:hover { box-shadow: var(--shadow-md); }
+
+.knowledge-card h3 {
+  font-size: 16px; font-weight: 600; color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.knowledge-card h3 .icon {
+  font-size: 18px;
+}
+
+.knowledge-card p {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.knowledge-card ul, .knowledge-card ol {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.knowledge-card li {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.knowledge-card .highlight {
+  background: var(--warning-light);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.knowledge-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.knowledge-table th, .knowledge-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.knowledge-table th {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.knowledge-table td { color: var(--text-secondary); }
+
+.tag-row {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 12px; background: var(--tag-bg);
+  color: var(--text-secondary);
+}
+
+.tag.accent { background: var(--accent-light); color: var(--accent); }
+.tag.success { background: var(--success-light); color: var(--success); }
+.tag.warning { background: var(--warning-light); color: var(--warning); }
+
+.card-actions {
+  display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.card-action-btn {
+  font-size: 12px; padding: 5px 12px;
+  border-radius: var(--radius-xs); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 4px;
+}
+
+.card-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.card-action-btn.bookmarked { border-color: #f59e0b; color: #f59e0b; background: #fffbeb; }
+
+.quiz-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+
+.quiz-section-label {
+  font-size: 12px; color: var(--text-muted);
+  background: var(--tag-bg);
+  padding: 3px 10px; border-radius: 12px;
+}
+
+.quiz-question {
+  font-size: 15px; font-weight: 500; color: var(--text);
+  margin-bottom: 16px; line-height: 1.6;
+}
+
+.quiz-options {
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.quiz-option {
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 14px; color: var(--text-secondary);
+  background: var(--bg);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.quiz-option:hover { border-color: var(--accent); }
+.quiz-option.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.quiz-option.correct { border-color: var(--success); background: var(--success-light); color: var(--success); font-weight: 600; }
+.quiz-option.wrong { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.quiz-option .option-letter {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-weight: 600; font-size: 13px;
+  background: var(--tag-bg); color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.quiz-option.selected .option-letter { background: var(--accent); color: #fff; }
+.quiz-option.correct .option-letter { background: var(--success); color: #fff; }
+.quiz-option.wrong .option-letter { background: var(--danger); color: #fff; }
+
+.analysis-box {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--info-light);
+  border: 1px solid #93c5fd;
+  font-size: 13px; color: #1e40af;
+  line-height: 1.7;
+  display: none;
+}
+
+.analysis-box.show { display: block; }
+
+.analysis-box strong { color: #1e3a5f; }
+
+.quiz-actions {
+  display: flex; gap: 8px; margin-top: 12px;
+}
+
+.btn {
+  padding: 8px 16px; border-radius: var(--radius-xs);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: none; transition: all var(--transition);
+}
+
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
+
+.quiz-nav {
+  display: flex; justify-content: center; gap: 8px; margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.quiz-nav-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg);
+  font-size: 12px; cursor: pointer; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+
+.quiz-nav-dot:hover { border-color: var(--accent); }
+.quiz-nav-dot.current { border-color: var(--accent); background: var(--accent); color: #fff; font-weight: 600; }
+.quiz-nav-dot.correct-dot { border-color: var(--success); background: var(--success-light); }
+.quiz-nav-dot.wrong-dot { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state h3 { font-size: 16px; margin-bottom: 8px; color: var(--text); }
+.empty-state p { font-size: 13px; }
+
+.score-display {
+  text-align: center; padding: 40px 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.score-number {
+  font-size: 48px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stats-row {
+  display: flex; justify-content: center; gap: 32px;
+  margin: 16px 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value { font-size: 20px; font-weight: 600; color: var(--text); }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.bookmark-list-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.bookmark-list-item:hover { background: var(--bg); }
+
+.bookmark-list-item .title { font-size: 13px; color: var(--text); font-weight: 500; }
+.bookmark-list-item .meta { font-size: 11px; color: var(--text-muted); }
+
+.mobile-menu-btn {
+  display: none;
+  width: 36px; height: 36px; border: none; background: none;
+  font-size: 20px; cursor: pointer; color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .search-box input { width: 160px; }
+  .content-area { padding: 16px; }
+}
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  padding: 10px 20px; background: var(--text); color: var(--bg);
+  border-radius: 20px; font-size: 13px; z-index: 1000;
+  animation: toastIn 0.3s ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>软件操作（应用软件）</h1>
+      <div class="subtitle">软件操作 · 知识库 · 全七章</div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+    <div class="sidebar-footer">
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>学习进度</span><span id="progressPercent">0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+      <button class="sidebar-btn" onclick="toggleBookmarks()" id="bookmarkBtn">
+        <span>⭐</span> 收藏夹
+      </button>
+      <button class="sidebar-btn" onclick="toggleErrors()" id="errorBtn">
+        <span>📝</span> 错题本 <span style="font-size:10px;color:var(--text-muted)" id="errorCount"></span>
+      </button>
+      <button class="sidebar-btn" onclick="exportErrorsCSV()">
+        <span>📥</span> 导出错题CSV
+      </button>
+      <button class="sidebar-btn" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">暗色模式</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="breadcrumb" id="breadcrumb">
+        首页 <span style="margin:0 4px;color:var(--text-muted)">›</span> <span id="breadcrumbCurrent">第一章</span>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜索知识点..." oninput="onSearch()">
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="read" onclick="switchTab('read')">
+          📖 知识阅读
+        </button>
+        <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">
+          📝 章节练习 <span class="badge" id="quizBadge">200题</span>
+        </button>
+        <button class="tab-btn" data-tab="bookmarks" onclick="switchTab('bookmarks')" style="display:none" id="bookmarksTab">
+          ⭐ 收藏夹
+        </button>
+        <button class="tab-btn" data-tab="errors" onclick="switchTab('errors')" style="display:none" id="errorsTab">
+          📝 错题本
+        </button>
+      </div>
+
+      <div id="readContent"></div>
+      <div id="quizContent" style="display:none"></div>
+      <div id="bookmarksContent" style="display:none"></div>
+      <div id="errorsContent" style="display:none"></div>
+    </div>
+  </main>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+// ============ 知识数据 ============
+const KB_DATA = {"title": "软件操作 · 知识库", "sections": [{"chapter": "第一章 文字处理软件 Word", "title": "Word 核心知识与操作", "cards": [{"id": "w1", "title": "Word 概述与窗口组成", "icon": "📄", "html": "<p>Word 是微软 Office 套件中的<strong>文字处理软件</strong>，用于日常办公、文档排版。</p><p>启动：开始菜单 / 双击文档 / 双击快捷方式；退出：关闭按钮、Office 按钮退出、Alt+F4。</p><p>窗口组成：</p><ul><li><strong>Office 按钮</strong>：左上角，文件新建/打开/保存/打印；</li><li><strong>标题栏</strong>：文档名、最小化/最大化/关闭，双击标题栏切换最大化；</li><li><strong>快速访问工具栏</strong>：可自定义，仅“命令”可加入；</li><li><strong>功能区</strong>：选项卡 + 组；<strong>文档编辑区</strong>；</li><li><strong>状态栏</strong>：页码/节号/页数，可切换“插入/改写”。</li></ul><p><span class='highlight'>启动后默认文档名为“文档1”；2007 及以后扩展名为 .docx，之前为 .doc。</span></p>", "tags": ["Word", "窗口", "扩展名", "必考"]}, {"id": "w2", "title": "视图与基本操作", "icon": "👁️", "html": "<p>五种视图：</p><ul><li><strong>草稿（普通）视图</strong>：创作文本；</li><li><strong>Web 版式视图</strong>：按网页方式显示；</li><li><strong>页面视图</strong>：所见即所得，含图形公式，最常用；</li><li><strong>大纲视图</strong>：看结构、折叠展开、调整段落层级；</li><li><strong>阅读版式视图</strong>：简洁阅读。</li></ul><p>输入法切换：<strong>Ctrl+空格</strong>中英文、<strong>Ctrl+Shift</strong>输入法、<strong>Shift+空格</strong>全/半角。</p><p>插入/改写：<strong>Insert</strong> 或双击状态栏“改写”切换；保存 <strong>Ctrl+S/F12</strong>；打开 <strong>Ctrl+O</strong>。</p><p><span class='highlight'>最近文档：2007 默认显示 17 个、最多 50 个；2003 默认 4 个、最多 9 个。</span></p>", "tags": ["视图", "页面视图", "快捷键", "必考"]}, {"id": "w3", "title": "文档编辑", "icon": "✂️", "html": "<p><strong>选定</strong>：单击定位 / 双击选词 / 三击选段；左侧选定区单击行、双击段、三击全文、Ctrl+单击全文；Ctrl+单击选句，Alt+拖动选矩形，Shift+单击选连续，Ctrl+单击选分散，<strong>Ctrl+A</strong> 选全文。</p><p><strong>移动/复制</strong>：拖动 / 剪切粘贴；<strong>Ctrl+C</strong> 复制、<strong>Ctrl+V</strong> 粘贴，粘贴选项有“保留源格式 / 匹配目标 / 仅保留文本 / 设默认”。</p><p><strong>删除</strong>：Delete 删光标后、BackSpace 删光标前。<strong>撤销 Ctrl+Z、恢复 Ctrl+Y</strong>。</p><p><span class='highlight'>查找替换：定位 Ctrl+G、查找 Ctrl+F、替换 Ctrl+H；只能按位置定位图片，不能按内容查找/替换图片。</span></p>", "tags": ["选定", "撤销", "查找替换", "必考"]}, {"id": "w4", "title": "文档排版", "icon": "🎨", "html": "<p><strong>字符格式化</strong>：字体、字号（最大 72 磅、最小 5 磅）、字形、颜色、字符间距。</p><p><strong>段落格式化</strong>：</p><ul><li>行距：单倍/1.5 倍/2 倍/最小值/固定值/多倍；</li><li>段落缩进：<strong>首行/左/右/悬挂</strong>四种，标尺最快最直观；</li><li>对齐：左对齐、两端对齐、居中、右对齐、分散对齐。</li></ul><p><strong>格式刷</strong>：复制格式不复制内容，<strong>双击可多次</strong>复制格式。</p><p><strong>项目符号和编号</strong>：使列表更有层次。</p>", "tags": ["字符", "段落", "格式刷", "必考"]}, {"id": "w5", "title": "图文混排与表格", "icon": "🖼️", "html": "<p><strong>图片</strong>：剪贴画、来自文件、艺术字、自选图形；环绕方式默认<strong>嵌入型</strong>，另有四周型、紧密型、衬于文字下方、浮于文字上方等。</p><p><strong>艺术字</strong>：可设字体字号加粗倾斜，<span class='highlight'>不能直接设颜色</span>。</p><p><strong>页面设置</strong>：默认纸张 A4；页眉页脚可设奇偶页/首页不同；分栏、分隔符（分页符/分栏符/<strong>分节符</strong>四种：下一页/连续/奇数页/偶数页）。</p><p><strong>表格</strong>：插入/绘制/套用样式；可用 <code>SUM(LEFT)</code> 公式求和、排序；文本可转表格。</p>", "tags": ["图文混排", "环绕", "表格", "必考"]}, {"id": "w6", "title": "辅助功能与邮件合并", "icon": "🛠️", "html": "<p><strong>超链接</strong>：插入选项卡→链接，可链本文档或外部文件/网页。</p><p><strong>水印</strong>：页面背景→水印；<strong>拼写语法检查 F7</strong>（红波浪=拼写、绿波浪=语法），自动更正。</p><p><strong>批注与修订</strong>：批注对象可是文字或图片，修订<strong>只能是文字</strong>。</p><p><strong>打印预览 Ctrl+F2</strong>；脚注/尾注（尾注常用于参考文献）。</p><p><span class='highlight'>邮件合并：主文档（Word）+ 数据源（Excel/Access），用于批量生成信函、成绩单等。</span></p>", "tags": ["超链接", "水印", "邮件合并"]}]}, {"chapter": "第二章 电子表格软件 Excel", "title": "Excel 核心知识与操作", "cards": [{"id": "e1", "title": "Excel 概述与数据类型", "icon": "📊", "html": "<p>电子表格软件，扩展名 <strong>.xlsx（2007+）/ .xls</strong>；工作簿含多张工作表（Sheet）。</p><p><strong>数据类型</strong>：数值型、日期型、文本型、逻辑（布尔）型。</p><p><span class='highlight'>输入超长数字（如身份证）：位数 &gt;11 显示为科学计数法，&gt;15 位后全变 0；应设为文本格式或在前面加英文单引号 ′。</span></p>", "tags": ["Excel", "数据类型", "身份证", "必考"]}, {"id": "e2", "title": "基础操作与工作表", "icon": "📑", "html": "<p><strong>工作表重命名</strong>：双击工作表标签，或右键标签→重命名。</p><p><strong>单元格引用</strong>：</p><ul><li>相对引用 <code>A1</code>：公式复制时行列变；</li><li>绝对引用 <code>$A$1</code>：加 <strong>$</strong> 符号，复制不变；</li><li>混合引用 <code>$A1 / A$1</code>。</li></ul><p>指针移动：<strong>Ctrl+Home</strong> 到首单元格 A1，Ctrl+End 到末单元格。</p>", "tags": ["引用", "绝对引用", "重命名", "必考"]}, {"id": "e3", "title": "公式与函数", "icon": "ƒ", "html": "<p>公式以 <strong>=</strong> 开头；求和 <code>=SUM(B3:E3)</code>；排名 <code>=RANK(数值,区域)</code>。</p><p>常用函数：<strong>SUM</strong> 求和、<strong>AVERAGE</strong> 平均、<strong>COUNT</strong> 计数、<strong>MAX/MIN</strong> 最大最小、<strong>RANK</strong> 排名。</p><p><span class='highlight'>错误值 #DIV/0! 表示“被零除”（分母为 0）。</span></p>", "tags": ["公式", "函数", "SUM", "RANK", "必考"]}, {"id": "e4", "title": "数据管理与图表", "icon": "📈", "html": "<p><strong>数据管理</strong>：排序、筛选、分类汇总。</p><p><strong>图表选择</strong>：</p><ul><li><strong>柱形图</strong>：比较各项目数量多少、高低；</li><li><strong>折线图</strong>：看趋势变化（同一对象不同时间）；</li><li><strong>饼图</strong>：看部分占整体的比例。</li></ul>", "tags": ["排序", "筛选", "图表", "必考"]}]}, {"chapter": "第三章 演示文稿软件 PowerPoint", "title": "PowerPoint 核心知识与操作", "cards": [{"id": "p1", "title": "PPT 概述与视图", "icon": "🖥️", "html": "<p>演示文稿软件，扩展名 <strong>.pptx / .ppt</strong>；<strong>模板</strong>扩展名 <strong>.pot</strong>。</p><p>视图：普通视图、大纲视图、幻灯片浏览视图、幻灯片放映视图、备注页视图。</p><p><span class='highlight'>插入新幻灯片快捷键 Ctrl+M。</span></p>", "tags": ["PPT", "扩展名", "模板", "必考"]}, {"id": "p2", "title": "插入对象与外观设计", "icon": "🧩", "html": "<p>可插入文本框、图片、艺术字、表格、图表、SmartArt 等；设置幻灯片版式、应用设计模板。</p><p><strong>母版</strong>：在母版中添加图片/标志后所有页面统一应用，给每页加标志最方便快捷。</p><p><span class='highlight'>空白幻灯片不能直接插入文字，需先插入文本框。</span></p>", "tags": ["插入", "母版", "版式", "必考"]}, {"id": "p3", "title": "动画、切换与放映", "icon": "🎬", "html": "<p><strong>自定义动画</strong>：为文字/图片等添加进入、强调、退出等动态效果（让元素按时间先后出现）。</p><p><strong>幻灯片切换</strong>：幻灯片之间的过渡效果。</p><p><strong>超链接</strong>：文字、图片、动作按钮可设超链接，<span class='highlight'>背景色不可设</span>超链接。</p><p>排练计时：可让每张幻灯片放映间隔时间一致或不同；可打包演示文稿。</p>", "tags": ["自定义动画", "切换", "超链接", "必考"]}]}, {"chapter": "第四章 WPS Office", "title": "WPS Office 概述与对比", "cards": [{"id": "wp0", "title": "WPS Office 概述", "icon": "🧱", "html": "<p>WPS Office 是<strong>金山公司</strong>推出的免费办公软件，含 <strong>WPS 文字、WPS 表格、WPS 演示</strong> + PDF 阅读等。</p><p><span class='highlight'>与 Microsoft Office 高度兼容：二者创建的文件可互相打开；安装时可按需独立选择模块。</span></p><p>WPS 文字文档扩展名为 <strong>.wps</strong>。</p>", "tags": ["WPS", "金山", "兼容", "必考"]}, {"id": "wp1", "title": "与 Office 的对比", "icon": "⚖️", "html": "<p>优势：体积小、免费、启动快、兼容 MS Office；文件管理权限含允许更改、允许复制、允许添加批注。</p><p>模块：WPS 文字（金山文字）、WPS 表格（金山表格）、WPS 演示（金山演示）。</p>", "tags": ["优势", "权限", "模块"]}]}, {"chapter": "第四章 WPS Office", "title": "WPS 文字", "cards": [{"id": "wt1", "title": "WPS 文字窗口与基本操作", "icon": "🅰️", "html": "<p>水平对齐方式一般有 <strong>5 种</strong>：左对齐、右对齐、居中对齐、两端对齐、分散对齐。</p><p><strong>标尺</strong>调整左右边界最快捷；新建 Ctrl+N、保存 Ctrl+S、另存为、全选 Ctrl+A、复制 Ctrl+C、粘贴 Ctrl+V、剪切 Ctrl+X。</p><p><span class='highlight'>加粗按钮标记为 B；插入表格在“插入”菜单栏中进行。</span></p>", "tags": ["WPS文字", "对齐", "快捷键", "必考"]}]}, {"chapter": "第四章 WPS Office", "title": "WPS 表格", "cards": [{"id": "wt2", "title": "WPS 表格基础", "icon": "🅱️", "html": "<p>数字默认<strong>右对齐</strong>；水平对齐含左/右/居中/分散/填充/跨列居中。</p><p>“单元格格式”对话框含数字、字体、对齐、边框等标签；添加边框从<strong>开始</strong>菜单。</p><p><span class='highlight'>单元格地址 C4 表示“第 3 行第 4 列”。</span></p>", "tags": ["WPS表格", "对齐", "C4", "必考"]}]}, {"chapter": "第四章 WPS Office", "title": "WPS 演示", "cards": [{"id": "wt3", "title": "WPS 演示基础与放映", "icon": "🅲️", "html": "<p>保存演示文稿快捷键 <strong>Ctrl+S</strong>；左侧大纲/幻灯片浏览区显示文本大纲或缩略图。</p><p>放映时 <strong>Ctrl+P</strong> 启用荧光笔标注、<strong>Ctrl+E</strong> 擦除标注。</p><p><span class='highlight'>可将演示文档打包成文件夹与压缩文件以便分发；排练计时可设每张间隔。</span></p>", "tags": ["WPS演示", "Ctrl+S", "打包", "必考"]}]}, {"chapter": "第五章 图像处理软件 Photoshop", "title": "Photoshop 核心知识与操作", "cards": [{"id": "ps1", "title": "界面、图层与选区", "icon": "🎨", "html": "<p>工作界面：工具箱、选项栏、面板（调板）、文档窗口。</p><p><strong>图层</strong>是核心概念，可独立编辑、叠加；<strong>羽化</strong>使选区边界柔化、产生过渡，数值范围 <strong>0-250</strong>。</p><p>选区操作：新建/添加到/从选区减去/与选区交叉（Shift+Alt 等）。</p><p>滤镜：添加杂色、液化（瘦脸瘦身）、消失点（修复透视照片）。</p>", "tags": ["Photoshop", "图层", "羽化", "必考"]}, {"id": "ps2", "title": "图像编辑与快捷键", "icon": "⌨️", "html": "<p>新建 Ctrl+N；打开；保存。图像编辑含裁切、色彩调整、修复画笔等。</p><p>常用：移动工具、魔棒/快速选择、画笔、文字工具；历史记录可逐步还原。</p><p><span class='highlight'>羽化让选区边缘柔和，是抠图与合成的基础技巧。</span></p>", "tags": ["编辑", "快捷键", "修复"]}]}, {"chapter": "第六章 动画制作软件 Flash", "title": "Flash 核心知识与操作", "cards": [{"id": "fl1", "title": "界面与元件", "icon": "⚡", "html": "<p>工作界面：舞台、时间轴、工具面板、属性面板、库。</p><p><strong>元件类型</strong>：按钮元件、图形元件、影片剪辑元件（时间轴各帧功能不同）。</p><p><span class='highlight'>用椭圆工具绘制正圆须按住 Shift 键；测试影片 Ctrl+Enter 生成 .swf。</span></p>", "tags": ["Flash", "元件", "舞台", "必考"]}, {"id": "fl2", "title": "动画类型与帧", "icon": "🎞️", "html": "<p><strong>帧</strong>是组成动画的每一个静态画面；播放速度称<strong>帧频（fps）</strong>。</p><p>动画类型：</p><ul><li><strong>逐帧动画</strong>：每帧图像连续播放；</li><li><strong>补间动画</strong>：动作（动画）补间 + <strong>形状补间</strong>（对象需先打散/分离）；</li><li><strong>遮罩动画</strong>：用遮罩层实现；</li><li><strong>引导（路径）动画</strong>：用引导层指定运动路径。</li></ul><p>常用动作命令：<code>stop()</code> 停止、<code>play()</code> 播放、<code>gotoAndPlay()</code> 跳转播放。</p>", "tags": ["帧", "补间", "遮罩", "引导层", "必考"]}]}, {"chapter": "第七章 Windows 操作系统", "title": "Windows 核心知识与操作", "cards": [{"id": "win1", "title": "操作系统概述", "icon": "🪟", "html": "<p><strong>操作系统</strong>是管理硬件与软件资源、提供用户接口的系统软件。</p><p>特征：并发、共享、虚拟、异步；功能：处理机/存储/设备/文件/作业管理。</p><p>常见系统：DOS、Windows、Unix、Linux、macOS；启动过程；可用 <strong>ghost</strong> 备份/还原系统。</p>", "tags": ["操作系统", "特征", "功能", "必考"]}, {"id": "win2", "title": "桌面、窗口与资源管理", "icon": "🗂️", "html": "<p>启动退出、鼠标键盘；<strong>桌面</strong>含图标、开始按钮、任务栏；开始菜单、窗口、对话框。</p><p><strong>资源管理</strong>：我的电脑 / 资源管理器，剪贴板（Ctrl+C/X/V）。</p><p><strong>控制面板</strong>：设置系统；输入法切换 Ctrl+Shift（输入法间）、Ctrl+空格（中英文）。</p><p><span class='highlight'>Windows 默认管理员账户名为 administrator；桌面背景可设居中/平铺/拉伸/填充。</span></p>", "tags": ["桌面", "资源管理", "administrator", "必考"]}]}], "quizzes": [{"section": 0, "stem": "Word 2010文件扩展名是( ) 。", "options": ["docx", "doc", "xt", "ppt"], "answer": 0, "analysis": "本题考查Word 2010扩展名。Word 2007及以后的版本使用的扩展"}, {"section": 0, "stem": "在Word中 , 可以同时显示水平和垂直标尺的视图是( ) 。", "options": ["页面", "大纲", "Web版式", "普通"], "answer": 0, "analysis": "本题考查Word常见视图。大纲视图不显示标尺内容 , 所以项不"}, {"section": 0, "stem": "利用Word的“查找和替换“命令不能完成的操作是( ) 。", "options": ["查找和替换多次重复的汉字", "查找文本并替换文本中的格式", "查找并替换图形对象", "查找和替换多次重复的英文"], "answer": 2, "analysis": "本题考查Word中的替换和查找。Word的“查找“和“督换“和令"}, {"section": 0, "stem": "下面文档中没有用到的对象是( ) 。\n\nnnan nn nn\nE\nnneen\nE\nseera-\n\nrn\n。 E\nnn w\nr s\ncesooee nnes a\n\nerinesentneueioee ieerooreey\nnneravuonramaris tioramatcrmeae\nE命", "options": ["艺术字", "动画", "自选图形", "图片"], "answer": 1, "analysis": "本题考查Word元素。图中用到了艺术字、自选图形四角星、图"}, {"section": 0, "stem": "在Word的表格操作中 , 当前插入点在表格中某行的最后一个单元格内 , 在未设定固定\n行高时敦回车键 , 则( ) 。", "options": ["插入点所在的列变宽", "插入点所在的行变高", "在插入点下行增加一空表格行", "对表格不起作用"], "answer": 1, "analysis": ": 本题考查Word中表格操作。当前插入点在表格中某行的最后一个"}, {"section": 0, "stem": "使用Word编辑文档中的表格时 , 下列操作不能实现的是( ) 。", "options": ["在表格中插入列", "在表格中插入行", "对表格数据分类汇总", "合并单元格"], "answer": 2, "analysis": ": 本题考查Word中表格的操作。Word中编辑表格时 , 可以插"}, {"section": 0, "stem": "在 Word 中，具有“所见即所得”效果的视图方式是（ ）。", "options": ["页面视图", "大纲视图", "Web 版式视图", "普通视图"], "answer": 0, "analysis": "本题考查页面视图。页面视图显示文档在整页的分布并可直接编辑，具有真正的“所见即所得”效果。故本题答案为页面视图。"}, {"section": 1, "stem": "在 Excel 中，下列属于 Excel 数据类型的是（ ）。", "options": ["日期型", "文本型", "数值型", "以上全部都是"], "answer": 3, "analysis": "本题考查 Excel 数据类型。Excel 常见数据类型有数值型、日期型、文本型、逻辑型（布尔型），故以上全部都是。"}, {"section": 1, "stem": "在Excel中 , 使用键盘将指针移动到Al单元格 , 应按的键是( ) 。", "options": ["Home", "End", "Ctrl+Home", "Ctrl+End"], "answer": 2, "analysis": ": 本题考查快捷键。在Excel中 , 使用键盘对指针进行移动的时候 ,"}, {"section": 1, "stem": "在 Excel 2003 的单元格引用中，使用绝对引用需在行标和列标前加（ ）符号。", "options": ["$", "%", "&", "@"], "answer": 0, "analysis": "本题考查绝对引用。绝对引用格式为 $A$1，需在行标和列标前加美元符号 $。"}, {"section": 1, "stem": "在Excel中", "options": ["SUM(", "3E3) B. =SUM(B3.63)", "=SUM(B3:E3)", "SUM(B3.3)"], "answer": 2, "analysis": "本题考查Excel中的求和公式。在Excel中 , 用SUM函数进行"}, {"section": 1, "stem": "如图所示是菪班期中考试成绩 , 若想计算某鹏同学在班级中的名次 , 可以在I2单元格\n输人( ) 。\nE c", "options": ["=RANK(H2.8HS2:8HS10)", "=RANKIH2.H2:H10)", "=MAX(H28HS28HS10)", "=COUNT(H2.H2:H10)"], "answer": 0, "analysis": "本题考查RANK函数。RANK是排名函数 , 在12单元格中输人以"}, {"section": 1, "stem": "下图是小米之家五彩城店某天的销售信息 , 若要计算红米Note 2这款手机的销售额 ,\n应在E5单元格中输人的公式为( ) 。\n\n习国5 , 0", "options": ["=", "5X", "5 X", "5B . =B5+CS5+D5\nC.=COUNT(B5:D5) D. =AVERAGE(B5:D5)"], "answer": 1, "analysis": ", 本题考查Excel公式输人。由图标可看到红米手机的销售额 = 红米"}, {"section": 1, "stem": "在Excel中 , 如果工作表标单元格显示为 : #DIV/0!, 这表示( ) 。", "options": ["公式错误", "格式错误", "行高不够", "列密不够"], "answer": 0, "analysis": ": 本题考查 #DIV/0! 含义。#DIV/0! 的意恩是“被零除“, 当公式"}, {"section": 1, "stem": "若用图表对不同地区农民人均现金收入进行比较分析，适合用（ ）图表示。", "options": ["柱形图", "饼图", "折线图", "散点图"], "answer": 0, "analysis": "本题考查图表。柱形图用于比较各项目的数量多少与高低，适合不同地区间内容比较；折线图看趋势；饼图看占比。"}, {"section": 2, "stem": "在 PowerPoint 中，保存为演示文稿模板文件的扩展名是（ ）。", "options": ["POT", "PPT", "RTF", "PPA"], "answer": 0, "analysis": "本题考查 PPT 扩展名。POT 是演示文稿模板文件的扩展名，PPT 是演示文稿本身。"}, {"section": 2, "stem": "秒钟后再出现“机器人“图片 , 他对图片设置了( ) 。", "options": ["幻灯片切接", "超链接", "动作按钮", "自定义动画"], "answer": 0, "analysis": ": 本题考查PPT的快捷键。Ctrl+M, 插入一张新的幻灯片 , 所以A项"}, {"section": 2, "stem": "在空白幻灯片中不可以直接撒人( ) 。", "options": ["文本框", "文字", "艺术字", "Word表格"], "answer": 1, "analysis": ": 本题考查PPT操作。空白幻灯片可以直接插入文本框、图片、艺"}, {"section": 2, "stem": "制作多媒体作品时，先出现文字、几秒后再出现图片，对图片设置了（ ）。", "options": ["幻灯片切换", "超链接", "动作按钮", "自定义动画"], "answer": 3, "analysis": "本题考查 PowerPoint 操作。自定义动画可为图片、文字等添加进入、退出等动态效果，实现元素按时间先后出现。"}, {"section": 2, "stem": "小芳同学做了一个近15页的PowerPoint “班级秀“电子报刊 , 后来王老师需要她在每\n一页上都加上班级的标志 , 最好的方法是( ) 。", "options": ["佩用PowerPoint自带的模板", "使用“母版“的功能 , 将标志描入母版中", "将标志分别插入到每张幻灯片中", "将标志插入到第一张幻灯片中 , 然后再用“复制 / 粘贴“将标志粘到每张幻灯片中\n\nb"], "answer": 1, "analysis": ": 本题考查母版。幻灯片母版的作用 : 在母版状态下 , 可以先将图片"}, {"section": 3, "stem": "金山文字文档文件的扩展名是( ) 。", "options": ["TXT", "DO", "C. WPS", "BMP"], "answer": 2, "analysis": ": 本题考查金山文字的拓展名。其中WPS文字文件的扩展名为"}, {"section": 3, "stem": "WPS文字叉叫作( ) 。", "options": ["金山文字", "Word", "WPS Office", "WPS Word"], "answer": 0, "analysis": ": 本题考查WPS文字的名称。WPS Office是一款由金山推出的免费办"}, {"section": 3, "stem": "Microsoft Office 创建的所有文件都可以直接用 WPS Office 2013 打开。（ ）", "options": ["正确", "错误"], "answer": 0, "analysis": "本题考查 WPS 兼容性。WPS Office 可打开 Microsoft Office 创建的文件，二者高度兼容。故本题答案为正确。"}, {"section": 3, "stem": "下载 WPS 时，一定要将 WPS Office 的所有产品都下载到电脑上。（ ）", "options": ["正确", "错误"], "answer": 1, "analysis": "本题考查 WPS 安装。WPS Office 各模块可在安装时独立选择，不使用的模块可不安装。故本题答案为错误。"}, {"section": 4, "stem": "WPS文字是一种( )软件。微信公众弓 : 尚睿公碧妻", "options": ["图形处理", "表格处理", "具有文字、图形混合排版功能的文字处理", "不具有文字、图形混合排版功能的文字处理"], "answer": 2, "analysis": ": 本题考查WPS文字的功能。WPS文字是具有文字、图形混合排版"}, {"section": 4, "stem": "在WPS文字中 , 水平对齐方式下一航有( )种对齐方式。", "options": ["4", "5", "6", "7"], "answer": 1, "analysis": ": 本题考查WPS文字的对齐方式。在WPS文字中 , 水平对齐方式一"}, {"section": 4, "stem": "在WPS文字的编辑状态下 , 若要调整左右边界 , 比较快捷的方法是( ) 。", "options": ["工具栏", "格式栏", "菜单", "标尺"], "answer": 3, "analysis": ": 本题考查WPS文字的标尺功能。在WPS文字中 , 设置段落缩进可"}, {"section": 4, "stem": "在WPS文字主窗口的右上角 , 可以同时显示的按钮是( ) 。", "options": ["最小化、还原和最大化", "还原、最大化和关闭", "最小化、还原和关闭", "还原和最大化\n\n榴"], "answer": 2, "analysis": ": 本题考查WPS文字的窗口界面。在WPS文字主窗口的右上角 , 可"}, {"section": 4, "stem": "在WPS文字中 , 想用新名字保存文件时 , 应( ) 。", "options": ["选择文件菜单中的【古存为 ] 命令", "选择文件菜单中的【保存 ] 命令", "单出常用按钮工具栏的【保存 ] 按钮", "复制文件到新命名的文件中"], "answer": 0, "analysis": ": 本题考查WPS文字的“另存为“功能。在WPS文字中 , 男存为是"}, {"section": 4, "stem": "在 WPS 文字中，设置表格是在（ ）菜单栏中进行的。", "options": ["设置", "开始", "插入", "设计"], "answer": 2, "analysis": "本题考查 WPS 文字。在 WPS 文字中插入和设置表格是在“插入”菜单栏中进行的。"}, {"section": 4, "stem": "在 WPS 文字中，将选定文本字体加粗，应单击“格式”工具栏中的（ ）按钮。", "options": ["U（下划线）", "T（字体）", "B（加粗）", "I（斜体）"], "answer": 2, "analysis": "本题考查 WPS 文字格式。加粗按钮标记为 B。"}, {"section": 5, "stem": "“对齐“标签属于( )对话框。", "options": ["单元格属性", "单元格格式", "单元格剧除", "以上都不是"], "answer": 1, "analysis": ": 本题考查WPS表格段落设置。在WPS表格中 , 若想设置单元格对"}, {"section": 5, "stem": "在WPS表格中 , 数字默认( )对齐。", "options": ["圣", "右", "上", ": 中"], "answer": 1, "analysis": ": 本题考查WPS表格的默认对齐方式。在WPS表格中 , 数字默"}, {"section": 5, "stem": "下列不属于水平对齐方式的是( ) 。", "options": ["左对齐", "分散对齐", "圣直对齐", "居中对齐"], "answer": 2, "analysis": "; 本题考查WPS表格的对齐方式。WPS表格的对齐方式分为 : 水平"}, {"section": 5, "stem": "下面哪个选项不属于“单元格格式“对话框中数学标签的内容 ? ( )", "options": ["字体", "贵币", "日期", "分数"], "answer": 0, "analysis": ": 本题考查WPS表格的数学标签。在WPS表格“单元格格式“"}, {"section": 5, "stem": "WPS表格中添加边框、颜色操作 , 是从卸个荷单中开始 ? ( )", "options": ["视图", "插入", "开始", "开发工具"], "answer": 2, "analysis": ": 本题考查WPS表格的菜单栏。在WPS表格中 , 开始菜单可以进行"}, {"section": 5, "stem": "在WPS表格中", "options": ["单元格中的内容为“C4“的单元格", "第三行第四列的单元格", "第四行第三列的单元格", "第三行的前四个单元格\n\n挂、\n(203)"], "answer": 2, "analysis": ": 本题考查WPS表格的单元格命名。在WPS表格中 ,“C“指的是"}, {"section": 6, "stem": "在 WPS 演示中，保存演示文稿的快捷键是（ ）。", "options": ["Ctrl+F", "Ctrl+H", "Ctrl+S", "Ctrl+Z"], "answer": 2, "analysis": "本题考查 WPS 演示。保存演示文稿的快捷键是 Ctrl+S。"}, {"section": 6, "stem": "在 WPS 演示中，显示幻灯片文本大纲或幻灯片缩略图的部分叫作（ ）。", "options": ["大纲/幻灯片浏览区", "状态栏", "幻灯片编辑区", "功能区"], "answer": 0, "analysis": "本题考查 WPS 演示界面。左侧大纲/幻灯片浏览区用于显示文本大纲或幻灯片缩略图。"}, {"section": 6, "stem": "在 WPS 演示放映过程中，按 Ctrl+P 快捷键可以启用（ ）功能。", "options": ["荧光笔（标注）", "橡皮擦", "激光笔", "黑屏"], "answer": 0, "analysis": "本题考查 WPS 演示放映。放映时 Ctrl+P 启用荧光笔用于标注，Ctrl+E 擦除标注。"}, {"section": 6, "stem": "WPS 演示一定可以将演示文档打包成文件夹与压缩文件。（ ）", "options": ["正确", "错误"], "answer": 0, "analysis": "本题考查 WPS 演示文件打包。WPS 演示可将演示文件打包成文件夹与压缩文件以便分发。故本题答案为正确。"}, {"section": 6, "stem": "使用“排练计时“功能放映幻灯片时 , 每张幻灯片放昶的间隔时间是一致的。 ( 。 )", "options": ["正确", "错误"], "answer": 1, "analysis": ": 本题考查WPS演示的放映方式。排练计时可以根据每张幻灯片的"}, {"section": 7, "stem": "在Photoshop中 , 下列方法中能够调用“新建“对话框的是( ) 。", "options": ["按Ctrl+N链", "按", "d键双击Photoshop的空白区城\nC掉Car+Alt+Shift+N锋", "按Ct键单击Photoshop的空白区域"], "answer": 0, "analysis": ": 本题考查调用“新建“对话框的方式。在Photoshop中 , 可以使用"}, {"section": 7, "stem": "在 Photoshop 中，使选区边缘产生柔和过渡效果的功能是（ ）。", "options": ["模糊", "锐化", "羽化", "描边"], "answer": 2, "analysis": "本题考查 Photoshop 基本功能。羽化可使选区边界柔化、产生过渡，数值范围 0-250。"}, {"section": 7, "stem": "Photoshop中 , 可以快速选取颜色相似的连续区域的工具是( ) 。", "options": ["磁性套索", "魅森", "仿制图章", "矩形选择"], "answer": 1, "analysis": ", 本题考查Photoshop中的区域选取工具。在Photoshop中 , 可以忠速"}, {"section": 7, "stem": "在Photoshop中 , 按图所示操作 , 将完成的是( ) 。\n\n\n\n\n/ 外 = 轼 / EE", "options": ["移动文孙图层到肉景图层上方", "在文字图层下加一个新图层", "移动图层到图层3下方", "在文字图层上加一个新图层"], "answer": 3, "analysis": ": 本题考查Photoshop的使用。文字图层的标志是在图尿前边有个T,"}, {"section": 7, "stem": "用Photoshop软件对左图进行加工 , 得到史图效果 , 执行的主要操作是( ) 。", "options": ["水平翻转并羽化处理", "顺时针180度并设置描边效果", "水平翻转并进行裁剪", "送时针180度些设置模糊效果"], "answer": 0, "analysis": ", 本题考查的是Photoshop的相关操作。观察图片 , 可以知道 , 左边"}, {"section": 7, "stem": "李浩用Photoshop软件处理L向日葵”图像时 , 忽然发现“太阳“不见了 , 如图所示 ,\n其原因是“太阳“图层( ) 。", "options": ["被途挡", "未被选中", "被锁定", "被隐藏了"], "answer": 0, "analysis": ": 本题考查Photoshop的相关知识。在Photoshop中 , 图像部分不见了 ,"}, {"section": 7, "stem": "在Photoshop图像处理中 , 被誉为“吊魂“的是( ) 。", "options": ["滤镜", "图尿", "荣版", "屏蔽\n\nE"], "answer": 1, "analysis": ": 本题考查Photoshop。 “图层“被誉为Photoshop的“吊魂“, 在图"}, {"section": 8, "stem": "如下图所示 , 当前编辑的flash元件类型是( ) 。", "options": ["按钮元件", "动画剪样元D. 图形元件"], "answer": 0, "analysis": ": 本题考查的是flash元件类型。按钮元件的时间轴上的每一绣都有"}, {"section": 8, "stem": "如图所示 , 从时间轻可以看出 , 该动\n\nE日亭姜」 譬击」」旦户「′丽′广属`", "options": ["返帧动画", "造智动画", "补间动画", "路径动画"], "answer": 0, "analysis": "A。"}, {"section": 8, "stem": "在Flash软件中 , 要实现动画停止播放的效果 , 应该在相应的关键带上添加代码( ) 。", "options": ["stop", "play", "end", "qui"], "answer": 0, "analysis": ": 本题考查Flash中的代码。实现动画停止播放的代码为stop。故本"}, {"section": 8, "stem": "在 Flash 中，要绘制正圆形可使用椭圆工具，同时须按（ ）键。", "options": ["Shift", "Ctrl", "Alt", "Enter"], "answer": 0, "analysis": "本题考查 Flash 绘图。绘制椭圆时按住 Shift 键可约束为正圆。"}, {"section": 8, "stem": "Flash 中的补间动画分为（ ）补间和（ ）补间。", "options": ["动作补间和形状补间", "逐帧动画和遮罩动画", "引导动画和遮罩动画", "颜色补间和透明度补间"], "answer": 0, "analysis": "本题考查 Flash 动画类型。补间动画分为动作（动画）补间和形状补间。"}, {"section": 8, "stem": "Flash 中组成动画的每一个静态画面叫作（ ）。", "options": ["帧", "场景", "图层", "关键帧"], "answer": 0, "analysis": "本题考查计算机动画基础。帧是动画中最小的单幅画面单位，组成动画的每一个静态画面叫帧；播放速度称帧频（fps）。"}, {"section": 8, "stem": "在 Flash 中，要对实例、位图、文本块等对象创建形状补间动画，必须先将它们（ ）。", "options": ["打散/分离", "组合", "转换为元件", "锁定"], "answer": 0, "analysis": "本题考查形状补间动画。形状补间应用于基本形状的变化，对象需先打散（分离）为图形。"}, {"section": 8, "stem": "在 Flash 中，测试影片命令的快捷键为（ ）。", "options": ["Ctrl+Enter", "F5", "F8", "Ctrl+Shift+Enter"], "answer": 0, "analysis": "本题考查 Flash 测试影片。测试影片快捷键为 Ctrl+Enter，可生成与源文件同名、扩展名为 .swf 的文件。"}, {"section": 8, "stem": "在 Flash 中，用于指定元素按照某一路径运动的图层是（ ）。", "options": ["引导层", "遮罩层", "普通图层", "背景层"], "answer": 0, "analysis": "本题考查 Flash 图层。引导层（运动引导层）用于指定元素沿某一路径运动，遮罩层用于实现遮罩动画。"}, {"section": 9, "stem": "下列操作中，能在各种中文输入法之间切换的是（ ）。", "options": ["Ctrl+Shift", "Ctrl+空格键", "Alt+F1", "Shift+空格键"], "answer": 0, "analysis": "本题考查输入法切换。Ctrl+Shift 在各种中文输入法之间循环切换；Ctrl+空格键在中英文之间切换。"}, {"section": 9, "stem": "关于操作系统 , 下列说法正确的有( ) 。 (多选)", "options": ["操作系统是用户和计算机的接口", "操作系统是计算机硬件和其他软件的接口", "操作系统管理着计算机硬件资源", "任何其他歇件都必须在操作系统的支持下才能运行"], "answer": 0, "analysis": ": 本题考查操作系统。操作系统是用户和计算机的接口 , 也可"}, {"section": 9, "stem": "下列不属于操作系统的是( ) 。", "options": ["DOS", "UNIX", "Windows", "FORTRAN"], "answer": 3, "analysis": "本题考查常见的操作系统。D项FORTRAN是一种编程语言 , 它是"}, {"section": 9, "stem": "苹果公司Macintosh系列计算机上的操作系统是( ) 。", "options": ["UNIDX", "Mac OS", "Linux", "Novell NetWare"], "answer": 1, "analysis": ": 本题考查Mac 0S操作系统。UNIX是多用户、多任务操作系统 , 属"}, {"section": 9, "stem": "下列（ ）是 Windows 默认的 administrator（管理员）账户。", "options": ["admin", "administrator", "guest", "root"], "answer": 1, "analysis": "本题考查 Windows 账户。Windows 默认管理员账户名为 administrator。"}, {"section": 9, "stem": "在桌面背景的设置中 , 无法设置的背景显示方式是( ) 。", "options": ["居中", "平铺", "拉伸", "蛇放"], "answer": 3, "analysis": ": 本题考查桌面背景的设置。桌面背景显示方式包括三种 : 居中、平"}, {"section": 9, "stem": "下列关于文档窗口的说法中 , 正确的是( ) 。", "options": ["友能打开一个", "可以打开多个 , 被打开的都是活动窗口", "可以打开多个 , 被打开的只有一个是活动窗口", "可以打开多个 , 但是只能看到一个文档窗口"], "answer": 2, "analysis": ": 本题考查文档窗口。在文档中可以打开多个窗口 , 但只有目前编辑"}, {"section": 9, "stem": "在Windows 7系统中 ,“回收站“的内容( ) 。", "options": ["将被永仁剜除", "不占用碳盘空间", "可以被永仁剜除", "只能在桌面上找到"], "answer": 2, "analysis": ": 本题考查回收站。回收站是系统定义的快捷图标 , 一舫放置在桌面"}]};
+
+// ============ 应用状态 ============
+const STATE = {
+  currentSection: 0,
+  currentTab: 'read',
+  currentQuizIndex: 0,
+  quizAnswers: {},       // {qIndex: selectedOptionIndex}
+  quizSubmitted: {},     // {qIndex: true}
+  doneSections: new Set(),
+  bookmarks: new Set(),
+  errorQuestions: new Set(),
+  openChapters: new Set(['第一章 文字处理软件 Word']),
+  theme: 'light',
+  searchQuery: ''
+};
+
+// ============ 初始化 ============
+function init() {
+  loadState();
+  renderSidebar();
+  renderContent();
+  updateProgress();
+  updateErrorCount();
+}
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('infotech_soft_kb_state') || '{}');
+    if (saved.doneSections) STATE.doneSections = new Set(saved.doneSections);
+    if (saved.bookmarks) STATE.bookmarks = new Set(saved.bookmarks);
+    if (saved.errorQuestions) STATE.errorQuestions = new Set(saved.errorQuestions);
+    if (saved.openChapters) STATE.openChapters = new Set(saved.openChapters);
+    if (saved.theme) STATE.theme = saved.theme;
+    if (saved.quizAnswers) STATE.quizAnswers = saved.quizAnswers;
+    if (saved.quizSubmitted) STATE.quizSubmitted = saved.quizSubmitted;
+  } catch(e) {}
+  applyTheme();
+}
+
+function saveState() {
+  localStorage.setItem('infotech_soft_kb_state', JSON.stringify({
+    doneSections: [...STATE.doneSections],
+    bookmarks: [...STATE.bookmarks],
+    errorQuestions: [...STATE.errorQuestions],
+    openChapters: [...STATE.openChapters],
+    theme: STATE.theme,
+    quizAnswers: STATE.quizAnswers,
+    quizSubmitted: STATE.quizSubmitted
+  }));
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', STATE.theme);
+  document.getElementById('themeIcon').textContent = STATE.theme === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = STATE.theme === 'dark' ? '亮色模式' : '暗色模式';
+}
+
+// ============ 侧边栏 ============
+function getChapterGroups() {
+  // Group sections by chapter
+  const groups = {};
+  KB_DATA.sections.forEach((s, si) => {
+    const ch = s.chapter || '其他';
+    if (!groups[ch]) groups[ch] = [];
+    groups[ch].push({section: s, si: si});
+  });
+  return groups;
+}
+
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  let html = '';
+  const groups = getChapterGroups();
+  Object.keys(groups).forEach((chName) => {
+    const items = groups[chName];
+    const isOpen = STATE.openChapters.has(chName);
+    const chDone = items.filter(it => STATE.doneSections.has(it.si)).length;
+    html += '<div class="chapter-group">';
+    html += `<button class="chapter-title ${isOpen ? 'open' : ''}" onclick="toggleChapter('${chName.replace(/'/g, "\\'")}')">`;
+    html += `<span class="arrow">▶</span>${chName}`;
+    html += `<span class="count">${chDone}/${items.length}节</span>`;
+    html += '</button>';
+    html += `<div class="section-list ${isOpen ? 'open' : ''}" id="sectionList-${chName}">`;
+    items.forEach(({section, si}) => {
+      const isActive = si === STATE.currentSection;
+      const isDone = STATE.doneSections.has(si);
+      const quizCount = KB_DATA.quizzes.filter(q => q.section === si).length;
+      html += `<div class="section-row ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}" onclick="selectSection(${si})">`;
+      html += `<span class="check">${isDone ? '✓' : ''}</span>`;
+      html += `<span class="section-title">${section.title}</span>`;
+      html += `<button class="mini-quiz-btn" onclick="event.stopPropagation();selectSectionAndQuiz(${si})" title="本节练习(${quizCount}题)">📝${quizCount}</button>`;
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  nav.innerHTML = html;
+}
+
+function toggleChapter(chName) {
+  if (STATE.openChapters.has(chName)) {
+    STATE.openChapters.delete(chName);
+  } else {
+    STATE.openChapters.add(chName);
+  }
+  renderSidebar();
+}
+
+function selectSection(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'read';
+  // Auto-expand the chapter containing this section
+  const sec = KB_DATA.sections[si];
+  if (sec && sec.chapter) STATE.openChapters.add(sec.chapter);
+  switchTab('read');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function selectSectionAndQuiz(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'quiz';
+  const sec = KB_DATA.sections[si];
+  if (sec && sec.chapter) STATE.openChapters.add(sec.chapter);
+  // Find first quiz question index for this section
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === si);
+  if (firstQ >= 0) STATE.currentQuizIndex = firstQ;
+  switchTab('quiz');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ============ 标签页切换 ============
+function switchTab(tab) {
+  STATE.currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+  document.getElementById('readContent').style.display = tab === 'read' ? 'block' : 'none';
+  document.getElementById('quizContent').style.display = tab === 'quiz' ? 'block' : 'none';
+  document.getElementById('bookmarksContent').style.display = tab === 'bookmarks' ? 'block' : 'none';
+  document.getElementById('errorsContent').style.display = tab === 'errors' ? 'block' : 'none';
+  renderContent();
+  if (tab === 'read') document.getElementById('searchInput').value = STATE.searchQuery;
+}
+
+// ============ 内容渲染 ============
+function renderContent() {
+  if (STATE.currentTab === 'read' || STATE.currentTab === 'bookmarks' || STATE.currentTab === 'errors') {
+    renderReadContent();
+  }
+  if (STATE.currentTab === 'quiz') {
+    renderQuizContent();
+  }
+  document.getElementById('breadcrumbCurrent').textContent = (KB_DATA.sections[STATE.currentSection]?.chapter || '') +
+    (KB_DATA.sections[STATE.currentSection] ? ' › ' : '') + (KB_DATA.sections[STATE.currentSection]?.title || '第一章');
+}
+
+function renderReadContent() {
+  const container = document.getElementById('readContent');
+  const section = KB_DATA.sections[STATE.currentSection];
+  let cards = section.cards;
+
+  // Handle bookmarks tab
+  if (STATE.currentTab === 'bookmarks') {
+    const allCards = KB_DATA.sections.flatMap((s, si) => s.cards.map(c => ({...c, sectionIdx: si, sectionTitle: s.title})));
+    cards = allCards.filter(c => STATE.bookmarks.has(c.id));
+    if (cards.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+      container.style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'block';
+      document.getElementById('errorsContent').style.display = 'none';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'block';
+    document.getElementById('errorsContent').style.display = 'none';
+
+    let html = `<div class="section-header"><h2>⭐ 我的收藏</h2><div class="meta">共 ${cards.length} 个收藏</div></div>`;
+    cards.forEach(c => {
+      html += renderCard(c, true);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Handle errors tab
+  if (STATE.currentTab === 'errors') {
+    const errorQuizList = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+    if (errorQuizList.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">📝</div><h3>暂无错题</h3><p>做错的题目会自动收入错题本</p></div>';
+      document.getElementById('readContent').style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'none';
+      document.getElementById('errorsContent').style.display = 'block';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'none';
+    document.getElementById('errorsContent').style.display = 'block';
+
+    let html = `<div class="section-header"><h2>📝 错题本</h2><div class="meta">共 ${errorQuizList.length} 道错题</div></div>`;
+    errorQuizList.forEach((q, idx) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderErrorQuiz(q, qi, idx + 1);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Normal read mode
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'none';
+
+  let html = `<div class="section-header">`;
+  html += `<h2>${section.title}</h2>`;
+  html += `<div class="meta">`;
+  html += `<span>📄 ${section.cards.length} 个知识点</span>`;
+  html += `<span>📝 ${KB_DATA.quizzes.filter(q => q.section === STATE.currentSection).length} 道练习题</span>`;
+  html += `</div></div>`;
+
+  let filteredCards = cards;
+  if (STATE.searchQuery) {
+    const q = STATE.searchQuery.toLowerCase();
+    filteredCards = cards.filter(c => {
+      const text = c.title + c.html.replace(/<[^>]*>/g, '');
+      return text.toLowerCase().includes(q);
+    });
+    if (filteredCards.length === 0) {
+      html += '<div class="empty-state"><div class="icon">🔍</div><h3>未找到匹配的知识点</h3><p>试试其他关键词</p></div>';
+    }
+  }
+
+  filteredCards.forEach(c => {
+    html += renderCard(c);
+  });
+
+  html += `<div style="text-align:center;margin-top:24px">`;
+  html += `<button class="btn btn-primary" onclick="markSectionDone(${STATE.currentSection})" ${STATE.doneSections.has(STATE.currentSection) ? 'disabled' : ''}>`;
+  html += STATE.doneSections.has(STATE.currentSection) ? '✅ 已学完本节' : '✓ 标记本节为已学';
+  html += '</button>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderCard(card, showSection = false) {
+  let html = `<div class="knowledge-card" id="card-${card.id}">`;
+  html += `<h3><span class="icon">${card.icon}</span>${card.title}</h3>`;
+  if (showSection && card.sectionTitle) {
+    html += `<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">📂 ${card.sectionTitle}</div>`;
+  }
+  html += card.html;
+  if (card.tags) {
+    html += '<div class="tag-row">';
+    card.tags.forEach(t => {
+      html += `<span class="tag">${t}</span>`;
+    });
+    html += '</div>';
+  }
+  html += `<div class="card-actions">`;
+  html += `<button class="card-action-btn ${STATE.bookmarks.has(card.id) ? 'bookmarked':''}" onclick="toggleBookmark('${card.id}')">`;
+  html += STATE.bookmarks.has(card.id) ? '⭐ 已收藏' : '☆ 收藏';
+  html += '</button>';
+  html += '</div></div>';
+  return html;
+}
+
+function renderErrorQuiz(q, qi, num) {
+  const sectionTitle = KB_DATA.sections[q.section]?.title || '';
+  const labels = ['A','B','C','D'];
+  let html = `<div class="quiz-container">`;
+  html += `<div class="quiz-header"><span class="quiz-section-label">${sectionTitle}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += `<div class="quiz-options">`;
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if (oi === q.answer) cls = 'correct';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += `<div class="quiz-actions">`;
+  html += `<button class="btn btn-outline" onclick="removeError(${qi})">✓ 已掌握，移除</button>`;
+  html += '</div></div>';
+  return html;
+}
+
+// ============ 练习模式 ============
+function renderQuizContent() {
+  const container = document.getElementById('quizContent');
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  const total = KB_DATA.quizzes.length;
+  const sectionTotal = sectionQuizzes.length;
+
+  // Show score summary if all questions in current section are answered
+  const allAnswered = sectionQuizzes.every((_, i) => {
+    const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+    return STATE.quizSubmitted[qi];
+  });
+
+  if (allAnswered) {
+    const correct = sectionQuizzes.filter((_, i) => {
+      const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+      return STATE.quizAnswers[qi] === sectionQuizzes[i].answer;
+    }).length;
+    const pct = Math.round((correct / sectionTotal) * 100);
+
+    let html = '<div class="score-display">';
+    html += `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">${KB_DATA.sections[STATE.currentSection].title} · 练习成绩</div>`;
+    html += `<div class="score-number">${pct}%</div>`;
+    html += '<div class="stats-row">';
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--success)">${correct}</div><div class="stat-label">正确</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--danger)">${sectionTotal - correct}</div><div class="stat-label">错误</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value">${sectionTotal}</div><div class="stat-label">总计</div></div>`;
+    html += '</div>';
+    html += '<div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">';
+    html += '<button class="btn btn-primary" onclick="resetSectionQuiz()">🔄 重新练习</button>';
+    if (sectionQuizzes.some((_, i) => STATE.quizAnswers[KB_DATA.quizzes.indexOf(sectionQuizzes[i])] !== sectionQuizzes[i].answer)) {
+      html += '<button class="btn btn-outline" onclick="reviewSectionErrors()">📝 回看本节错题</button>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // Show all questions with results
+    sectionQuizzes.forEach((q, si) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderQuizResult(q, qi, si + 1);
+    });
+
+    container.innerHTML = html;
+    return;
+  }
+
+  const q = sectionQuizzes[STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0])] || sectionQuizzes[0];
+  const qi = KB_DATA.quizzes.indexOf(q);
+  const localIdx = STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0]);
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const labels = ['A','B','C','D'];
+
+  let html = '<div class="section-header">';
+  html += `<h2>${KB_DATA.sections[STATE.currentSection].title} · 章节练习</h2>`;
+  html += `<div class="meta"><span>第 ${localIdx + 1}/${sectionTotal} 题</span></div>`;
+  html += '</div>';
+
+  html += '<div class="quiz-container">';
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if (submitted) {
+      if (oi === q.answer) cls = 'correct';
+      else if (oi === selected && oi !== q.answer) cls = 'wrong';
+    } else if (oi === selected) {
+      cls = 'selected';
+    }
+    html += `<div class="quiz-option ${cls}" onclick="selectOption(${qi}, ${oi})">`;
+    html += `<span class="option-letter">${labels[oi]}</span>${opt}`;
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Analysis
+  html += `<div class="analysis-box ${submitted ? 'show' : ''}" id="analysis${qi}">${q.analysis}</div>`;
+
+  // Actions
+  html += '<div class="quiz-actions">';
+  if (!submitted) {
+    html += `<button class="btn btn-primary" onclick="submitAnswer(${qi})" ${selected === undefined ? 'disabled' : ''}>确认提交</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="prevQuiz()">上一题</button>`;
+  html += `<button class="btn btn-outline" onclick="nextQuiz()">下一题</button>`;
+  if (STATE.errorQuestions.has(qi)) {
+    html += `<button class="btn btn-outline" style="color:var(--danger)" onclick="removeError(${qi})">从错题本移除</button>`;
+  }
+  html += '</div>';
+  html += '</div>';
+
+  // Dots navigation
+  html += '<div class="quiz-nav">';
+  sectionQuizzes.forEach((sq, idx) => {
+    const qi2 = KB_DATA.quizzes.indexOf(sq);
+    let dotCls = '';
+    if (idx === localIdx) dotCls += ' current';
+    if (STATE.quizSubmitted[qi2]) {
+      dotCls += STATE.quizAnswers[qi2] === sq.answer ? ' correct-dot' : ' wrong-dot';
+    }
+    html += `<button class="quiz-nav-dot ${dotCls}" onclick="goToQuestion(${qi2})">${idx + 1}</button>`;
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderQuizResult(q, qi, num) {
+  const labels = ['A','B','C','D'];
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const correct = submitted && selected === q.answer;
+
+  let html = '<div class="quiz-container">';
+  html += `<div class="quiz-header"><span class="quiz-section-label" style="background:${correct ? 'var(--success-light)' : 'var(--danger-light)'};color:${correct ? 'var(--success)' : 'var(--danger)'}">${correct ? '✓ 正确' : '✗ 错误'}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if (oi === q.answer) cls = 'correct';
+    else if (oi === selected && oi !== q.answer) cls = 'wrong';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += '</div>';
+  return html;
+}
+
+// ============ 练习操作 ============
+function selectOption(qi, oi) {
+  if (STATE.quizSubmitted[qi]) return;
+  STATE.quizAnswers[qi] = oi;
+  saveState();
+  renderQuizContent();
+}
+
+function submitAnswer(qi) {
+  if (STATE.quizAnswers[qi] === undefined) return;
+  STATE.quizSubmitted[qi] = true;
+  const q = KB_DATA.quizzes[qi];
+  if (STATE.quizAnswers[qi] !== q.answer) {
+    STATE.errorQuestions.add(qi);
+  }
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function findLastSectionQuizIdx(sectionIdx) {
+  let last = -1;
+  for (let i = 0; i < KB_DATA.quizzes.length; i++) {
+    if (KB_DATA.quizzes[i].section === sectionIdx) last = i;
+  }
+  return last;
+}
+
+function prevQuiz() {
+  const sectionStart = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex > sectionStart) {
+    STATE.currentQuizIndex--;
+  }
+  renderQuizContent();
+}
+
+function nextQuiz() {
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex < sectionEnd) {
+    STATE.currentQuizIndex++;
+  }
+  renderQuizContent();
+}
+
+function goToQuestion(qi) {
+  STATE.currentQuizIndex = qi;
+  renderQuizContent();
+}
+
+function resetSectionQuiz() {
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  sectionQuizzes.forEach(q => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    delete STATE.quizAnswers[qi];
+    delete STATE.quizSubmitted[qi];
+     STATE.errorQuestions.delete(qi);
+  });
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  STATE.currentQuizIndex = firstQ >= 0 ? firstQ : 0;
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function reviewSectionErrors() {
+  // Switch to errors tab
+  STATE.currentTab = 'errors';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('errorsTab').classList.add('active');
+  document.getElementById('errorsTab').style.display = '';
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'block';
+  renderContent();
+}
+
+function removeError(qi) {
+  STATE.errorQuestions.delete(qi);
+  saveState();
+  updateErrorCount();
+  if (STATE.currentTab === 'errors') renderContent();
+  if (STATE.currentTab === 'quiz') renderQuizContent();
+}
+
+// ============ 收藏 ============
+function toggleBookmark(cardId) {
+  if (STATE.bookmarks.has(cardId)) {
+    STATE.bookmarks.delete(cardId);
+    showToast('已取消收藏');
+  } else {
+    STATE.bookmarks.add(cardId);
+    showToast('已加入收藏夹');
+  }
+  saveState();
+  renderContent();
+}
+
+function toggleBookmarks() {
+  const tabBtn = document.getElementById('bookmarksTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'bookmarks';
+  switchTab('bookmarks');
+  const allBookmarks = KB_DATA.sections.flatMap(s => s.cards).filter(c => STATE.bookmarks.has(c.id));
+  if (allBookmarks.length === 0) {
+    document.getElementById('bookmarksContent').innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+  }
+}
+
+function toggleErrors() {
+  const tabBtn = document.getElementById('errorsTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'errors';
+  switchTab('errors');
+}
+
+// ============ 节完成标记 ============
+function markSectionDone(si) {
+  STATE.doneSections.add(si);
+  saveState();
+  updateProgress();
+  renderSidebar();
+  renderContent();
+  setTimeout(() => showToast('✅ 已标记本节为已学'), 300);
+}
+
+function updateProgress() {
+  const total = KB_DATA.sections.length;
+  const done = STATE.doneSections.size;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function updateErrorCount() {
+  document.getElementById('errorCount').textContent = STATE.errorQuestions.size > 0 ? `(${STATE.errorQuestions.size})` : '';
+}
+
+// ============ 搜索 ============
+function onSearch() {
+  STATE.searchQuery = document.getElementById('searchInput').value.trim();
+  if (STATE.currentTab !== 'read') {
+    switchTab('read');
+  }
+  renderContent();
+}
+
+// ============ 主题 ============
+function toggleTheme() {
+  STATE.theme = STATE.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  saveState();
+}
+
+// ============ 错题导出 ============
+function exportErrorsCSV() {
+  const errors = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+  if (errors.length === 0) {
+    showToast('暂无错题可导出');
+    return;
+  }
+  const labels = ['A','B','C','D'];
+  let csv = '\uFEFF序号,题目,选项A,选项B,选项C,选项D,正确答案,你的答案,解析\n';
+  errors.forEach((q, idx) => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    const yourAnswer = STATE.quizAnswers[qi] !== undefined ? labels[STATE.quizAnswers[qi]] : '未答';
+    const correctAnswer = labels[q.answer];
+    const stem = q.stem.replace(/"/g, '""');
+    const opts = q.options.map(o => o.replace(/"/g, '""'));
+    const analysis = q.analysis.replace(/<[^>]*>/g, '').replace(/"/g, '""');
+    csv += `${idx + 1},"${stem}","${opts[0] || ''}","${opts[1] || ''}","${opts[2] || ''}","${opts[3] || ''}","${correctAnswer}","${yourAnswer}","${analysis}"\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '信息技术_错题导出.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============ 移动端 ============
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ============ Toast ============
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.getElementById('toastContainer').appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+// ============ 启动 ============
+document.addEventListener('DOMContentLoaded', function() {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+});
+// 兜底：如果DOMContentLoaded已触发
+if (document.readyState !== 'loading') {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+}
+</script>
+</body>
+</html>

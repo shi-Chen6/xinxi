@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信息技术学科专业知识 · 知识库（全四章）</title>
+<style>
+:root {
+  --bg: #f8f9fb;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #5a5d6e;
+  --text-muted: #9498a8;
+  --border: #e8eaef;
+  --accent: #4f46e5;
+  --accent-light: #eef0ff;
+  --success: #059669;
+  --success-light: #ecfdf5;
+  --warning: #d97706;
+  --warning-light: #fffbeb;
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --info: #2563eb;
+  --info-light: #eff6ff;
+  --tag-bg: #f1f5f9;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-sidebar: #1e293b;
+  --text: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #334155;
+  --accent: #818cf8;
+  --accent-light: #1e1b4b;
+  --tag-bg: #334155;
+  --shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.4;
+}
+
+.sidebar-header .subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+}
+
+.chapter-group {
+  margin-bottom: 4px;
+}
+
+.chapter-title {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: background var(--transition);
+}
+
+.chapter-title:hover { background: var(--accent-light); }
+.chapter-title .arrow {
+  font-size: 10px;
+  transition: transform var(--transition);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.chapter-title.open .arrow { transform: rotate(90deg); }
+.chapter-title .count {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.section-list {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+}
+
+.section-list.open { max-height: 500px; }
+
+.section-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.section-item:hover { background: var(--accent-light); color: var(--accent); }
+.section-item.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+
+.section-item .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.section-item.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.section-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all var(--transition);
+  border-radius: var(--radius-xs);
+  margin: 1px 8px;
+  width: calc(100% - 16px);
+}
+
+.section-row:hover { background: var(--accent-light); color: var(--accent); }
+.section-row.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+.section-row .section-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.section-row .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.section-row.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.mini-quiz-btn {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.mini-quiz-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-bar-wrap { margin-bottom: 4px; }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text-muted); margin-bottom: 6px;
+}
+.progress-bar {
+  height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease;
+}
+
+.sidebar-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: var(--radius-xs);
+  font-size: 12px; color: var(--text-secondary); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg-card);
+  transition: all var(--transition);
+  width: 100%;
+}
+
+.sidebar-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sidebar-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+
+.top-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 50;
+}
+
+.breadcrumb {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.breadcrumb span { color: var(--text); font-weight: 500; }
+
+.search-box {
+  margin-left: auto;
+  position: relative;
+}
+
+.search-box input {
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-size: 13px; width: 240px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.search-box input:focus { border-color: var(--accent); }
+.search-box .search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); font-size: 14px;
+}
+
+.content-area {
+  padding: 24px;
+  max-width: 900px;
+}
+
+.tab-bar {
+  display: flex; gap: 4px; margin-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  font-size: 14px; font-weight: 500; color: var(--text-muted);
+  border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn .badge {
+  font-size: 11px; background: var(--tag-bg); color: var(--text-secondary);
+  padding: 1px 8px; border-radius: 10px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 20px; font-weight: 700; color: var(--text);
+  margin-bottom: 4px;
+}
+
+.section-header .meta {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; gap: 16px;
+}
+
+.knowledge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--transition);
+}
+
+.knowledge-card:hover { box-shadow: var(--shadow-md); }
+
+.knowledge-card h3 {
+  font-size: 16px; font-weight: 600; color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.knowledge-card h3 .icon {
+  font-size: 18px;
+}
+
+.knowledge-card p {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.knowledge-card ul, .knowledge-card ol {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.knowledge-card li {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.knowledge-card .highlight {
+  background: var(--warning-light);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.knowledge-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.knowledge-table th, .knowledge-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.knowledge-table th {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.knowledge-table td { color: var(--text-secondary); }
+
+.tag-row {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 12px; background: var(--tag-bg);
+  color: var(--text-secondary);
+}
+
+.tag.accent { background: var(--accent-light); color: var(--accent); }
+.tag.success { background: var(--success-light); color: var(--success); }
+.tag.warning { background: var(--warning-light); color: var(--warning); }
+
+.card-actions {
+  display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.card-action-btn {
+  font-size: 12px; padding: 5px 12px;
+  border-radius: var(--radius-xs); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 4px;
+}
+
+.card-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.card-action-btn.bookmarked { border-color: #f59e0b; color: #f59e0b; background: #fffbeb; }
+
+.quiz-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+
+.quiz-section-label {
+  font-size: 12px; color: var(--text-muted);
+  background: var(--tag-bg);
+  padding: 3px 10px; border-radius: 12px;
+}
+
+.quiz-question {
+  font-size: 15px; font-weight: 500; color: var(--text);
+  margin-bottom: 16px; line-height: 1.6;
+}
+
+.quiz-options {
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.quiz-option {
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 14px; color: var(--text-secondary);
+  background: var(--bg);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.quiz-option:hover { border-color: var(--accent); }
+.quiz-option.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.quiz-option.correct { border-color: var(--success); background: var(--success-light); color: var(--success); font-weight: 600; }
+.quiz-option.wrong { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.quiz-option .option-letter {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-weight: 600; font-size: 13px;
+  background: var(--tag-bg); color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.quiz-option.selected .option-letter { background: var(--accent); color: #fff; }
+.quiz-option.correct .option-letter { background: var(--success); color: #fff; }
+.quiz-option.wrong .option-letter { background: var(--danger); color: #fff; }
+
+.analysis-box {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--info-light);
+  border: 1px solid #93c5fd;
+  font-size: 13px; color: #1e40af;
+  line-height: 1.7;
+  display: none;
+}
+
+.analysis-box.show { display: block; }
+
+.analysis-box strong { color: #1e3a5f; }
+
+.quiz-actions {
+  display: flex; gap: 8px; margin-top: 12px;
+}
+
+.btn {
+  padding: 8px 16px; border-radius: var(--radius-xs);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: none; transition: all var(--transition);
+}
+
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
+
+.quiz-nav {
+  display: flex; justify-content: center; gap: 8px; margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.quiz-nav-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg);
+  font-size: 12px; cursor: pointer; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+
+.quiz-nav-dot:hover { border-color: var(--accent); }
+.quiz-nav-dot.current { border-color: var(--accent); background: var(--accent); color: #fff; font-weight: 600; }
+.quiz-nav-dot.correct-dot { border-color: var(--success); background: var(--success-light); }
+.quiz-nav-dot.wrong-dot { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state h3 { font-size: 16px; margin-bottom: 8px; color: var(--text); }
+.empty-state p { font-size: 13px; }
+
+.score-display {
+  text-align: center; padding: 40px 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.score-number {
+  font-size: 48px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stats-row {
+  display: flex; justify-content: center; gap: 32px;
+  margin: 16px 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value { font-size: 20px; font-weight: 600; color: var(--text); }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.bookmark-list-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.bookmark-list-item:hover { background: var(--bg); }
+
+.bookmark-list-item .title { font-size: 13px; color: var(--text); font-weight: 500; }
+.bookmark-list-item .meta { font-size: 11px; color: var(--text-muted); }
+
+.mobile-menu-btn {
+  display: none;
+  width: 36px; height: 36px; border: none; background: none;
+  font-size: 20px; cursor: pointer; color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .search-box input { width: 160px; }
+  .content-area { padding: 16px; }
+}
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  padding: 10px 20px; background: var(--text); color: var(--bg);
+  border-radius: 20px; font-size: 13px; z-index: 1000;
+  animation: toastIn 0.3s ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>信息技术学科专业知识</h1>
+      <div class="subtitle">信息基础 · 知识库 · 全四章</div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+    <div class="sidebar-footer">
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>学习进度</span><span id="progressPercent">0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+      <button class="sidebar-btn" onclick="toggleBookmarks()" id="bookmarkBtn">
+        <span>⭐</span> 收藏夹
+      </button>
+      <button class="sidebar-btn" onclick="toggleErrors()" id="errorBtn">
+        <span>📝</span> 错题本 <span style="font-size:10px;color:var(--text-muted)" id="errorCount"></span>
+      </button>
+      <button class="sidebar-btn" onclick="exportErrorsCSV()">
+        <span>📥</span> 导出错题CSV
+      </button>
+      <button class="sidebar-btn" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">暗色模式</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="breadcrumb" id="breadcrumb">
+        首页 <span style="margin:0 4px;color:var(--text-muted)">›</span> <span id="breadcrumbCurrent">第一章</span>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜索知识点..." oninput="onSearch()">
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="read" onclick="switchTab('read')">
+          📖 知识阅读
+        </button>
+        <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">
+          📝 章节练习 <span class="badge" id="quizBadge">200题</span>
+        </button>
+        <button class="tab-btn" data-tab="bookmarks" onclick="switchTab('bookmarks')" style="display:none" id="bookmarksTab">
+          ⭐ 收藏夹
+        </button>
+        <button class="tab-btn" data-tab="errors" onclick="switchTab('errors')" style="display:none" id="errorsTab">
+          📝 错题本
+        </button>
+      </div>
+
+      <div id="readContent"></div>
+      <div id="quizContent" style="display:none"></div>
+      <div id="bookmarksContent" style="display:none"></div>
+      <div id="errorsContent" style="display:none"></div>
+    </div>
+  </main>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+// ============ 知识数据 ============
+const KB_DATA = {"title": "信息技术学科专业知识 · 知识库", "sections": [{"id": "s1", "title": "第一节 信息概述", "cards": [{"id": "c1", "title": "信息的定义与表示", "icon": "📌", "html": "<p>信息是通过<strong>文字、数字、图像、图形、声音、视频</strong>等方式进行传播的<strong>内容</strong>。信息需要借助一定的<strong>载体</strong>，通过一定的<strong>途径</strong>才能实现传播。</p><p><strong>载体</strong>（表现形式）：文字、图像、图形、声音、视频、动画等。</p><p><strong>途径</strong>（传播渠道）：书报、电话、广播、电视、计算机网络等。</p><p>关键区分：<span class='highlight'>信息是内容，不是载体本身</span>。比如U盘是载体，U盘里的文件内容才是信息。</p>", "tags": ["基础概念", "载体vs内容"]}, {"id": "c2", "title": "信息的分类", "icon": "📂", "html": "<table class='knowledge-table'><tr><th>分类维度</th><th>类别</th><th>说明</th></tr><tr><td rowspan='2'><strong>按稳定性</strong></td><td>静态信息</td><td>反映历史情况，具有相对稳定性，如历史数据</td></tr><tr><td>动态信息</td><td>反映进程或发展变化，需随时更新</td></tr><tr><td rowspan='3'><strong>按表现形式</strong></td><td>语法信息</td><td>与事物运动状态及变化方式相联系</td></tr><tr><td>语义信息</td><td>与含义因素相联系</td></tr><tr><td>语用信息</td><td>与效用相联系</td></tr><tr><td rowspan='2'><strong>按交流方式</strong></td><td>实时信息交流</td><td>双方同时在线，如QQ、微信</td></tr><tr><td>非实时信息交流</td><td>不需同时在线，如Email、微博、BBS</td></tr></table>", "tags": ["分类体系", "稳定性", "表现形式", "交流方式"]}, {"id": "c3", "title": "信息的特征", "icon": "🔑", "html": "<p>信息具有以下<span class='highlight'>8个基本特征</span>，是考试高频考点：</p><ol><li><strong>普遍性</strong>：不以人的意志为转移，无处不在。</li><li><strong>依附性</strong>：必须依附于载体，决定可存储、可传递、可转换、可增值。</li><li><strong>价值性</strong>：是有价值的资源，使用越多价值越大且不消耗。</li><li><strong>时效性</strong>：有生命周期，价值随时间推移变化。</li><li><strong>传递性</strong>：空间和时间上都可传递。</li><li><strong>共享性</strong>：可被多个接收者多次使用。<span class='highlight'>共享性是信息与物质、能量的根本区别</span>。</li><li><strong>真伪性</strong>：有真假之分，衡量标准是客观反映现实的程度。</li><li><strong>不完全性</strong>：受环境和理性限制，所掌握的信息不可能完整。</li></ol>", "tags": ["核心考点", "8个特征"]}, {"id": "c4", "title": "信息论与控制论", "icon": "🧠", "html": "<p><strong>信息论</strong>由<span class='highlight'>香农</span>提出，运用概率论与数理统计方法研究信息、信息熵、通信系统、数据传输、密码学、数据压缩等问题的应用数学学科。</p><p><strong>控制论</strong>创始人<span class='highlight'>维纳</span>提出：“信息就是信息，不是物质也不是能量。”</p><p><span class='highlight'>信息、物质和能量</span>是构成世界的三大要素。</p>", "tags": ["香农", "维纳", "三大要素"]}, {"id": "c5", "title": "信息的表达、发布和存储", "icon": "📡", "html": "<table class='knowledge-table'><tr><th>方面</th><th>方式/渠道</th></tr><tr><td><strong>表达方式</strong></td><td>语言、文字、图形、图像、声音、形体动作</td></tr><tr><td><strong>发布方式</strong></td><td>Email、BBS、QQ、现场幻灯片演示、网站发布</td></tr><tr><td><strong>存储方式</strong></td><td>U盘、硬盘、光盘、网盘存储</td></tr><tr><td><strong>交流方式</strong></td><td>QQ、微信、博客</td></tr></table>", "tags": ["表达", "发布", "存储", "交流"]}, {"id": "c6", "title": "信息集成的一般过程", "icon": "🔧", "html": "<p>信息集成是对各种信息的<span class='highlight'>组织、规划和提炼</span>，一般过程：</p><ol><li><strong>确定主题、设计目标</strong></li><li><strong>规划内容结构、收集加工素材</strong></li><li><strong>选择工具、实际制作</strong></li><li><strong>收集反馈、评价修正</strong></li></ol><p><strong>信息集成工具</strong>分三类：</p><table class='knowledge-table'><tr><th>类型</th><th>组织方式</th><th>特点</th></tr><tr><td>基于页面的工具</td><td>类似书本“页”</td><td>形象直观、简单易学，适合初学者</td></tr><tr><td>基于图标的工具</td><td>图标依次连接在流程图中</td><td>可单独编辑各素材，灵活调整</td></tr><tr><td>基于时间的工具</td><td>按时间顺序集成</td><td>操作复杂，需编程基础</td></tr></table>", "tags": ["信息集成", "四步过程", "三类工具"]}, {"id": "c7", "title": "信息传输的一般过程", "icon": "📶", "html": "<p>信息传输模型：<span class='highlight'>信息源 → 发送器（编码）→ 信道（+噪声）→ 接收器（解码）→ 信宿</span></p><table class='knowledge-table'><tr><th>组件</th><th>说明</th></tr><tr><td>信息源</td><td>信号的产生物</td></tr><tr><td>发送器</td><td>将消息信号变换为适合信道传输的信号</td></tr><tr><td>信道</td><td>通信通道，有线（明线、电缆、光纤）或无线（大气）</td></tr><tr><td>噪声</td><td>通信系统固有的干扰，分内部和外部噪声</td></tr><tr><td>接收器</td><td>与发送器相反的变换，恢复原始信号</td></tr><tr><td>信宿</td><td>信息接收者，传输信息的归宿点</td></tr><tr><td>编码</td><td>将信息从一种形式转换为另一种形式</td></tr><tr><td>解码</td><td>编码的逆过程</td></tr></table>", "tags": ["通信模型", "编码解码"]}], "chapter": "第一章 信息与信息技术"}, {"id": "s2", "title": "第二节 信息技术", "cards": [{"id": "c8", "title": "信息技术的定义（三层含义）", "icon": "📌", "html": "<p>信息技术（IT）定义为与<strong>获取、加工、存储、传输、表示和应用信息</strong>有关的技术。从三个层面理解：</p><table class='knowledge-table'><tr><th>层面</th><th>定义</th><th>强调</th></tr><tr><td><strong>广义</strong></td><td>能充分利用与扩展人类信息器官功能的各种方法、工具与技能的总和</td><td>哲学上人与技术的关系</td></tr><tr><td><strong>中义</strong></td><td>对信息进行采集、传输、存储、加工、表达的各种技术之和</td><td>功能与过程的一般理解</td></tr><tr><td><strong>狭义</strong></td><td>利用计算机、网络、广播电视等硬件设备及软件工具与科学方法，对文图声像信息进行获取、加工、存储、传输与使用的技术之和</td><td>现代化与高科技含量</td></tr></table>", "tags": ["IT", "三层定义"]}, {"id": "c9", "title": "信息技术的内容（四基元）", "icon": "🏗️", "html": "<p>信息技术包括微电子技术、通信技术、计算机技术、感测技术等。<span class='highlight'>微电子和光电子技术为基础，计算机技术为核心，通信技术为支柱。</span></p><p>“四基元”与人体器官对应：</p><table class='knowledge-table'><tr><th>技术</th><th>扩展器官</th><th>功能</th><th>举例</th></tr><tr><td><strong>感测技术</strong></td><td>感觉器官</td><td>获取信息</td><td>传感器、感测信息处理</td></tr><tr><td><strong>通信技术</strong></td><td>传导神经</td><td>传递信息</td><td>物联网、无线局域网</td></tr><tr><td><strong>计算机技术</strong></td><td>思维器官</td><td>处理与存储信息</td><td>虚拟现实、云计算</td></tr><tr><td><strong>控制技术</strong></td><td>效应器官</td><td>使用信息</td><td>预测恢复、神经网络控制</td></tr></table>", "tags": ["四基元", "核心-计算机"]}, {"id": "c10", "title": "信息技术的五次革命", "icon": "📜", "html": "<table class='knowledge-table'><tr><th>次序</th><th>标志</th><th>说明</th></tr><tr><td>第一次</td><td><strong>语言的使用</strong></td><td>人类从猿进化到人的重要标志</td></tr><tr><td>第二次</td><td><strong>文字的创造</strong></td><td>第一次打破时间、空间的限制</td></tr><tr><td>第三次</td><td><strong>印刷术的发明</strong></td><td>中国最早使用活字印刷</td></tr><tr><td>第四次</td><td><strong>电报、电话、广播、电视的发明</strong></td><td>电磁波的发现，实现有线/无线通信</td></tr><tr><td>第五次</td><td><strong>计算机和网络的应用</strong></td><td>1946年美国研制第一台电子计算机ENIAC</td></tr></table><p><strong>发展趋势</strong>：智能化、网络化、综合化、数字化、高速度、大容量、个人化、多元化、虚拟化。</p>", "tags": ["五次革命", "ENIAC-1946"]}, {"id": "c11", "title": "信息技术的管理", "icon": "📊", "html": "<p><strong>信息管理（IM）</strong>：以现代信息技术为手段，对信息资源进行<strong>计划、组织、领导、控制</strong>的社会活动。</p><p>管理过程：<span class='highlight'>信息收集 → 信息传输 → 信息加工 → 信息存储</span></p><p><strong>不同主体管理目的</strong>：</p><ul><li>个人：提高工作和学习效率</li><li>学校：提高教学效率和质量</li><li>信息服务机构：满足公众信息需求</li><li>企业：正确决策，提高生产效率</li></ul><p>管理方法：文件管理、电子表格管理、数据库管理、网络数据库管理。</p>", "tags": ["信息管理", "IM"]}, {"id": "c12", "title": "信息技术的应用与影响", "icon": "💡", "html": "<p><strong>典型应用</strong>：</p><ul><li><strong>数字地球</strong>：用数字化方法把地球活动存入计算机，在网络上流通</li><li><strong>虚拟现实</strong>：计算机模拟三维虚拟世界，提供视/听/触觉模拟</li><li><strong>智能代理</strong>：按用户参数搜集感兴趣信息，定时提供服务</li><li><strong>电子警察</strong>：自动化检测交通违法，网络传回分析处罚</li><li><strong>可视电话</strong>：利用电话线路实时传送语音和图像</li></ul><p><strong>影响</strong>：积极（推动社会进步、方便生活）与消极（黑客、病毒、垃圾信息）并存。</p>", "tags": ["数字地球", "虚拟现实", "智能代理"]}], "chapter": "第一章 信息与信息技术"}, {"id": "s3", "title": "第三节 信息采集的来源与获取", "cards": [{"id": "c13", "title": "信息的来源", "icon": "🔍", "html": "<p><strong>主要来源</strong>：</p><ul><li><strong>直接来源</strong>：通过人的感官与事物接触，在脑中留下印象</li><li><strong>间接来源</strong>：用科学分析方法挖掘隐藏在表象背后的信息</li></ul><p><strong>来源的多样性（四类信息源）</strong>：</p><table class='knowledge-table'><tr><th>类型</th><th>举例</th></tr><tr><td>文献型信息源</td><td>书籍、报刊等记录知识的载体</td></tr><tr><td>口头型信息源</td><td>同学、父母、朋友、老师</td></tr><tr><td>电子型信息源</td><td>广播、电视、电话、因特网</td></tr><tr><td>实物型信息源</td><td>运动会、动物园、公共场所及事件</td></tr></table>", "tags": ["直接/间接来源", "四类信息源"]}, {"id": "c14", "title": "信息获取的途径与过程", "icon": "🛠️", "html": "<p><strong>获取途径</strong>（多渠道）：人力直接获取、设备获取、报纸杂志、书籍资料、广播电视、光盘等电子出版物、计算机网络、遥感遥测、手机扫码。</p><p><strong>一般过程（6步）</strong>：</p><ol><li><strong>定位信息需求</strong>：需要什么信息（时间范围、地域范围、内容范围）</li><li><strong>选择信息来源</strong>：哪里有这些信息</li><li><strong>确定获取方法</strong>：现场观察法、问卷调查法、访谈法、检索法、阅读法、视听法等</li><li><strong>保存信息</strong>：整理分类保存或输入计算机</li><li><strong>评价信息</strong>：以信息需求为依据进行评价，<span class='highlight'>评价贯穿整个获取过程</span></li><li><strong>反馈信息</strong>：循环往复，信息需求不断发展</li></ol>", "tags": ["6步过程", "评价贯穿始终"]}, {"id": "c15", "title": "信息价值的判断原则", "icon": "⚖️", "html": "<p>判断信息价值的<span class='highlight'>五个原则</span>：</p><table class='knowledge-table'><tr><th>原则</th><th>考察要点</th></tr><tr><td><strong>准确性</strong></td><td>各要素是否真实可靠，出处是否可信</td></tr><tr><td><strong>客观性</strong></td><td>信息提供者立场是否公正，有无偏见</td></tr><tr><td><strong>权威性</strong></td><td>信息提供者的身份及资质</td></tr><tr><td><strong>时效性</strong></td><td>信息提供时间，是否失效</td></tr><tr><td><strong>适用性</strong></td><td>根据需求和目的选择重点（如法官断案重准确性；动态信息重时效性）</td></tr></table>", "tags": ["五原则"]}], "chapter": "第一章 信息与信息技术"}, {"id": "s4", "title": "第一节 多媒体技术概要", "cards": [{"id": "c16", "title": "媒体与多媒体的概念", "icon": "📌", "html": "<p><strong>媒体</strong>在计算机领域有两种含义：一是存储信息的实体（磁带、磁盘、光盘）；二是承载信息的载体（数字、文字、声音、图形、图像、动画）。</p><p><strong>媒体的分类（五类）</strong>：</p><table class='knowledge-table'><tr><th>类型</th><th>说明</th><th>举例</th></tr><tr><td>感觉媒体</td><td>直接作用于人的感官</td><td>语言、文字、音乐、图像、动画</td></tr><tr><td>表示媒体</td><td>传输感觉媒体的手段（编码）</td><td>语言编码、文本编码、图像编码</td></tr><tr><td>表现媒体</td><td>输入/输出设备</td><td>键盘、鼠标、显示器、打印机</td></tr><tr><td>存储媒体</td><td>存储表示媒体的介质</td><td>内存、硬盘、软盘、磁带、光盘</td></tr><tr><td>传输媒体</td><td>传送表示媒体的物理载体</td><td>导线、电缆、电磁波</td></tr></table><p><strong>多媒体</strong>：融合两种或两种以上媒体的人机交互式信息交流和传播媒体。</p>", "tags": ["媒体五分类", "感觉/表示/表现/存储/传输"]}, {"id": "c17", "title": "超文本、超媒体与流媒体", "icon": "🔗", "html": "<p><strong>超文本</strong>：用超链接的方法，将各种不同空间的<strong>文字</strong>信息组织在一起的<strong>非线性</strong>文本。</p><p><strong>超媒体</strong>：除文本外，还使用声音、图形、图像、动画、视频片段等多种媒体信息表示信息，建立的链接是文本、声音、图形等之间的链接。</p><p><strong>流媒体</strong>：采用流式传输方式在因特网播放的媒体格式，是一种<strong>新的媒体传送方式</strong>而非新媒体的类型。</p><ul><li>特点：高压缩和可变流速率，可以<strong>边下载边播放</strong></li><li>播放方式：单播、组播、广播</li></ul>", "tags": ["超文本", "超媒体", "流媒体"]}, {"id": "c18", "title": "多媒体技术的特征", "icon": "✨", "html": "<p>多媒体技术是计算机综合处理文本、图形、图像、声音、视频等媒体信息，使它们建立联系并集成为具有良好交互功能系统的整体技术。五大特征：</p><ol><li><strong>数字化</strong>：<span class='highlight'>本质特征</span>。所有信息必须采样、编码变成二进制数字后才能由计算机处理。</li><li><strong>集成性</strong>：<span class='highlight'>典型特征</span>。以计算机为中心综合处理多种媒体信息。</li><li><strong>交互性</strong>：<span class='highlight'>最重要特征</span>。各方都可以进行编辑、控制和传递。</li><li><strong>实时性</strong>：用户给出操作命令时迅速得到多媒体信息反应。</li><li><strong>非线性</strong>：以树形或网状结构方式处理信息之间的关系。</li></ol>", "tags": ["数字化-本质", "交互性-最重要", "集成性-典型"]}, {"id": "c19", "title": "多媒体关键技术", "icon": "🔐", "html": "<p>多媒体关键技术：数据压缩与解压缩、媒体同步、多媒体网络、超媒体、虚拟现实技术等。<span class='highlight'>视频和音频数据的压缩与解压缩技术最为重要</span>。</p><p><strong>两大压缩标准</strong>：</p><table class='knowledge-table'><tr><th>标准</th><th>全称</th><th>对象</th><th>压缩比</th></tr><tr><td><strong>JPEG</strong></td><td>联合图像专家组</td><td>静止图像</td><td>单色10:1，彩色15:1</td></tr><tr><td><strong>MPEG</strong></td><td>运动图像专家组</td><td>运动图像/视频</td><td>平均50:1</td></tr></table><p>还有多媒体通信技术、多媒体同步技术、流媒体技术、虚拟现实技术等。</p>", "tags": ["JPEG", "MPEG", "压缩标准"]}, {"id": "c20", "title": "多媒体技术的应用", "icon": "🎮", "html": "<p><strong>娱乐领域</strong>：欣赏音乐、观看影片、玩三维游戏、制作MTV。</p><p><strong>教育与培训领域</strong>：多媒体计算机辅助教学、多媒体远程教学、虚拟教室。</p><p><strong>办公系统</strong>：多媒体办公室系统、视频会议、资源共享。</p><p><strong>其他应用</strong>：</p><ul><li><strong>CSCW</strong>（计算机支持的协同工作系统）：远程教育系统、远程协同设计制造、军事协同指挥。</li><li><strong>VOD</strong>（视频点播系统）：根据观众要求播放节目。</li></ul>", "tags": ["CSCW", "VOD", "应用领域"]}, {"id": "c21", "title": "多媒体系统与作品开发", "icon": "🖥️", "html": "<p><strong>多媒体系统</strong>包括硬件平台（多媒体计算机主机MPC、大容量存储、视频卡、扫描仪、数码相机等）和软件平台（多媒体操作系统、数据库管理系统、压缩与解压缩软件、通信软件）。</p><p><strong>多媒体作品开发的一般过程</strong>：</p><p><span class='highlight'>需求分析 → 规划设计 → 素材的采集加工与集成 → 测试作品 → 发布、评价作品</span></p><p><strong>作品评价标准</strong>：思想性、创造性、艺术性、技术性、科学性、整体效果。</p>", "tags": ["开发过程", "评价六标准"]}], "chapter": "第二章 多媒体技术"}, {"id": "s5", "title": "第二节 图形图像基础", "cards": [{"id": "c22", "title": "位图与矢量图", "icon": "🖼️", "html": "<p>数字图形图像分为<span class='highlight'>位图</span>和<span class='highlight'>矢量图</span>两种。</p><table class='knowledge-table'><tr><th>比较项</th><th>位图</th><th>矢量图</th></tr><tr><td><strong>构成</strong></td><td>像素（点阵）</td><td>数学指令（直线、曲线）</td></tr><tr><td><strong>特点</strong></td><td>色彩丰富细腻，适合照片</td><td>可无限缩放不失真</td></tr><tr><td><strong>放大效果</strong></td><td>易失真、产生锯齿</td><td>不失真，与分辨率无关</td></tr><tr><td><strong>文件大小</strong></td><td>较大</td><td>较小</td></tr><tr><td><strong>常用格式</strong></td><td>BMP、PSD、TIFF、GIF、JPEG</td><td>EPS、DXF、AI</td></tr><tr><td><strong>编辑软件</strong></td><td>Windows画图、Photoshop</td><td>CorelDraw、Illustrator、Flash</td></tr></table><p>图形主要指用计算机绘制的由直线、圆、矩形等组成的画面；图像主要指用扫描仪、数码相机等设备捕捉实际场景获得的画面。</p>", "tags": ["位图-像素", "矢量图-不失真", "高频考点"]}, {"id": "c23", "title": "图像的基本属性", "icon": "📐", "html": "<p><strong>分辨率</strong>：单位长度内所含像素数。分辨率越高，像素越多，图像越清晰。</p><ul><li><strong>PPI</strong>：每英寸像素数，仅存在于计算机显示领域</li><li><strong>DPI</strong>：每英寸像点数，出现于打印或印刷领域</li></ul><p><strong>颜色深度</strong>（位深度）：每个像素颜色信息所占的二进制位数，单位“位”（bit）。常用1、8、16、24、32位，分别表现2¹、2⁸、2¹⁶、2²⁴、2³²种颜色。24位称为<span class='highlight'>真彩色</span>（1677万色）。</p><p><strong>文件大小计算</strong>：</p><p class='highlight'>图像文件大小 = 像素总量 × 颜色深度 / 8（字节）</p><p>像素总量 = 水平方向像素量 × 垂直方向像素量</p>", "tags": ["PPI/DPI", "颜色深度", "容量计算"]}, {"id": "c24", "title": "颜色参数与色彩模式", "icon": "🎨", "html": "<p><strong>颜色三参数</strong>：</p><ul><li><strong>色相</strong>：色彩的相貌和特征（红橙黄绿青蓝紫）</li><li><strong>明度</strong>：色彩的亮度或明度</li><li><strong>纯度</strong>（饱和度）：色彩的鲜艳程度，颜色混合的越多纯度越低</li></ul><p><strong>色彩模式</strong>：</p><table class='knowledge-table'><tr><th>模式</th><th>说明</th></tr><tr><td><strong>RGB</strong></td><td>红绿蓝三原色，<span class='highlight'>加色法</span>，取值0-255，用于显示器、投影仪、数码相机，是Photoshop默认模式</td></tr><tr><td><strong>CMYK</strong></td><td>青、洋红、黄、黑，<span class='highlight'>减色法</span>，用于印刷行业</td></tr><tr><td><strong>灰度模式</strong></td><td>用单一色调表现，256种明度的灰色调，如同黑白照片</td></tr></table>", "tags": ["RGB-加色", "CMYK-减色", "色相/明度/纯度"]}, {"id": "c25", "title": "图像的压缩", "icon": "🗜️", "html": "<p><strong>压缩原理</strong>：一是图像数据中有许多重复数据，用数学方法表示可减少数据量；二是人眼对图像细节和颜色的辨认有极限，去掉超过极限的部分。</p><p>压缩就是去除信息中的冗余，保留不确定的信息。</p><table class='knowledge-table'><tr><th>类型</th><th>说明</th><th>举例</th></tr><tr><td><strong>有损压缩</strong></td><td>利用人眼视觉特性简化不重要数据，损失不影响观看</td><td>JPEG、MP3、GIF、WMA、WMV</td></tr><tr><td><strong>无损压缩</strong></td><td>把相同或相似的数据归类，用较少数据描述</td><td>TIFF、PNG、APE、FLAC、ZIP、RAR、WAV</td></tr></table><p><strong>压缩软件</strong>：WinRAR、7Z、好压、快压、360压缩。</p><p><strong>衡量压缩性能指标</strong>：压缩比、算法复杂度、恢复效果。</p>", "tags": ["有损vs无损", "压缩软件"]}, {"id": "c26", "title": "图像的数字化", "icon": "🔄", "html": "<p><strong>数字图像</strong>：把图像分解成像素的若干小离散点，并将各个像素的颜色值用量化的离散值来表示的图像。</p><p>数字图像的数字化过程：</p><p><span class='highlight'>采样 → 量化 → 编码</span></p><ol><li><strong>采样</strong>：按某种时间或空间间隔，采集模拟图像信号瞬时值，即<strong>空间离散化</strong></li><li><strong>量化</strong>：将采集到的模拟信号划归到有限个信号等级上，即<strong>信号等级有限化</strong></li><li><strong>编码</strong>：将量化的离散信号转换成用二进制数码0/1表示的形式</li></ol>", "tags": ["采样-量化-编码", "数字化"]}, {"id": "c27", "title": "图形图像文件格式", "icon": "📁", "html": "<table class='knowledge-table'><tr><th>格式</th><th>说明</th></tr><tr><td><strong>BMP</strong></td><td>Windows标准文件格式，几乎不压缩，占用空间大</td></tr><tr><td><strong>JPEG</strong></td><td>有损压缩，压缩比高，文件存储量小，用于网页和光盘读物</td></tr><tr><td><strong>TIFF</strong></td><td>跨平台存储扫描图像，支持压缩和非压缩</td></tr><tr><td><strong>PSD</strong></td><td>Photoshop自建标准格式，含图层、通道、蒙版</td></tr><tr><td><strong>PNG</strong></td><td>无损压缩网络图像格式，支持透明图片</td></tr><tr><td><strong>WMF</strong></td><td>矢量文件格式，文件短小，用于Windows剪贴画</td></tr><tr><td><strong>SVG</strong></td><td>可缩放的矢量图形，开放标准，可直接嵌入HTML</td></tr><tr><td><strong>DXF</strong></td><td>AutoCAD矢量文件格式，以ASCII码方式存储</td></tr></table>", "tags": ["BMP不压缩", "JPEG有损", "PNG透明"]}, {"id": "c28", "title": "图形图像处理软件", "icon": "🛠️", "html": "<table class='knowledge-table'><tr><th>软件</th><th>用途</th></tr><tr><td>Photoshop</td><td>位图图像处理软件（强大）</td></tr><tr><td>AutoCAD</td><td>专业机械制图软件</td></tr><tr><td>Ulead GIF Animator</td><td>GIF动画文件制作软件</td></tr><tr><td>Adobe Illustrator</td><td>工业标准的矢量插画软件</td></tr><tr><td>CorelDRAW</td><td>专业的矢量图形绘图与排版软件</td></tr><tr><td>Windows画图</td><td>系统自带简单位图工具</td></tr></table>", "tags": ["Photoshop位图", "CorelDraw矢量"]}], "chapter": "第二章 多媒体技术"}, {"id": "s6", "title": "第三节 音频、视频和动画基础", "cards": [{"id": "c29", "title": "声音三要素", "icon": "🔊", "html": "<p><strong>声波参数</strong>：</p><ul><li><strong>振幅</strong>：声音波形振动的幅度，表示声音的强弱</li><li><strong>频率</strong>：一秒内完成全振动的次数，表示声音的音调</li><li><strong>频带</strong>：音频信号的频率范围</li><li><strong>周期</strong>：完成一次振动所经历的时间</li></ul><p><strong>声音的三要素</strong>：</p><table class='knowledge-table'><tr><th>要素</th><th>决定因素</th><th>说明</th></tr><tr><td><strong>音量</strong>（响度/音强）</td><td>振幅</td><td>与振幅成正比，单位是分贝</td></tr><tr><td><strong>音调</strong></td><td>频率</td><td>频率越高音调越高；人耳可听范围20Hz~20000Hz，高于20000Hz叫超声波，低于20Hz叫次声波</td></tr><tr><td><strong>音色</strong></td><td>振动波形/频谱结构</td><td>与发声体的材料、结构有关</td></tr></table>", "tags": ["音量-振幅", "音调-频率", "超声波>20kHz"]}, {"id": "c30", "title": "音频的数字化与技术指标", "icon": "🎚️", "html": "<p>模拟音频信号数字化需要三个步骤：<span class='highlight'>采样 → 量化 → 编码</span></p><p><strong>技术指标</strong>：</p><table class='knowledge-table'><tr><th>指标</th><th>说明</th></tr><tr><td>采样频率</td><td>1秒内采样的次数。根据奈奎斯特采样理论：采样频率不应低于模拟音频信号最高频率的<strong>两倍</strong></td></tr><tr><td>量化位数</td><td>一般为8位和16位，量化位数越高信号越接近原始信号，存储空间越大</td></tr><tr><td>声道数</td><td>单声道和双声道（立体声），立体声占空间是单声道的两倍</td></tr></table><p><strong>文件大小计算</strong>：</p><p class='highlight'>音频文件大小 =（采样频率 × 采样精度 × 声道数）× 时间 / 8（字节）</p>", "tags": ["采样频率", "量化位数", "容量计算"]}, {"id": "c31", "title": "音频文件格式与处理软件", "icon": "🎵", "html": "<table class='knowledge-table'><tr><th>格式</th><th>说明</th></tr><tr><td><strong>WAV</strong></td><td>Windows声音格式，文件较大，多用于存储简短声音片段</td></tr><tr><td><strong>MIDI</strong></td><td>乐器数字接口，存储的是指令而非声音，<span class='highlight'>只能记录乐器的声音，不能记录人的声音</span></td></tr><tr><td><strong>MP3</strong></td><td>MPEG音频有损压缩，根据编码复杂程度分MP1、MP2、MP3三层</td></tr><tr><td><strong>AIFF</strong></td><td>Apple公司开发的音频交换文件格式</td></tr></table><p><strong>音频处理软件</strong>：Windows Media Player（系统自带）、Sound Forge（专业录音）、Audition（原Cool Edit Pro）、GoldWave（数码录音编辑，体积小，一般用户首选）。</p>", "tags": ["MIDI存指令", "WAV-大", "MP3有损"]}, {"id": "c32", "title": "视频基础知识与文件格式", "icon": "🎬", "html": "<p><strong>视频</strong>是活动的图像。图像是视频的最小和最基本的单元，视频由一系列图像组成。<span class='highlight'>在电视中每幅图像称为一帧，在电影中每幅图像称为一格</span>。</p><p>视频数字化过程：采样 → 量化 → 编码。</p><p><strong>文件大小计算</strong>：文件总字节 =（画面尺寸 × 彩色位数 × 帧数）× 时间 / 8（字节）</p><p><strong>常见视频格式</strong>：</p><table class='knowledge-table'><tr><th>格式</th><th>说明</th></tr><tr><td>AVI</td><td>Microsoft开发的音视频交错格式，图像质量好但文件大</td></tr><tr><td>3GP</td><td>3G流媒体视频编码格式，手机常见</td></tr><tr><td>FLV</td><td>流媒体视频格式，文件极小，视频网站使用</td></tr><tr><td>WMV</td><td>微软产品，可直接在网上观看</td></tr><tr><td>MOV</td><td>Apple公司的音频视频文件格式</td></tr><tr><td>MPEG</td><td>有损压缩，VCD用MPEG-1，DVD用MPEG-2</td></tr><tr><td>DIVX</td><td>支持MPEG-4、H.264和H.265，分辨率可达4K</td></tr></table><p><strong>视频处理软件</strong>：Adobe Premiere（剪辑合成）、会声会影（Ulead Video Studio）、Windows Movie Maker、Adobe After Effects（AE）。</p>", "tags": ["帧vs格", "视频格式", "Premiere"]}, {"id": "c33", "title": "动画原理与帧", "icon": "🎞️", "html": "<p><strong>动画原理</strong>：利用人的“<span class='highlight'>视觉暂留</span>”，连续播放静止图像产生景物运动的效果。</p><p>动画分类：手工传统动画 / 计算机动画；平面动画 / 三维动画；顺序动画 / 交互式动画。</p><p><strong>帧</strong>是动画的最小单位，是Flash动画制作的基本单位。Flash默认每秒播放12帧（帧频12帧/秒）。</p><table class='knowledge-table'><tr><th>帧类型</th><th>说明</th><th>时间轴表现</th><th>快捷键</th></tr><tr><td><strong>关键帧</strong></td><td>定义动画变化、状态更改的帧</td><td>实心圆点</td><td>F6</td></tr><tr><td><strong>普通帧</strong></td><td>关键帧内容的延续，不能修改</td><td>灰色</td><td>F5</td></tr><tr><td><strong>空白关键帧</strong></td><td>没有内容的特殊关键帧</td><td>空心圆点</td><td>F7</td></tr></table>", "tags": ["视觉暂留", "F5/F6/F7", "帧频12"]}, {"id": "c34", "title": "动画元件、软件与格式", "icon": "🧩", "html": "<p><strong>元件</strong>是构成Flash动画最基本的元素，特点：可重复使用、操作简单易于修改、可以减小文件存储容量。</p><p><strong>元件的类型</strong>：</p><ul><li><strong>图形元件</strong>：可重复使用的静态矢量图形（GIF动画）</li><li><strong>影片剪辑元件</strong>：可独立于主时间轴播放并可重复使用的动画片段</li><li><strong>按钮元件</strong>：创建鼠标事件（单击、指向等）的交互按钮，包括弹起、指针经过、按下、点击四帧</li></ul><p><strong>元件与实例</strong>：元件在舞台中的实际应用称为实例。一个元件可以创建多个实例；更改实例不影响元件，更改元件实例随之改变。</p><p><strong>常见动画软件</strong>：Flash（二维）、Ulead GIF Animator、Cool 3D、3D MAX（三维）。</p><p><strong>常见动画格式</strong>：GIF（网页动画）、SWF（Flash矢量动画）、FLA（Flash源文件）、DIR（Director交互式动画）。</p>", "tags": ["元件三类", "实例", "3DMAX三维"]}], "chapter": "第二章 多媒体技术"}, {"id": "s7", "title": "第一节 因特网信息的获取", "cards": [{"id": "c35", "title": "因特网与网页保存", "icon": "🌐", "html": "<p><strong>因特网（Internet）</strong>：一组全球信息资源的总汇，是世界上规模最大的计算机网络，由许多子网互联而成的逻辑网。</p><p><strong>网页保存的4种类型</strong>：</p><table class='knowledge-table'><tr><th>类型</th><th>扩展名</th><th>说明</th></tr><tr><td>网页，全部</td><td>.htm/.html</td><td>保存网页及网页元素，自动生成页面文件和文件夹</td></tr><tr><td>WEB档案，单个文件</td><td>.mht</td><td>将网页元素生成一个文件保存</td></tr><tr><td>网页，仅HTML</td><td>.htm/.html</td><td>只能保存当前页面，图片等无法保存</td></tr><tr><td>文本文件</td><td>.txt</td><td>只能保存文本，无法解析的代码出现乱码</td></tr></table>", "tags": ["4种保存类型", "mht单文件"]}, {"id": "c36", "title": "收藏夹、历史记录与主页", "icon": "🔖", "html": "<p><strong>收藏夹</strong>：把喜欢的网址添加到收藏夹中，以后可以快速打开这些网站，并可对收藏夹中的网址进行分类管理（新建文件夹、重命名）。</p><p><strong>历史记录</strong>：按 Ctrl+H 组合键打开，显示浏览过的网页记录。</p><p><strong>主页</strong>：用户打开浏览器时默认打开的网页，可通过“工具 → Internet选项 → 常规 → 主页”设定，<span class='highlight'>设置主页后可以更改</span>。</p>", "tags": ["收藏夹", "Ctrl+H", "主页"]}, {"id": "c37", "title": "常见的网络浏览器", "icon": "🧭", "html": "<table class='knowledge-table'><tr><th>浏览器</th><th>说明</th></tr><tr><td><strong>IE</strong></td><td>微软推出，Windows系统自带，只支持Windows平台，国内许多浏览器基于IE内核</td></tr><tr><td><strong>Chrome</strong></td><td>Google开发，市场占有率第一，支持Windows、Linux、Mac及移动端</td></tr><tr><td><strong>Firefox</strong></td><td>火狐，自由开放源代码，使用Gecko排版引擎</td></tr><tr><td><strong>Safari</strong></td><td>Apple公司为Mac系统打造，主要用于Mac和iOS</td></tr><tr><td><strong>360安全浏览器</strong></td><td>基于IE和Chrome双内核，拥有全国最大的恶意网址库</td></tr></table><p><strong>浏览器</strong>是用来检索、展示以及传递Web信息资源的应用程序。Web信息资源由统一资源标识符（URL）所标记。</p>", "tags": ["IE", "Chrome", "360双内核"]}], "chapter": "第三章 信息技术与社会"}, {"id": "s8", "title": "第二节 因特网信息资源检索与评价", "cards": [{"id": "c38", "title": "信息检索的含义与分类", "icon": "🔎", "html": "<p><strong>广义信息检索</strong>：将信息按一定的方式组织和存储起来，并根据信息用户的需要找出有关信息的过程。</p><p><strong>狭义信息检索</strong>：仅指从信息集合中找出所需要的信息的过程，相当于信息查询。</p><p><strong>分类</strong>：</p><table class='knowledge-table'><tr><th>类型</th><th>说明</th></tr><tr><td><strong>数据检索</strong></td><td>从数据集合中检索出能回答问题的准确数据</td></tr><tr><td><strong>事实检索</strong></td><td>包括数值数据检索、运算比较，也包括非数值数据的检索、演绎和逻辑推理</td></tr><tr><td><strong>文献检索</strong></td><td>以文献为对象，查找某个课题的有关文献</td></tr></table>", "tags": ["数据/事实/文献检索"]}, {"id": "c39", "title": "搜索引擎的分类", "icon": "🔍", "html": "<table class='knowledge-table'><tr><th>类型</th><th>原理</th><th>特点</th><th>代表</th></tr><tr><td><strong>全文搜索引擎</strong></td><td>根据用户输入的关键词在数据库中检出匹配记录，按相关程度排序</td><td>资源范围广、速度快、更新及时；缺乏人工干预，准确性差</td><td>Google、百度</td></tr><tr><td><strong>目录搜索引擎</strong></td><td>人工采集存储网络信息，建立关键字索引，放入相应类目</td><td>内容丰富、学术性强；收录范围不够全面、更新周期较长</td><td>雅虎、搜狐、新浪、网易</td></tr><tr><td><strong>元搜索引擎</strong></td><td>通过统一界面帮助用户在多个搜索引擎中选择和利用</td><td>没有独立网页数据库；可同时检索多个数据库</td><td>InfoSpace、Dogpile、搜星</td></tr></table><p><strong>新兴搜索引擎</strong>：热点搜索、知识搜索（中国知网是最大的知识搜索引擎）、语义搜索（捕捉用户真正意图）。</p>", "tags": ["全文-百度", "目录-雅虎", "元搜索"]}, {"id": "c40", "title": "信息检索的检索技巧", "icon": "🧮", "html": "<table class='knowledge-table'><tr><th>逻辑符</th><th>含义</th><th>示例</th></tr><tr><td><strong>AND（空格、&、+）</strong></td><td>逻辑“与”，表示同时包含两个词</td><td>中国 AND 经济危机</td></tr><tr><td><strong>OR（|）</strong></td><td>逻辑“或”，表示任意一个词出现在查询结果中</td><td>经济危机 OR 金融危机</td></tr><tr><td><strong>NOT（-）</strong></td><td>逻辑“非”，表示查询结果不包含指定词</td><td>经济危机 - 欧洲</td></tr><tr><td><strong>引号“”</strong></td><td>词组检索，只检索包含该完整词组的文档</td><td>“高中信息科技练习”</td></tr></table><p><strong>全文检索工作流程</strong>：网上抓取网页 → 对网页进行解析 → 建立索引数据库 → 在索引数据库中搜索 → 对搜索结果处理和排序返回给用户。</p><p><strong>检索策略</strong>：遵循快、准、全及低成本原则；提高效率方法：关键词提炼、细化搜索条件、用好逻辑命令。</p>", "tags": ["AND/OR/NOT", "词组检索", "高频考点"]}, {"id": "c41", "title": "信息资源评价与CARS指标", "icon": "🏅", "html": "<p><strong>评价方式</strong>：统计评价（点击率排行）、专家或核心刊物评价、个人评价。</p><p><strong>评价标准</strong>：信息质量（最重要最基本）、范围、易用性、稳定性和连续性。</p><p><strong>CARS评价指标</strong>：</p><table class='knowledge-table'><tr><th>指标</th><th>考察内容</th></tr><tr><td><strong>C</strong> 可信度（credibility）</td><td>信息的真实性、可靠性</td></tr><tr><td><strong>A</strong> 准确度（accuracy）</td><td>更新时间是否及时、信息是否全面，要素有时效性、全面性、针对性</td></tr><tr><td><strong>R</strong> 合理性（reasonable）</td><td>信息的公正性、客观性、适度性、一致性</td></tr><tr><td><strong>S</strong> 相关支持（support）</td><td>信息来源和渠道、其他网站的支持</td></tr></table>", "tags": ["CARS指标", "信息质量最重要"]}], "chapter": "第三章 信息技术与社会"}, {"id": "s9", "title": "第三节 新兴技术", "cards": [{"id": "c42", "title": "人工智能概述", "icon": "🤖", "html": "<p><strong>图灵测试</strong>：由英国数学家图灵提出，如果超过<strong>30%</strong>的测试者不能确定被测试者是人还是机器，则机器通过测试，被认为具有人类智能。</p><p><strong>图灵奖</strong>：由美国计算机协会1966年设立，有“计算机界的诺贝尔奖”之称。中国唯一的图灵奖获得者：<span class='highlight'>姚期智</span>。</p><p><strong>人工智能（AI）</strong>：研究、开发用于模拟、延伸和扩展人的智能的理论、方法、技术及应用系统的技术科学。<span class='highlight'>机器学习是人工智能技术的核心</span>，是使计算机具有智能的根本途径。</p>", "tags": ["图灵测试30%", "图灵奖", "姚期智"]}, {"id": "c43", "title": "人工智能主要技术", "icon": "🧠", "html": "<p><strong>机器学习</strong>：AI技术核心。常见算法：强化学习（与环境交互接收奖惩）、深度学习（模拟人脑神经网络）、“深度”指中间神经元网络层次多）、迁移学习（适用于小数据量场景）。</p><p><strong>模式识别</strong>：以图像处理与计算机视觉、语音语言信息处理为主要研究方向。</p><ul><li><strong>语音识别（ASR）</strong>：将人类语音中的词汇内容转换为计算机可读的输入</li><li><strong>生物认证技术</strong>：利用人体生理特性（指纹、脸象、虹膜）和行为特征（笔迹、声音、步态）进行身份鉴定</li><li><strong>虹膜识别</strong>：当前应用最为方便和精准的生物识别技术</li></ul><p><strong>数字水印</strong>：应用计算机算法嵌入载体文件的保护信息，是信息隐藏技术，可防伪溯源、版权保护。</p><p><strong>自然语言理解</strong>：俗称人机对话，使计算机理解并运用自然语言。</p><p><strong>光学字符识别（OCR）</strong>：将纸质文档中的文字转换成文本格式。</p>", "tags": ["机器学习-核心", "模式识别", "数字水印"]}, {"id": "c44", "title": "人工智能应用案例", "icon": "🚀", "html": "<ul><li><strong>人机对弈</strong>：AlphaGo（阿尔法围棋）是第一个击败人类职业围棋选手的AI机器人，由Google旗下DeepMind开发，主要工作原理是深度学习；AlphaGo Zero从零开始自学，以100:0击败前辈。</li><li><strong>AI合成主播</strong>：通过人脸关键点检测、唇语识别、情感迁移等技术生成的AI分身模型。</li><li><strong>自动驾驶</strong>：依靠人工智能、视觉计算、雷达、监控装置和全球定位系统协同合作。</li><li><strong>智能系统</strong>：能产生人类智能行为的计算机系统，问题求解方法分搜索、推理、规划三类。</li><li><strong>知识工程</strong>：以知识本身为处理对象，如专家系统（模拟人类专家解决领域问题的计算机程序系统）。</li><li><strong>智能穿戴设备</strong>：手表、手环、眼镜、服饰等。</li></ul>", "tags": ["AlphaGo-深度学习", "专家系统", "自动驾驶"]}, {"id": "c45", "title": "5G与云计算", "icon": "☁️", "html": "<p><strong>5G</strong>（第五代移动通信网络）：在4G基础上发展而来，速度可达10Gbps，比4G快数百倍。特点：<span class='highlight'>高速率、大带宽、低时延、高可靠、广覆盖、大连接</span>。</p><p><strong>云计算</strong>：分布式计算的一种，通过网络“云”将巨大数据计算处理程序分解成无数小程序，通过多部服务器组成的系统处理分析并返回结果。</p><p><strong>云计算特点</strong>：超大规模、虚拟化、高可靠性、通用性、高可扩展性、按需服务、极其廉价、潜在危险性。</p><p><strong>四种服务模式</strong>：</p><table class='knowledge-table'><tr><th>模式</th><th>名称</th><th>提供</th></tr><tr><td>IaaS</td><td>基础设施即服务</td><td>各种硬件服务</td></tr><tr><td>PaaS</td><td>平台即服务</td><td>硬件和软件服务</td></tr><tr><td>SaaS</td><td>应用即服务</td><td>软件服务</td></tr><tr><td>DaaS</td><td>数据即服务</td><td>数据服务</td></tr></table><p><strong>应用</strong>：云安全、云存储、云交通、云管理、云游戏、云物联。</p>", "tags": ["5G六特点", "IaaS/PaaS/SaaS/DaaS"]}, {"id": "c46", "title": "物联网", "icon": "📡", "html": "<p><strong>物联网</strong>：物物相连的互联网。核心和基础仍然是互联网，用户端延伸到任何物品与物品之间进行信息交换和通信。</p><p><strong>四层架构</strong>：</p><table class='knowledge-table'><tr><th>层次</th><th>功能</th></tr><tr><td><strong>感知层</strong></td><td>传感器、RFID标签、摄像头等，识别物体、采集信息</td></tr><tr><td><strong>网络层</strong></td><td>整个物联网的中枢，负责传递和处理信息</td></tr><tr><td><strong>平台层</strong></td><td>整体架构的核心，解决数据如何存储、检索、使用及安全隐私</td></tr><tr><td><strong>应用层</strong></td><td>物联网和用户的接口，实现智能应用</td></tr></table><p><strong>特征</strong>：全面感知、可靠传送、智能处理、自由互动。</p><p><strong>主要技术</strong>：RFID射频识别（让物品“开口说话”，赋予可跟踪性）、传感器技术、M2M网络通信技术、云计算。</p><p><strong>传感器类型</strong>：电阻式、霍尔（根据霍尔效应）、无线温度、生物、视觉、超声波（频率高于20kHz）、声、红外线、光、火焰、烟雾。</p>", "tags": ["四层架构", "感知层", "RFID"]}, {"id": "c47", "title": "大数据与区块链", "icon": "⛓️", "html": "<p><strong>大数据</strong>：无法在一定时间范围内用常规软件工具进行捕获、管理和处理的数据集合。核心：<span class='highlight'>预测事情发生的可能性</span>。</p><p><strong>大数据5V特点</strong>（IBM提出）：Volume（大量）、Velocity（高速）、Variety（多样）、Value（低价值密度）、Veracity（真实性）。</p><p><strong>类型</strong>：海量交易数据、海量交互数据、海量处理数据。</p><p><strong>区块链</strong>：一个去中心化的分布式账本数据库，存储的数据具有“不可伪造”“全程留痕”“可以追溯”“公开透明”“集体维护”等特征。</p><p><strong>区块链五大特征</strong>：去中心化、开放性、自治性、信息不可篡改、匿名性。<span class='highlight'>最主要的两个特征：去中心化和信息不可篡改</span>。</p><p><strong>类型</strong>：公有区块链、行业区块链、私有区块链。</p><p><strong>核心技术</strong>：分布式账本、对称加密和授权技术、共识机制、智能合约。</p>", "tags": ["5V特点", "区块链两特征"]}, {"id": "c48", "title": "网络热点技术", "icon": "⚡", "html": "<p><strong>VR/AR/MR</strong>：</p><ul><li><strong>VR虚拟现实</strong>：所看到的场景和人物全是假的，将人的意识带入虚拟世界</li><li><strong>AR增强现实</strong>：所看场景一部分真一部分假，把虚拟信息带入现实世界</li><li><strong>MR混合现实</strong>：合并现实和虚拟世界产生的新可视化环境</li></ul><p><strong>电子商务</strong>：B2B（企业对企业，如阿里巴巴）、B2C（企业对个人，如京东、当当）、C2C（个人对个人，如淘宝）、B2G（企业对政府，如电子报税）、O2O（线上线下结合，如美团）。</p><p><strong>NFC</strong>：近距离无线通讯技术，飞利浦发起，诺基亚、索尼联合主推；传输范围比RFID小，带宽高、能耗低。</p><p><strong>二维码</strong>：按一定规律在平面上分布的黑白相间图形记录数据，水平垂直方向都可存储信息，能存字母、数字、汉字和图片信息。按原理分行排式、矩阵式。</p><p><strong>3D打印</strong>：快速成型技术，以数字模型文件为基础，逐层打印构造物体。</p><p><strong>机器人</strong>：由传动装置、电路驱动、计算机、传感系统组成。</p>", "tags": ["VR/AR/MR", "电商模式", "NFC", "二维码"]}], "chapter": "第三章 信息技术与社会"}, {"id": "s10", "title": "第一节 信息安全", "cards": [{"id": "c49", "title": "信息安全的目标", "icon": "🛡️", "html": "<p>信息安全的任务是保证信息功能的实现。保护信息安全的主要目标是<strong>机密性、完整性、可用性、可控性及可审查性</strong>，这五大目标也是信息安全的五大特征。</p><table class='knowledge-table'><tr><th>目标</th><th>含义</th></tr><tr><td><strong>机密性</strong>（保密性）</td><td>信息没有通过任何途径泄露给非授权用户</td></tr><tr><td><strong>完整性</strong></td><td>信息在传输、交换、存储和处理过程中保持非修改、非破坏、非丢失，<span class='highlight'>是最基本的安全特征</span></td></tr><tr><td><strong>可用性</strong></td><td>信息能够被授权用户正确访问</td></tr><tr><td><strong>可控性</strong></td><td>信息在网络系统中传播时能够实现有效的控制</td></tr><tr><td><strong>可审查性</strong>（不可否认性）</td><td>参与信息通信的双方都不可能否认或抵赖本人的真实身份</td></tr></table><p>消息层次：完整性、机密性、可审查性；网络层次：可用性、可控性。另外还包括真实性、不可抵赖性。</p>", "tags": ["五大目标", "完整性-基本"]}, {"id": "c50", "title": "信息安全防范的基本方法", "icon": "🔒", "html": "<p>信息安全防范的基本方法包含<strong>物理防范</strong>和<strong>逻辑防范</strong>。</p><p><strong>物理防范</strong>：环境维护、防盗、防火、防静电、防雷击、防电磁泄漏。基于物理环境的容灾技术和物理隔离技术也属物理安全范畴。</p><p><strong>逻辑防范</strong>：</p><ul><li><strong>访问控制</strong>：通过用户身份的识别和认证，鉴别合法用户和非法用户；通过访问权限控制资源使用权限</li><li><strong>信息加密</strong>：常用方法有数据加密和数字签名</li></ul>", "tags": ["物理防范", "逻辑防范", "访问控制"]}, {"id": "c51", "title": "网络安全技术", "icon": "🛰️", "html": "<p>网络信息安全保护技术主要有两种：<strong>主动防御技术</strong>和<strong>被动防御技术</strong>。</p><p><strong>主动防御技术</strong>：数据加密（公认的保护网络安全最实用方法）、身份鉴别（如刷脸、密码验证）、存取控制、权限设置、虚拟专用网。</p><p><strong>被动防御技术</strong>：</p><table class='knowledge-table'><tr><th>技术</th><th>说明</th></tr><tr><td>防火墙技术</td><td>内部网与Internet间实现安全策略的访问控制保护，核心思想是<strong>包过滤技术</strong></td></tr><tr><td>传统入侵检测技术</td><td>主动发现入侵行为和入侵企图，是防火墙的重要补充</td></tr><tr><td>安全扫描器</td><td>自动检测远程或本地主机及网络系统的安全性漏洞点</td></tr><tr><td>口令验证</td><td>利用密码检查器中的口令进行验证</td></tr><tr><td>审计跟踪</td><td>详尽审计系统运行状态，保持审计记录和日志</td></tr><tr><td>物理保护与安全管理</td><td>通过制定标准、管理办法和条例规范管理</td></tr></table>", "tags": ["主动防御", "被动防御", "防火墙-包过滤"]}], "chapter": "第四章 信息安全"}, {"id": "s11", "title": "第二节 计算机病毒及防范", "cards": [{"id": "c52", "title": "计算机病毒的定义与特点", "icon": "🦠", "html": "<p><strong>定义</strong>：人为故意在计算机程序中插入的破坏计算机功能或者毁坏数据、影响计算机使用、并能自我复制的一组计算机指令或程序代码。<span class='highlight'>计算机病毒主要破坏数据的完整性</span>。</p><p><strong>特点</strong>：</p><table class='knowledge-table'><tr><th>特点</th><th>说明</th></tr><tr><td>传染性</td><td>随正常程序的执行而繁殖，随数据或程序代码传送而传播</td></tr><tr><td>寄生性</td><td>寄生在其他程序之中，执行该程序时病毒起破坏作用</td></tr><tr><td>潜伏性</td><td>进入系统后一般不会马上发作，可长时间隐藏</td></tr><tr><td>隐蔽性</td><td>程序短小，发作前很难发现</td></tr><tr><td>可触发性</td><td>具有预定的触发条件（时间、日期、文件类型等）</td></tr><tr><td>破坏性</td><td>轻者降低工作效率占用资源，重者破坏数据、删除文件、格式化磁盘</td></tr></table>", "tags": ["定义", "六大特点", "破坏完整性"]}, {"id": "c53", "title": "计算机病毒的分类", "icon": "🗂️", "html": "<table class='knowledge-table'><tr><th>分类方式</th><th>类别</th><th>说明</th></tr><tr><td rowspan='2'><strong>按传播媒介</strong></td><td>单机病毒</td><td>载体是磁盘，从U盘等移动设备传入硬盘</td></tr><tr><td>网络病毒</td><td>传播媒介是网络通道，传染能力更强、破坏力更大</td></tr><tr><td rowspan='4'><strong>按传染方式</strong></td><td>引导型病毒</td><td>感染磁盘的引导区，一般不对磁盘文件进行感染</td></tr><tr><td>文件型病毒</td><td>传染可执行文件（.com、.exe），附着于正常程序文件</td></tr><tr><td>混合型病毒</td><td>综合引导型和文件型病毒特性，既传染引导区又传染可执行文件</td></tr><tr><td>宏病毒</td><td>用BASIC语言编写，寄存在Office文档的宏代码，感染doc、xls等</td></tr><tr><td><strong>按破坏性</strong></td><td>良性/恶性病毒</td><td>良性降低效率占用资源（如比特币挖矿病毒）；恶性直接破坏</td></tr><tr><td><strong>按激活时间</strong></td><td>定时/随机病毒</td><td>定时病毒仅特定时间发作</td></tr></table>", "tags": ["引导型", "文件型", "宏病毒"]}, {"id": "c54", "title": "常见病毒与传播方式", "icon": "🕷️", "html": "<p><strong>宏病毒</strong>：寄存在文档或模板的宏中的病毒，会感染Office相关文件格式。特点：感染数据文件、打破单一平台传播局限、以源代码形式出现容易编写修改、容易传播隐蔽性强危害巨大。属于特殊的文件型病毒。</p><p><strong>蠕虫病毒</strong>：危害网络安全的恶性病毒，通过扫描网络中计算机漏洞并感染存在漏洞的计算机传播，可在一分钟内感染网络中所有存在漏洞的计算机。<span class='highlight'>蠕虫病毒是一套完整程序，不需要寄宿在其他文件中</span>。常见：熊猫烧香、求职信、震荔波、勒索病毒。</p><p><strong>传播方式</strong>：移动设备（U盘是病毒寄生的“温床”）、<span class='highlight'>网络（病毒传播的最佳途径和首选途径）</span>、系统漏洞和软件漏洞。</p>", "tags": ["宏病毒", "蠕虫不寄宿", "网络-首选"]}, {"id": "c55", "title": "计算机病毒的检测与预防", "icon": "🧪", "html": "<p><strong>感染病毒的症状</strong>：动作迟钝程序载入时间长、硬盘指示灯无故亮、系统存储容量大量减少、可用空间突然减少、可执行文件长度增加、坏磁道增加、经常蓝屏死机、文档奇怪消失或内容被更改。</p><p><strong>预防措施</strong>：</p><ol><li><strong>隔离来源</strong>：保护系统盘、尽量不使用移动设备、使用网络下载软件先确认是否带毒、不使来路不明的U盘、将U盘设置为只读属性等</li><li><strong>杀毒软件</strong>：扫描磁盘查杀病毒，大部分具有防火墙功能可实时监控；由于新病毒不断产生，<span class='highlight'>必须及时更新杀毒软件</span></li></ol><p><strong>常用杀毒软件</strong>：360杀毒、金山毒霸、百度杀毒、腾讯电脑管家、卡巴斯基、小红伞。</p>", "tags": ["隔离来源", "杀毒软件"]}], "chapter": "第四章 信息安全"}, {"id": "s12", "title": "第三节 计算机网络安全技术", "cards": [{"id": "c56", "title": "网络黑客及常见攻击形式", "icon": "🕵️", "html": "<p><strong>黑客（Hacker）</strong>：对计算机信息系统进行非授权访问的人员。</p><p><strong>常见攻击形式</strong>：</p><table class='knowledge-table'><tr><th>形式</th><th>说明</th></tr><tr><td>端口扫描</td><td>一个端口就是一个潜在入侵通道，扫描发现系统安全漏洞</td></tr><tr><td>口令破解</td><td>猜解简单口令、字典攻击、暴力破解（穷举法）</td></tr><tr><td>特洛伊木马</td><td>通过特定程序控制另一台计算机，<span class='highlight'>不会自我繁殖，不刻意感染其他文件</span>，通过伪装吸引用户下载执行</td></tr><tr><td>网络监听</td><td>在网上的任何位置实施，截获明文传输的信息</td></tr><tr><td>网络及系统漏洞</td><td>网络系统在需求、设计、实现、配置、运行过程中产生的缺陷</td></tr><tr><td>信息攻击</td><td>影响、阻断、摧毁和利用敌方信息及信息系统</td></tr><tr><td>网络钓鱼（Phishing）</td><td>发送声称来自银行等知名机构的欺骗性垃圾邮件，引诱给出敏感信息</td></tr><tr><td>旁路攻击（SCA）</td><td>利用密码算法硬件实现的运算中泄露的信息（执行时间、功耗、电磁辐射）破解密码</td></tr><tr><td>信息炸弹</td><td>短时间内向目标服务器发送大量超出系统负荷的信息，如邮件炸弹、逻辑炸弹</td></tr></table>", "tags": ["木马不自我繁殖", "网络钓鱼", "旁路攻击"]}, {"id": "c57", "title": "防火墙技术", "icon": "🧱", "html": "<p><strong>防火墙定义</strong>：在两个网络之间加强访问控制的一整套装置，构造在可信网络（内部网）和不可信网络（外部网）之间的保护装置。强制所有的访问和连接都必须经过这个保护层，只有合法的数据包才能通过。</p><p><strong>作用</strong>：</p><ol><li>有效地收集和记录互联网上的活动和网络误用情况</li><li>能有效隔离网络中的多个网段，防止问题传播</li><li>作为安全检查站，能有效地过滤、筛选和屏蔽有害的信息和服务</li><li>作为“警察”，能执行和强化网络的安全策略，有效防止黑客入侵</li></ol>", "tags": ["内部网vs外网", "包过滤"]}, {"id": "c58", "title": "数据加密与数字签名", "icon": "🔑", "html": "<p><strong>相关概念</strong>：密码算法（加密解密数学函数）、明文（未加密的消息）、密文（被加密的消息）、加密（伪装数据隐藏原貌）、密钥（参与加密解密的关键数据）。</p><table class='knowledge-table'><tr><th>类型</th><th>原理</th><th>特点</th><th>算法</th></tr><tr><td><strong>对称加密</strong></td><td>加密密钥与解密密钥相同，“一把钥匙开一把锁”</td><td>算法公开、计算量小、加密速度快效率高；缺点是双方使用相同密钥，安全性得不到保证</td><td>凯撒密码、DES</td></tr><tr><td><strong>非对称加密</strong></td><td>使用不同加密密钥和解密密钥，公钥公开、私钥保密</td><td>A用B的公钥加密，B用私钥解密</td><td>RSA</td></tr></table><p><strong>数字签名</strong>：只有信息发送者才能产生别人无法伪造的一段数字串，实现对信息发送者发送信息真实性的有效证明，用于验证发送方身份真实性。</p>", "tags": ["对称-DES", "非对称-RSA", "数字签名验身份"]}, {"id": "c59", "title": "数字认证与安全防范措施", "icon": "🛂", "html": "<p><strong>数字认证技术</strong>：以数字证书为核心的加密技术，对网上传输的信息进行加密解密、数字签名和签名验证，确保网上传递信息的安全性、完整性。数字证书在日常生活中：U盾、短信验证码。</p><p><strong>PKI</strong>：公钥基础设施，利用公钥加密技术为电子商务的开展提供一套安全基础平台的技术和规范。</p><p><strong>网络安全防范措施（要点）</strong>：</p><ul><li>安装杀毒软件并经常升级</li><li>选用合适的防火墙系统</li><li>设置电脑和网络口令（<span class='highlight'>不使用弱密码：生日、电话号码等；不在多个场合使用同一密码；定期修改密码；密码同时包含大小写字母、数字和特殊字符</span>）</li><li>用安全软件打补丁、更新漏洞</li><li>移动设备使用前先杀毒</li><li>不打开来历不明的邮件、文件、链接和弹窗</li><li>备份文件</li><li>关闭无用的端口（如23号端口Telnet服务）</li></ul>", "tags": ["数字证书", "PKI", "强密码"]}], "chapter": "第四章 信息安全"}, {"id": "s13", "title": "第四节 计算机的法律法规及道德规范", "cards": [{"id": "c60", "title": "法律法规", "icon": "📜", "html": "<p><strong>网络诽谤认定</strong>：利用信息网络诽谤他人，同一诽谤信息实际被点击、浏览次数达到<strong>5000次以上</strong>，或被转发次数达到<strong>500次以上</strong>，应认定为“情节严重”，可构成诽谤罪。不知情转发不构成诽谤罪。</p><p><strong>计算机软件保护条例</strong>：2013年修订施行，计算机软件受法律保护，不可随意复制、盗版。</p><p><strong>我国与网络安全相关的法律</strong>：《宪法》《刑法》《刑事诉讼法》《保守国家秘密法》《国家安全法》《电子签名法》《全国人大常委会关于维护互联网安全的决定》《中华人民共和国网络安全法》。</p><p><span class='highlight'>《中华人民共和国网络安全法》</span>由全国人大常委会2016年11月7日发布，<span class='highlight'>自2017年6月1日起施行</span>。</p>", "tags": ["诽谤罪5000/500", "网络安全法2017"]}, {"id": "c61", "title": "知识产权", "icon": "©️", "html": "<p><strong>知识产权</strong>（知识财产权）：权利人对其所创作的智力劳动成果所享有的财产权利，一般只在有限时间内有效。</p><p><strong>分类</strong>：工业产权和著作权两部分。</p><p><strong>最主要的特点</strong>：<span class='highlight'>专有性</span>。除非权利人同意或法律规定，权利人以外的任何人不得享有或使用该权利。</p><p>我国于1991年6月颁布《计算机软件保护条例》，未经他人（著作人）同意随意复制其软件的行为是违法行为；2001年颁布新的《计算机软件保护条例》。</p>", "tags": ["专有性", "软件保护条例"]}, {"id": "c62", "title": "计算机犯罪与网络道德", "icon": "🚨", "html": "<p><strong>计算机犯罪</strong>：在信息活动领域中，利用计算机信息系统或计算机信息知识作为手段，或者针对计算机信息系统，对国家、团体或个人造成危害，依法应当予以刑罚处罚的行为。如：利用网络窃取他人信息资源、攻击他人网络服务、私自删除他人计算机内的重要数据。</p><p><strong>比较严重的网络道德失范行为</strong>：</p><ol><li>网络犯罪（黑客非法潜入网络进行恶性破坏）</li><li>色情和暴力风暴席卷而来</li><li>网络文化侵略</li><li>破坏国家安全</li></ol><p><strong>不当行为</strong>：有意造成网络交通混乱、商业性或欺骗性利用计算机资源、偷窃资料、未经许可复制他人文件、伪造电子邮件信息等。</p>", "tags": ["计算机犯罪", "网络失范行为"]}], "chapter": "第四章 信息安全"}], "quizzes": [{"section": 0, "stem": "以下选项中属于信息的是（　）。", "options": ["一盏灯", "一段录像", "一张光盘", "一台电视"], "answer": 1, "analysis": "信息指人类社会传播的一切内容，一段录像属于信息内容。灯、光盘、电视都是信息的<span style='font-weight:600;color:#059669'>载体</span>，不是信息本身。"}, {"section": 0, "stem": "下列不属于信息的是（　）。", "options": ["听到下课的铃声", "播放的天气预报", "看到的招生简章", "存有资料的U盘"], "answer": 3, "analysis": "信息是内容，铃声、天气预报、招生简章都是内容。U盘是信息的<span style='font-weight:600;color:#059669'>载体</span>，不是信息。"}, {"section": 0, "stem": "校园广播的主要载体形式是（　）。", "options": ["声音", "图片", "文字", "动画"], "answer": 0, "analysis": "信息具有依附性，广播以声波形式传播，载体为<span style='font-weight:600;color:#059669'>声音</span>。"}, {"section": 0, "stem": "下列关于信息的说法中，正确的是（　）。", "options": ["信息是具有价值的", "信息是可以不依附于任何载体的", "信息是永远有效的", "信息是无法进行加工的"], "answer": 0, "analysis": "信息是有价值的资源，使用的人越多价值越大且不会消耗。B错：信息必须依附于载体；C错：信息有时效性；D错：信息可以被加工处理。"}, {"section": 0, "stem": "孙膑“增兵减灶灭庞涓”、诸葛亮“空城计”体现了信息具有（　）特征。", "options": ["依附性", "真伪性", "时效性", "共享性"], "answer": 1, "analysis": "增兵减灶和空城计都是利用虚假信息迷惑敌人，体现了信息的<span style='font-weight:600;color:#059669'>真伪性</span>。"}, {"section": 0, "stem": "“玉不琢不成器”，表达了信息的主要特征是（　）。", "options": ["传递性", "共享性", "时效性", "可处理性"], "answer": 3, "analysis": "玉经过雕琢价值提升，类比信息经过人的<span style='font-weight:600;color:#059669'>分析和处理</span>后价值得到提升，体现可处理性。"}, {"section": 0, "stem": "“一传十，十传百”体现了信息的（　）。", "options": ["真伪性", "时效性", "传递性", "可处理性"], "answer": 2, "analysis": "一传十十传百描述信息在空间中的传播，体现了信息的<span style='font-weight:600;color:#059669'>传递性</span>。"}, {"section": 0, "stem": "小李通过电话方式告诉同事开会，这主要体现了信息的（　）。", "options": ["时效性", "真伪性", "依附性", "传递性"], "answer": 2, "analysis": "通过电话传递信息，体现<span style='font-weight:600;color:#059669'>载体依附性</span>。注意：打电话主要体现依附性（依附电话为载体）。"}, {"section": 0, "stem": "交通信息既可以通过信号灯显示，也可以通过交警的手势来传递；文字信息既可以印刷在书本上，也可以利用电脑来存储和浏览，这体现了信息的（　）特征。", "options": ["载体依附性", "价值性", "时效性", "真伪性"], "answer": 0, "analysis": "同一信息可以通过不同载体呈现，体现了信息必须依附于载体存在，即<span style='font-weight:600;color:#059669'>载体依附性</span>。"}, {"section": 0, "stem": "下列关于QQ空间相册描述错误的是（　）。", "options": ["可以设置仅自己可见", "可以指定可见的好友", "可以公开，不能设置观看权限", "可以设置好友可见"], "answer": 2, "analysis": "QQ空间<span style='font-weight:600;color:#dc2626'>可以</span>设置观看权限，C选项说“不能设置”是错误的。"}, {"section": 1, "stem": "信息技术简称（　）。", "options": ["IT", "IF", "IE", "IQ"], "answer": 0, "analysis": "信息技术英文为Information Technology，简称<span style='font-weight:600;color:#059669'>IT</span>。"}, {"section": 1, "stem": "现代信息技术的核心是（　）。", "options": ["计算机技术", "通信技术", "传感技术", "微电子技术"], "answer": 0, "analysis": "现代信息技术以微电子技术为基础，<span style='font-weight:600;color:#059669'>计算机技术为核心</span>，通信技术为支柱。"}, {"section": 1, "stem": "信息技术中扩展了人类的感觉器官收集信息功能的是（　）。", "options": ["计算机技术", "通信技术", "感测技术", "微电子技术"], "answer": 2, "analysis": "感测技术扩展<span style='font-weight:600;color:#059669'>感觉器官</span>功能（获取信息）；通信技术扩展传导神经；计算机技术扩展思维器官；控制技术扩展效应器官。"}, {"section": 1, "stem": "下列关于信息技术发展的叙述，不正确的是（　）。", "options": ["随着人工智能的发展，信息技术将朝着智能化方向发展", "信息技术主要包括传感技术、通信技术、微电子技术和计算机技术", "第五次信息技术革命的重要标志是手机的普及使用", "大数据、物联网、云计算将成为信息技术发展的热点"], "answer": 2, "analysis": "第五次信息技术革命的标志是<span style='font-weight:600;color:#dc2626'>计算机和网络的应用</span>，不是手机的普及使用。"}, {"section": 1, "stem": "3D模拟仿真飞行器体现了信息技术（　）的发展趋势。", "options": ["多元化", "网络化", "智能化", "虚拟化"], "answer": 3, "analysis": "3D模拟仿真飞行器是一种虚拟技术的体现，对应<span style='font-weight:600;color:#059669'>虚拟化</span>趋势。"}, {"section": 1, "stem": "下列不属于现代信息技术应用案例的是（　）。", "options": ["烽火告急", "电子警察", "可视电话", "远程教育"], "answer": 0, "analysis": "烽火告急是<span style='font-weight:600;color:#dc2626'>古代</span>信息传递技术，不属于现代信息技术。"}, {"section": 2, "stem": "若根据获取信息的来源决定信息的可靠程度，下列属于最直接的信息来源是（　）。", "options": ["报刊杂志", "查阅访谈记录", "大型门户网站", "亲自试验"], "answer": 3, "analysis": "<span style='font-weight:600;color:#059669'>亲自试验</span>是直接利用自身感官感知信息，是最直接、最可靠的获取方式。"}, {"section": 2, "stem": "下列关于信息来源的叙述，不正确的是（　）。", "options": ["信息源越广，收集的信息量越大", "信息源越可靠，收集到的信息越真实可信", "在收集信息时，信息源越少越好", "尽量选择有代表性的信息源"], "answer": 2, "analysis": "信息源的多寡与信息质量无直接关系，<span style='font-weight:600;color:#dc2626'>不是越少越好</span>，应选择有代表性的可靠信息源。"}, {"section": 2, "stem": "获取图形、图像素材，下列方法中不能实现的是（　）。", "options": ["使用手机拍摄", "在网上搜索后下载", "使用QQ软件截图", "使用ACDSee软件查看"], "answer": 3, "analysis": "ACDSee软件只能<span style='font-weight:600;color:#dc2626'>查看</span>图片，不能获取图片。"}, {"section": 2, "stem": "小丽喜欢旅游，她经常通过手机将她旅游的照片等信息发布在微信“朋友圈”里，她利用手机拍照这一过程是（　）。", "options": ["信息采集", "信息存储", "信息处理", "信息传递"], "answer": 0, "analysis": "用手机拍照即收集信息，属于<span style='font-weight:600;color:#059669'>信息采集</span>过程。发布到朋友圈属于信息传递。"}, {"section": 2, "stem": "计算机处理信息的工作过程为（　）。", "options": ["输出信息、处理与存储信息、收集信息", "收集信息、处理与存储信息、输出信息", "处理与存储信息、收集信息、输出信息", "输出与处理信息、信息存储、收集信息"], "answer": 1, "analysis": "计算机处理信息的正确顺序：<span style='font-weight:600;color:#059669'>收集信息 → 处理与存储信息 → 输出信息</span>。"}, {"section": 3, "stem": "下列选项中都属于多媒体中的“媒体”的是（　）。", "options": ["电视机、录音机、报纸", "图像、声音、文本", "光盘、U盘、硬盘", "网卡、显卡、声卡"], "answer": 1, "analysis": "媒体是指承载信息的载体，如文本、图像、图形、音频、视频、动画等，所以B项符合题意。"}, {"section": 3, "stem": "多媒体的信息载体不包括的是（　）。", "options": ["文本", "色彩", "声音", "图像"], "answer": 1, "analysis": "多媒体的信息载体有文本、声音、图像等，但<span style='font-weight:600;color:#dc2626'>色彩不是</span>多媒体的信息载体。"}, {"section": 3, "stem": "将教学资源分为文字、图片、视频等类别，它的分类依据是（　）。", "options": ["媒体形式", "信息内容", "媒体用途", "教学需要"], "answer": 0, "analysis": "将教学资源按照<span style='font-weight:600;color:#059669'>媒体形式</span>可分为文字、图片、视频等。"}, {"section": 3, "stem": "用于传递连续数据信息的媒体，如电缆、光缆等都属于（　）。", "options": ["感觉媒体", "传输媒体", "表示媒体", "存储媒体"], "answer": 1, "analysis": "传输媒体是数据传输系统中在发送器和接收器之间的物理通路，常见的有双绞线、同轴电缆、光纤等，所以B项符合题意。"}, {"section": 3, "stem": "多媒体最重要的特征是（　）。", "options": ["图像", "动画", "音乐", "交互性"], "answer": 3, "analysis": "<span style='font-weight:600;color:#059669'>交互性</span>是多媒体应用有别于传统信息交流媒体的主要特点之一，是最重要的特征。"}, {"section": 3, "stem": "制作多媒体作品前，需要采集图像、音频、视频等素材。下列工具中不能用于采集多媒体素材的是（　）。", "options": ["打印机", "手机", "扫描仪", "话筒"], "answer": 0, "analysis": "打印机是<span style='font-weight:600;color:#dc2626'>输出设备</span>，不能用来采集任何信息和素材。手机可采集图像音频视频，扫描仪采集图像，话筒采集音频。"}, {"section": 3, "stem": "要制作一个“改革开放40周年”的多媒体作品，下列正确的制作流程是（　）。", "options": ["需求分析→规划与设计→素材采集与加工→作品集成→发布与评价", "需求分析→素材采集与加工→规划与设计→发布与评价→作品集成", "规划与设计→需求分析→素材采集与加工→作品集成→发布与评价", "需求分析→规划与设计→作品集成→素材采集与加工→发布与评价"], "answer": 0, "analysis": "多媒体作品开发的一般过程：<span style='font-weight:600;color:#059669'>需求分析 → 规划设计 → 素材的采集加工与集成 → 测试 → 发布评价</span>。"}, {"section": 3, "stem": "对文件进行压缩的目的是（　）。", "options": ["图像更清晰", "存储量变小", "色彩丰富", "声音更动听"], "answer": 1, "analysis": "文件压缩就是将较大的文件压缩成较小的文件，占用存储空间较小，所以B项符合题意。"}, {"section": 4, "stem": "矢量图形放大十倍，如图所示放大的效果，下列说话错误的是（　）。", "options": ["矢量图是由像素构成的", "矢量图放大后不影响质量", "矢量图通过指令的形式描述", "矢量图文件所占的存储空间较小"], "answer": 0, "analysis": "<span style='font-weight:600;color:#dc2626'>位图</span>是由像素构成的，矢量图通过指令形式描述，放大或缩小不影响分辨率，文件存储空间较小。所以A项说法错误。"}, {"section": 4, "stem": "下列说法中，符合计算位图图像基本特征的是（　）。", "options": ["位图可以任意缩放而不失真", "图像由一组指令集合加以描述", "图像无论放大或缩小，都有一样平滑的边缘和清晰度", "图像由像素构成，在缩放过程中会损失细节或产生锯齿"], "answer": 3, "analysis": "位图由像素组成，能较好表现色彩浓度和层次，放大易失真产生锯齿，缩放会损失细节。所以D项符合题意。"}, {"section": 4, "stem": "分辨率不受缩放尺寸影响的图属于（　）。", "options": ["长阵图", "位图", "矢量图", "真彩图"], "answer": 2, "analysis": "矢量图是根据几何特性绘制的图形，特点是<span style='font-weight:600;color:#059669'>放大后图像不会失真，与分辨率无关</span>。"}, {"section": 4, "stem": "在RGB颜色模式下，下列表示红色的是（　）。", "options": ["RGB(0,0,0)", "RGB(255,0,255)", "RGB(0,255,0)", "RGB(255,0,0)"], "answer": 3, "analysis": "RGB(0,0,0)表示黑色，RGB(255,0,255)表示紫色，RGB(0,255,0)表示绿色，<span style='font-weight:600;color:#059669'>RGB(255,0,0)表示红色</span>。"}, {"section": 4, "stem": "存储一张分辨率为2048×1024的256色位图，其容量为（　）。", "options": ["2MB", "8MB", "16MB", "64MB"], "answer": 0, "analysis": "图像容量 = 图像分辨率 × 颜色深度 / 8。256色对应颜色深度8位，2048×1024×8/8/1024/1024=<span style='font-weight:600;color:#059669'>2MB</span>。"}, {"section": 4, "stem": "描述图像像素密度的度量方法是（　）。", "options": ["像素总量", "显示分辨率", "图像分辨率", "PPI"], "answer": 2, "analysis": "<span style='font-weight:600;color:#059669'>图像分辨率</span>是用来描述图像像素密度的方法。像素总量=水平像素量×垂直像素量；PPI是分辨率的常用单位。"}, {"section": 4, "stem": "为便于文件传输应用等，要对文件进行压缩，下列对文件压缩说法错误的是（　）。", "options": ["压缩比是压缩技术的指标之一", "压缩分为有损压缩和无损压缩", "MP3是一种经过压缩的音频文件格式", "BMP是一种经过压缩的图像文件格式"], "answer": 3, "analysis": "BMP格式是<span style='font-weight:600;color:#dc2626'>几乎不进行压缩</span>的Windows标准图像格式，占用空间大，所以D项说法错误。"}, {"section": 4, "stem": "下列用于文件压缩的软件是（　）。", "options": ["Excel", "WinZip", "PowerPoint", "GoldWave"], "answer": 1, "analysis": "WinZip是一款功能强大的压缩实用程序。GoldWave是数码录音及编辑软件，Excel和PowerPoint是Office办公软件。"}, {"section": 4, "stem": "将模拟声音信号转换为数字音频信号的数字化过程是（　）。", "options": ["采样→编码→量化", "编码→采样→量化", "量化→编码→采样", "采样→量化→编码"], "answer": 3, "analysis": "模拟信号转数字信号的过程为<span style='font-weight:600;color:#059669'>采样、量化和编码</span>。"}, {"section": 4, "stem": "“画图”软件中不能保存的文件类型是（　）。", "options": ["GIF", "PNG", "JPEG", "TXT"], "answer": 3, "analysis": "TXT是<span style='font-weight:600;color:#dc2626'>记事本</span>的文本格式，画图软件不能保存。"}, {"section": 4, "stem": "王老师想把正确佩戴口罩的方法以动态图像的方式发布到群里，采用（　）能够实现他的想法。", "options": ["bmp格式", "jpg格式", "gif格式", "png格式"], "answer": 2, "analysis": "以上4个选项中只有<span style='font-weight:600;color:#059669'>gif格式是动图格式</span>，其他都是静态图片格式。"}, {"section": 5, "stem": "采用下列数字化音频参数采集到的音频文件，质量最好的是（　）。", "options": ["采样频率11.025kHz，量化位数16位，单声道", "采样频率22.05kHz，量化位数8位，双声道", "采样频率22.05kHz，量化位数16位，单声道", "采样频率44.1kHz，量化位数16位，双声道"], "answer": 3, "analysis": "音频质量影响因素：采样频率越高品质越好，量化位数越多越好，双声道比单声道质量更好。D项三项指标都最高，所以质量最好。"}, {"section": 5, "stem": "使用Windows录音机录制一段时长为1s、采样频率为22.05kHz、量化位数为16位、双声道立体声的wave格式音频文件所需的存储空间为（　）。", "options": ["11KB", "22KB", "44KB", "88KB"], "answer": 3, "analysis": "音频文件大小=(采样频率×采样精度×声道数)×时间/8。22050×16×2×1/8=<span style='font-weight:600;color:#059669'>88KB</span>。"}, {"section": 5, "stem": "以下格式中，属于音频文件格式的是（　）。", "options": ["WAV格式", "JPG格式", "DAT格式", "MOV格式"], "answer": 0, "analysis": "WAV格式用于保存Windows平台的音频信息资源。JPG是图像格式，DAT和MOV是视频文件格式。"}, {"section": 5, "stem": "下列全都属于音频文件格式的是（　）。", "options": ["GIF、MP3、JPEG", "GIF、MP3、WMA", "JPEG、MP3、WMA", "WAV、MP3、WMA"], "answer": 3, "analysis": "GIF、JPEG是常见的图形图像文件格式，<span style='font-weight:600;color:#059669'>WAV、MP3、WMA是常见的音频文件格式</span>。"}, {"section": 5, "stem": "下列属于视频文件的是（　）。", "options": ["海洋.mp3、海洋.avi", "海洋.mp4、海洋.rm、海洋.rmvb", "海洋.jpg、海洋.rmvb", "海洋.mp3、海洋.rm"], "answer": 1, "analysis": "mp3属于音频文件格式，jpg属于图片格式，<span style='font-weight:600;color:#059669'>mp4、rm、rmvb属于视频文件格式</span>。"}, {"section": 5, "stem": "以下不属于视频文件格式的是（　）。", "options": ["3GP", "MP4", "TIFF", "FLV"], "answer": 2, "analysis": "3GP、MP4、FLV都是视频文件格式，<span style='font-weight:600;color:#dc2626'>TIFF是标签图像文件格式</span>。"}, {"section": 5, "stem": "小华要下载一部大小为1GB的电影，他电脑接入的网速为100Mbps，在理想状态下，电影下载完需要的时间大约是（　）。", "options": ["11秒", "81秒", "10秒", "82秒"], "answer": 3, "analysis": "1GB=1024MB，网速100Mbps（即100Mb/s），下载时间≈1024×8/100≈82秒。所以D项符合题意。"}, {"section": 5, "stem": "下列属于Premiere软件功能的是（　）。", "options": ["转换音频格式", "视频剪辑合成", "语音合成技术", "图像处理技术"], "answer": 1, "analysis": "Premiere是Adobe公司出品的<span style='font-weight:600;color:#059669'>视频编辑软件</span>，主要用来进行视频剪辑合成。"}, {"section": 5, "stem": "新建Flash文件默认的帧频（fps）是（　）。", "options": ["10", "12", "15", "24"], "answer": 1, "analysis": "Flash中帧频的意思是每秒运行多少帧，<span style='font-weight:600;color:#059669'>默认是12帧每秒</span>。"}, {"section": 5, "stem": "在Flash动画制作中，时间轴上的黑色实心圆点表示的帧是（　）。", "options": ["空白帧", "空白关键帧", "关键帧", "补间帧"], "answer": 2, "analysis": "时间轴上的黑色实心圆点表示<span style='font-weight:600;color:#059669'>关键帧</span>；空白关键帧表现为空心圆点。"}, {"section": 5, "stem": "3DMAX主要用于（　）。", "options": ["二维动画制作", "三维动画制作", "数字音频制作", "数字视频制作"], "answer": 1, "analysis": "FLASH主要用于二维动画制作，<span style='font-weight:600;color:#059669'>3DMAX主要用于三维动画制作</span>，AUDITION用于数字音频制作，PREMIERE用于数字视频制作。"}, {"section": 6, "stem": "下列关于浏览器的使用，错误的是（　）。", "options": ["可以将常用的网页设置成主页", "可以将喜欢的网页添加到收藏夹", "设置主页后不能更改", "可以对收藏夹中的网址进行分类管理"], "answer": 2, "analysis": "设置主页后是<span style='font-weight:600;color:#dc2626'>可以根据用户自定义更改</span>的，所以C项符合题意。"}, {"section": 6, "stem": "通过（　）可以把自己喜欢的、经常浏览的WEB页地址保存下来，这样以后就能快速打开这些网站。", "options": ["回收站", "剪贴板", "资源管理器", "收藏夹"], "answer": 3, "analysis": "<span style='font-weight:600;color:#059669'>收藏夹</span>是用来记录自己喜欢、常用的网站的。"}, {"section": 6, "stem": "张确是一个篮球迷，经常要去新浪NBA网站上浏览有关NBA的最新消息。为方便打开网站，以下哪种方法是不恰当的？", "options": ["将新浪NBA网站设为主页", "将新浪NBA网站页面以“WEB档案，单个文件”的方式保存下来", "将新浪NBA网站添加到浏览器的收藏夹中", "将新浪NBA网站的快捷方式保存在桌面上"], "answer": 1, "analysis": "以“WEB档案，单个文件”的方式保存网站，之后更新的信息就看不到了，所以B项不恰当。"}, {"section": 6, "stem": "下列软件中不属于网络浏览器的是（　）。", "options": ["Internet Explorer", "Fire Fox", "Windows Media Player", "360安全浏览器"], "answer": 2, "analysis": "Windows Media Player是Windows系统自带的<span style='font-weight:600;color:#dc2626'>音频采集编辑软件</span>，不是浏览器。"}, {"section": 6, "stem": "图书馆工作人员上班期间必须访问某图书馆管理平台，下列最便捷的方法是（　）。", "options": ["将平台主体保存到本地磁盘", "在地址栏中输入该平台网址", "通过搜索引擎搜索该平台网址", "在浏览器中把该平台网址设为主页网址"], "answer": 3, "analysis": "把平台网址<span style='font-weight:600;color:#059669'>设为主页</span>，每次打开浏览器就会自动登录，是最便捷的方法。"}, {"section": 6, "stem": "将当前浏览的标题为“school”的网页保存（采用默认文件名）（　）。", "options": ["可以得到一个index.htm页面和index文件夹", "可以得到一个school.htm页面和index文件夹", "可以得到一个index.htm文件夹", "可以得到一个school.htm页面和school文件夹"], "answer": 3, "analysis": "保存网页采用默认文件名，会生成与网页标题同名的页面文件和文件夹，即school.htm和school文件夹。"}, {"section": 7, "stem": "关于搜索引擎和网页，下列说法正确的是（　）。", "options": ["搜索引擎搜索信息时，可减少搜索到的信息数", "用搜索引擎搜索信息时，本质上是检索搜索引擎网站的索引数据库", "所有网页均是HTTP语言编写的纯文本文件", "选择“网页，仅HTML”方式保存网页，保存的文件不含超链接"], "answer": 1, "analysis": "搜索引擎搜索信息本质上是<span style='font-weight:600;color:#059669'>检索索引数据库</span>。HTTP是超文本传输协议而非语言；“网页，仅HTML”方式包含超链接。"}, {"section": 7, "stem": "张某打开安徽基础教育资源网，选择“教学资源-信息科技学科-小学-第五册”，找到所需资源，这种做法属于网络搜索方法中的（　）。", "options": ["直接访问网页", "使用搜索引擎", "查询在线数据库", "主题目录检索"], "answer": 3, "analysis": "张某利用分类目录逐级查找，最终获取所需资源，属于<span style='font-weight:600;color:#059669'>主题目录检索</span>。"}, {"section": 7, "stem": "在互联网上，按照“首页>教育>院校名单>985高校>北京大学”的顺序找到了北京大学的相关资料，这种搜索方式称为（　）。", "options": ["目录检索", "全文搜索", "关键词查询", "元搜索"], "answer": 0, "analysis": "按照分类目录层层递进找到信息，属于<span style='font-weight:600;color:#059669'>目录检索</span>。"}, {"section": 7, "stem": "下列选项中，属于全文搜索引擎的是（　）。", "options": ["百度", "新浪", "雅虎", "搜狐"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>百度</span>、Google等属于全文搜索引擎；雅虎、搜狐、新浪属于目录搜索引擎。"}, {"section": 7, "stem": "元搜索引擎可以方便地检索多个搜索引擎，同时检索多个（　）。", "options": ["网站", "数据库", "网页", "图片"], "answer": 1, "analysis": "元搜索引擎可以同时检索多个<span style='font-weight:600;color:#059669'>数据库</span>，扩大检索范围。"}, {"section": 7, "stem": "在网络上要准确地查找“北京”以外的“农业大学”信息，应在搜索框中输入（　）。", "options": ["北京 NOT 农业大学", "北京 OR 农业大学", "农业大学 + 北京", "农业大学 - 北京"], "answer": 3, "analysis": "使用中划线（-）告诉搜索引擎搜索结果不能带有后面的关键词，<span style='font-weight:600;color:#059669'>农业大学-北京</span>即查找“北京”以外的“农业大学”。"}, {"section": 7, "stem": "打开百度搜索引擎，在搜索框中分别输入关键字：高中信息科技练习、“高中信息科技练习”，下列说法中正确的是（　）。", "options": ["输入：高中信息科技练习，搜索到的相关网页篇数较多", "输入：“高中信息科技练习”，搜索到的相关网页篇数较多", "两种输入搜索到的相关网页篇数一样多", "输入：“高中信息科技练习”，无法搜索"], "answer": 0, "analysis": "加双引号表示词组检索，只检索包含该完整词组的文档，<span style='font-weight:600;color:#059669'>不加引号搜到的文章更多</span>。"}, {"section": 7, "stem": "因特网上搜索效率高的搜索办法是（　）。", "options": ["增加搜索次数", "用近义词代替关键词", "更换浏览器", "提炼细化关键词"], "answer": 3, "analysis": "提高搜索效率的方法：关键词提炼、细化搜索条件、用好逻辑命令等。所以D项符合题意。"}, {"section": 8, "stem": "人工智能于1950年提出，该科学家是（　）。", "options": ["冯·诺依曼", "扎克伯格", "艾伦·图灵", "史蒂夫·乔布斯"], "answer": 2, "analysis": "艾伦·图灵是英国数学家，被称为<span style='font-weight:600;color:#059669'>计算机科学之父、人工智能之父</span>。"}, {"section": 8, "stem": "人工智能首先要解决的是（　）。", "options": ["机器系统掌握知识", "植入人类智慧", "识别机器及人类", "机器会参与游戏"], "answer": 0, "analysis": "人工智能的核心是机器学习，先要解决的最重要的问题就是<span style='font-weight:600;color:#059669'>机器系统掌握知识</span>。"}, {"section": 8, "stem": "机器人能体现或模拟人的智能。下列全属于机器人认知能力的是（　）。", "options": ["记忆、学习、感知", "行走、学习、记忆", "记忆、感知、行走", "学习、感知、行走"], "answer": 0, "analysis": "“认知”是人类认识事物、对外界事物进行加工的过程。行走不属于认知能力，<span style='font-weight:600;color:#059669'>记忆、学习、感知</span>都是认知能力。"}, {"section": 8, "stem": "下列描述属于人工智能的是（　）。", "options": ["医生用磁共振探测病人身体", "杀毒软件在有WiFi连接的地方自动升级", "微信语音聊天", "停车场车牌识别技术的应用"], "answer": 3, "analysis": "模式识别属于人工智能技术，<span style='font-weight:600;color:#059669'>停车场车牌识别技术属于模式识别</span>。"}, {"section": 8, "stem": "“人工智能”是计算机智能化运用，它使计算机具有（　）能力。", "options": ["视觉", "听觉", "学习", "语言"], "answer": 2, "analysis": "人工智能是研究使计算机来模拟人的某些思维过程和智能行为（如学习、推理、思考、规划等）的学科，所以C项符合题意。"}, {"section": 8, "stem": "下列不属于人工智能应用的是（　）。", "options": ["使用键盘输入汉字", "ETC车牌自动识别系统", "网上购物商品自动推送", "百度“在线翻译”系统"], "answer": 0, "analysis": "使用键盘输入汉字属于信息处理，<span style='font-weight:600;color:#dc2626'>不属于人工智能</span>。ETC车牌识别、商品自动推送、在线翻译都属于人工智能。"}, {"section": 8, "stem": "下列关于人工智能特点的叙述，不正确的是（　）。", "options": ["AI是人工智能的简称", "模式识别属于人工智能的研究领域", "自然语言属于人工智能的研究领域", "工业自动化生产属于人工智能的应用领域"], "answer": 3, "analysis": "工业自动化生产属于<span style='font-weight:600;color:#dc2626'>自动控制</span>，不属于人工智能。"}, {"section": 8, "stem": "智能机器已经走进我们的生活，可以部分代替人类的工作。以下不属于机器智能设备的是（　）。", "options": ["ATM自动存取款机", "无人驾驶汽车", "定时闹钟", "语音识别"], "answer": 2, "analysis": "ATM、无人驾驶汽车、语音识别都使用人工智能技术，只有<span style='font-weight:600;color:#dc2626'>定时闹钟属于机械设备</span>。"}, {"section": 8, "stem": "模拟人类的听觉、视觉等感觉功能，对声音、图像、景物、文字等进行识别的研究领域是（　）。", "options": ["专家系统", "遗传算法", "神经网络", "模式识别"], "answer": 3, "analysis": "模拟人类听觉视觉等感觉功能，对声音、图像等进行识别，该领域是<span style='font-weight:600;color:#059669'>模式识别</span>。"}, {"section": 8, "stem": "“指纹锁”应用了图像特征匹配技术，其开锁流程是（　）。", "options": ["采集信息→预处理→特征匹配→指纹图像识别→开启门锁", "预处理→采集信息→指纹图像识别→特征匹配→开启门锁", "采集信息→指纹图像识别→预处理→特征匹配→开启门锁", "采集信息→预处理→指纹图像识别→特征匹配→开启门锁"], "answer": 3, "analysis": "指纹开锁流程：<span style='font-weight:600;color:#059669'>采集信息 → 预处理 → 指纹图像识别 → 特征匹配 → 开启门锁</span>。"}, {"section": 8, "stem": "随着信息技术的进步，小王在家就能用手机APP远程打开自己汽车上的空调，其用到的技术属于（　）范畴。", "options": ["物联网技术", "蓝牙技术", "多媒体技术", "图像识别技术"], "answer": 0, "analysis": "手机APP远程控制汽车空调，属于<span style='font-weight:600;color:#059669'>物联网技术</span>的应用。"}, {"section": 8, "stem": "制作一个声控灯，实现白天不亮，晚上有声才亮的功能，不需要的部件是（　）。", "options": ["声音传感器", "光感传感器", "超声波传感器", "灯泡"], "answer": 2, "analysis": "声控灯需要灯泡发光、声音传感器采集声音、光感传感器识别光照强度，<span style='font-weight:600;color:#dc2626'>超声波传感器用不到</span>。"}, {"section": 8, "stem": "手环、运动跑鞋、无线耳机等可穿戴数码设备，所采用的无线通讯技术多为（　）。", "options": ["蓝牙", "3G", "4G", "WiFi"], "answer": 0, "analysis": "可穿戴数码设备与移动设备连接使用，是一种近距无线连接，<span style='font-weight:600;color:#059669'>多为蓝牙技术</span>。"}, {"section": 8, "stem": "4G手机里“4G”指的是（　）。", "options": ["存储量为4G", "短信流量为4G", "第四代制造技术", "第四代移动通讯技术"], "answer": 3, "analysis": "4G指<span style='font-weight:600;color:#059669'>第四代移动电话行动通信标准</span>，即第四代移动通信技术。"}, {"section": 9, "stem": "信息安全的目标中，（　）是指保证信息不泄漏给未经授权的人。", "options": ["真实性", "保密性", "完整性", "可用性"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>保密性</span>（机密性）是指信息没有通过任何途径泄露给非授权用户。"}, {"section": 9, "stem": "对于一般计算机用户来说，维护信息安全最重要的是养成良好的使用习惯。以下可能威胁信息安全的是（　）。", "options": ["随意安装软件", "进行系统更新", "经常备份数据", "设置开机密码"], "answer": 0, "analysis": "随意安装软件，软件很可能携带病毒使电脑中毒，<span style='font-weight:600;color:#059669'>威胁到信息安全</span>。B、C、D都是正常维护信息安全的操作。"}, {"section": 9, "stem": "保护信息安全的措施主要从两个方面进行考虑：一是物理安全，二是（　）。", "options": ["系统安全", "逻辑安全", "产品安全", "功能安全"], "answer": 1, "analysis": "保护信息安全的措施主要从<span style='font-weight:600;color:#059669'>物理安全和逻辑安全</span>两个方面考虑。"}, {"section": 9, "stem": "维护信息安全是要从物理安全和逻辑安全两方面进行，下列全属于逻辑安全防范措施的是（　）。", "options": ["信息加密、防电磁泄漏", "信息加密、访问控制", "访问控制、防静电", "防静电、防电磁泄漏"], "answer": 1, "analysis": "物理防范：环境维护、防盗、防火、防静电、防雷击、防电磁泄漏。逻辑防范：<span style='font-weight:600;color:#059669'>访问控制和信息加密</span>。"}, {"section": 9, "stem": "客户可以在手机银行客户端“刷脸”，通过银行的远程核验后，办理大额转账业务。该核验过程主要体现了网络安全技术中的（　）。", "options": ["防火墙技术", "网络安全技术", "身份认证技术", "加密传输技术"], "answer": 2, "analysis": "“刷脸”的作用是为了识别用户的身份，属于<span style='font-weight:600;color:#059669'>身份认证技术</span>。"}, {"section": 9, "stem": "下列不属于信息安全产品的是（　）。", "options": ["压缩软件", "防火墙", "杀毒软件", "加密狗"], "answer": 0, "analysis": "常见的信息安全产品有杀毒软件、防火墙、入侵检测系统等。<span style='font-weight:600;color:#dc2626'>压缩软件属于普通的应用软件</span>，不属于信息安全产品。"}, {"section": 10, "stem": "计算机病毒产生的原因有（　）。", "options": ["计算机软件错误", "计算机硬件损坏", "人为制造", "程序错误"], "answer": 2, "analysis": "计算机病毒是<span style='font-weight:600;color:#059669'>人为制造</span>的，有破坏性、传染性和潜伏性，是对计算机信息或系统起破坏作用的程序。"}, {"section": 10, "stem": "计算机病毒是一种（　）。", "options": ["计算机程序", "菌类", "语言", "害虫"], "answer": 0, "analysis": "计算机病毒是一种人为编写的破坏计算机功能和数据的<span style='font-weight:600;color:#059669'>程序</span>，不是自然界的生命体。"}, {"section": 10, "stem": "关于计算机病毒传播的特征，正确的是（　）。", "options": ["只要不上网就不会感染病毒", "在计算机中安装杀毒软件就能确保计算机不感染病毒", "在开机状态下插入U盘可能会导致计算机感染病毒", "感染过病毒的计算机具有对该病毒的免疫性"], "answer": 2, "analysis": "在开机状态下插入U盘可能会感染病毒。不上网也可能通过移动存储设备感染；杀毒软件不能保证不感染；计算机对病毒没有免疫性。"}, {"section": 10, "stem": "下面是有关计算机病毒的说法，其中不正确的是（　）。", "options": ["计算机病毒分为引导区病毒、文件型病毒、混合型病毒和宏病毒等", "计算机病毒是一种具有破坏性的程序", "计算机病毒实际上是一种计算机程序", "计算机病毒是由于程序的错误编制而产生的"], "answer": 3, "analysis": "计算机病毒是编制者<span style='font-weight:600;color:#dc2626'>故意插入</span>的破坏性代码，不是程序错误编制产生的。"}, {"section": 10, "stem": "新型计算机病毒传播中不被反病毒程序发现的特性是指其具有（　）。", "options": ["强壮性", "潜伏性", "变种性", "繁殖性"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>潜伏性</span>指病毒进入系统后不会马上发作，可长时间隐藏，躲避免疫程序扫描。"}, {"section": 10, "stem": "计算机病毒主要破坏数据的（　）。", "options": ["可审性", "及时性", "完整性", "保密性"], "answer": 2, "analysis": "计算机病毒主要破坏数据的<span style='font-weight:600;color:#059669'>完整性</span>。"}, {"section": 10, "stem": "2017年全球爆发的电脑勒索病毒是一种新型电脑病毒，对常规的杀毒软件具有免疫性。这主要说明了病毒的（　）特点。", "options": ["隐蔽性", "传染性", "攻击性", "免疫性"], "answer": 0, "analysis": "勒索病毒对常规杀毒软件具有免疫性，常规杀毒软件不能很好地查杀，说明此病毒的<span style='font-weight:600;color:#059669'>隐蔽性非常强</span>。"}, {"section": 10, "stem": "下列选项中，不属于计算机病毒特征的是（　）。", "options": ["安全性", "传染性", "潜伏性", "破坏性"], "answer": 0, "analysis": "计算机病毒具有传染性、潜伏性、破坏性、隐蔽性、寄生性、可触发性等特征，<span style='font-weight:600;color:#dc2626'>安全性不属于</span>。"}, {"section": 10, "stem": "根据统计，当前计算机病毒扩散最快的途径是（　）。", "options": ["运行游戏软件", "软件复制", "磁盘拷贝", "网络传播"], "answer": 3, "analysis": "随着互联网的快速发展，<span style='font-weight:600;color:#059669'>网络成为计算机病毒扩散最快的途径</span>。"}, {"section": 10, "stem": "预防计算机病毒感染的有效措施是（　）。", "options": ["定期对计算机重新安装系统", "经常重新启动计算机", "不准往计算机中拷贝软件", "安装防病毒软件"], "answer": 3, "analysis": "预防计算机病毒感染的措施：不随便浏览陌生网站、<span style='font-weight:600;color:#059669'>安装最新的杀毒软件</span>、安装防火墙、对重要文件做备份等。"}, {"section": 11, "stem": "黑客行为是指（　）。", "options": ["非法闯入计算机系统", "测试计算机系统的极限", "非法拷贝软件", "制造计算机病毒"], "answer": 0, "analysis": "黑客是指对计算机信息系统进行<span style='font-weight:600;color:#059669'>非授权访问</span>的人员。"}, {"section": 11, "stem": "下列关于木马的叙述不正确的是（　）。", "options": ["木马的潜伏性与计算机病毒相似", "木马的特点是盗取计算机、手机中的账号", "木马的破坏作用与计算机病毒相似", "木马的传播途径与计算机病毒相似"], "answer": 2, "analysis": "木马的破坏作用是窥探电脑中的秘密、控制电脑；病毒的破坏作用是破坏数据的完整性，二者不同，所以C项不正确。"}, {"section": 11, "stem": "网络漏洞产生的原因是（　）。", "options": ["低级错误、信赖未经确信的信道、错误的默认设定、薄弱的安全部件", "低级错误、磁盘碎片、信赖未经确信的信道、错误的默认设定", "磁盘碎片、信赖未经确信的信道、错误的默认设定、薄弱的安全部件", "低级错误、磁盘碎片、信赖未经确信的信道、薄弱的安全部件"], "answer": 0, "analysis": "<span style='font-weight:600;color:#dc2626'>磁盘碎片</span>属于正常现象，不是网络漏洞产生的原因。低级错误、信赖未经确信的信道、错误的默认设定、薄弱的安全部件都可能造成网络漏洞。"}, {"section": 11, "stem": "攻击者发送大量声称来自银行和其他知名机构的欺骗性垃圾邮件，意图引诱收件人给出敏感信息的攻击手段是（　）。", "options": ["信息攻击", "网络钓鱼", "旁路攻击", "授权攻击"], "answer": 1, "analysis": "发送声称来自银行的欺骗性垃圾邮件引诱给出敏感信息，属于<span style='font-weight:600;color:#059669'>网络钓鱼（Phishing）</span>。"}, {"section": 11, "stem": "防止内部网络受到外部网络攻击的主要防御措施是（　）。", "options": ["防火墙", "杀毒软件", "数据加密", "数据备份"], "answer": 0, "analysis": "防火墙是内部网与Internet间实现安全策略的访问控制保护，是<span style='font-weight:600;color:#059669'>防止内部网络受外部攻击的主要防御措施</span>。"}, {"section": 11, "stem": "在计算机网络中，（　）用于验证消息发送对方的真实性。", "options": ["数据加密", "数字签名", "访问控制", "病毒防范"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>数字签名</span>用于验证发送方身份的真实性，是信息发送者产生别人无法伪造的数字串。"}, {"section": 11, "stem": "张小薇给自己设置的支付宝登录密码中，安全性最高的是（　）。", "options": ["19950528", "anhuizxw", "zKw1995", "ZxwX_x01"], "answer": 3, "analysis": "D选项同时包含大小写英文字符、数字和特殊字符（_），且长度足够，不容易破解，安全性最高。"}, {"section": 11, "stem": "下列不能有效预防计算机病毒的行为是（　）。", "options": ["尽量不使用来路不明的U盘", "使用别人的U盘时，先将该U盘设置为只读属性", "使用别人的U盘时，先将该U盘用防病毒软件杀毒", "别人要拷贝自己U盘上的文件时，先将自己的U盘设置为只读属性"], "answer": 1, "analysis": "使用别人U盘时先设置只读属性，则不利于对文件的使用和修改，且不能杀毒，不是有效预防措施。"}, {"section": 11, "stem": "下列行为中，不正当的是（　）。", "options": ["安装正版软件", "购买正版CD", "未征得他人同意私自使用他人的资源", "参加反盗版公益活动"], "answer": 2, "analysis": "未征得他人同意私自使用他人资源属于<span style='font-weight:600;color:#dc2626'>不正当行为</span>，造成重大损失可能违法。"}, {"section": 12, "stem": "下列符合《计算机信息系统安全保护条例》的是（　）。", "options": ["通过漏洞将主页改为自己喜欢的风格", "收发电子邮件", "利用软件获得网络管理员密码", "将单位保密资料发布到外网上"], "answer": 1, "analysis": "《计算机信息系统安全保护条例》保障计算机及其配套设备设施的安全、运行环境的安全、信息安全。<span style='font-weight:600;color:#059669'>收发电子邮件</span>是正常行为，A、C、D都是破坏行为。"}, {"section": 12, "stem": "下列关于计算机软件版权的叙述不正确的是（　）。", "options": ["计算机软件版权受法律保护", "购买的正版软件可以随意复制给他人使用", "在计算机中必须安装有使用版权的正版软件", "正版软件采用各种加密方法来保护版权"], "answer": 1, "analysis": "就算购买了正版软件也<span style='font-weight:600;color:#dc2626'>不能随意复制给他人使用</span>，这算违法。"}, {"section": 12, "stem": "对计算机软件正确的认识应该是（　）。", "options": ["计算机软件不需要维护", "计算机软件只要能复制得到的就不必购买", "受法律保护的计算机软件不能随便复制", "计算机软件不必有备份"], "answer": 2, "analysis": "受到法律保护的计算机软件不能随意复制，随意复制会牵扯到法律问题，支持正版反对盗版是我们的原则。"}, {"section": 12, "stem": "《全国青少年网络文明公约》提出：“要有益身心健康，不沉溺虚拟时空”，下列理解正确的是（　）。", "options": ["多上网对学生身心发展有好处", "要规范自己的行为，文明用网", "学生上网必然会沉溺其中，不可自拔", "学生不能上网，浪费时间"], "answer": 1, "analysis": "学生合理上网不会沉浸其中，只要<span style='font-weight:600;color:#059669'>规范自己的行为，文明上网</span>是可以的。"}, {"section": 12, "stem": "以下行为构成犯罪的是（　）。", "options": ["常沉溺于虚拟时空", "破解其他人的计算机密码", "给朋友发电子邮件", "将自己的作品传至网络"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>破解他人的计算机密码</span>会给他人造成一定损害，构成犯罪。"}, {"section": 12, "stem": "下列属于遵守《全国青少年网络文明公约》的行为的是（　）。", "options": ["浏览不健康网络", "上网查找学习资料", "随意约会网友", "沉溺于网络"], "answer": 1, "analysis": "公约包括：要善于网上学习不浏览不良信息、要诚实友好交流不侮辱欺诈他人、要增强自我保护意识不随意约会网友、要有益身心健康不沉溺虚拟时空。"}, {"section": 12, "stem": "随着网络发展，现在侵犯网络隐私权的案例越来越多，以下属于侵犯个人隐私权行为的是（　）。", "options": ["网管查看教学机房中学生电脑使用情况", "网管查看学校网络中用户使用日志", "网管出售学生信息", "网管查看网络内教师机流量使用情况"], "answer": 2, "analysis": "网管查看使用情况、使用日志、流量情况都属于正常职责，但<span style='font-weight:600;color:#dc2626'>出售学生信息属于侵犯个人隐私权</span>。"}, {"section": 12, "stem": "使用信息技术必须遵守相关法律法规，以下行为构成犯罪的是（　）。", "options": ["在网站上共享自己的旅游视频", "通过网络传播计算机病毒造成严重后果", "下载安徽基础教育资源平台上的课件", "通过电子邮件向老师提交作业"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>通过网络传播计算机病毒造成严重后果</span>严重危害了网络安全，构成违法犯罪。"}, {"section": 0, "stem": "下列属于动态信息的是（　）。", "options": ["历年的财务报表", "某次人口普查数据", "股票实时行情", "档案馆的档案记录"], "answer": 2, "analysis": "动态信息反映某项工作、活动的进程或事件发展变化情况，需随时更新。<span style='font-weight:600;color:#059669'>股票实时行情</span>随行情变化，属于动态信息；其余属于静态信息（反映历史情况）。"}, {"section": 0, "stem": "把与含义因素相联系的认识论信息称为（　）。", "options": ["语法信息", "语义信息", "语用信息", "静态信息"], "answer": 1, "analysis": "信息按表现形式分为：语法信息（与事物运动状态及变化方式相联系）、<span style='font-weight:600;color:#059669'>语义信息（与含义因素相联系）</span>、语用信息（与效用相联系）。"}, {"section": 0, "stem": "信息论的提出者是（　）。", "options": ["维纳", "香农", "图灵", "冯·诺依曼"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>香农</span>提出信息论，运用概率论与数理统计方法研究信息、信息熵、通信系统等问题；维纳是控制论的创始人。"}, {"section": 0, "stem": "在信息传输过程中，负责将消息信号变换为适合在信道中传输信号的设备是（　）。", "options": ["信息源", "发送器", "接收器", "信宿"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>发送器</span>将信息源产生的消息信号变换为适合在信道中传输的信号；接收器完成相反的变换；信宿是信息接收者。"}, {"section": 0, "stem": "信息集成工具中，各种素材用形象的图标依次连接在流程图中的是（　）。", "options": ["基于页面的工具", "基于图标的工具", "基于时间的工具", "基于数据库的工具"], "answer": 1, "analysis": "信息集成工具分三类：基于页面的工具（类似书本页）、<span style='font-weight:600;color:#059669'>基于图标的工具（素材用图标依次连接在流程图中）</span>、基于时间的工具（按时间顺序集成）。"}, {"section": 1, "stem": "从广义而言，信息技术是指能充分利用与扩展人类信息器官功能的各种方法、工具与技能的总和。该定义强调的是（　）。", "options": ["信息技术与人的本质关系", "信息技术的现代化含量", "信息技术的功能与过程", "信息技术的高科技含量"], "answer": 0, "analysis": "广义定义从<span style='font-weight:600;color:#059669'>哲学上阐述信息技术与人的本质关系</span>；狭义定义强调现代化与高科技含量；中义定义强调功能与过程的一般理解。"}, {"section": 1, "stem": "信息技术中扩展了人类传导神经功能的是（　）。", "options": ["感测技术", "通信技术", "计算机技术", "控制技术"], "answer": 1, "analysis": "四基元与人体器官对应：感测技术扩展感觉器官、<span style='font-weight:600;color:#059669'>通信技术扩展传导神经</span>、计算机技术扩展思维器官、控制技术扩展效应器官。"}, {"section": 1, "stem": "信息技术中扩展了人类效应器官功能的是（　）。", "options": ["感测技术", "通信技术", "计算机技术", "控制技术"], "answer": 3, "analysis": "<span style='font-weight:600;color:#059669'>控制技术</span>扩展效应器官的功能，是信息的使用技术，如预测恢复技术、神经网络控制技术。"}, {"section": 1, "stem": "信息技术发展的第四次革命的重要标志是（　）。", "options": ["语言的产生", "文字的创造", "印刷术的发明", "电报、电话、广播、电视的发明"], "answer": 3, "analysis": "第四次信息技术革命标志是<span style='font-weight:600;color:#059669'>电报、电话、广播、电视的发明</span>，电磁波的发现实现了有线/无线通信；第五次是计算机和网络的应用。"}, {"section": 1, "stem": "我国最早使用的印刷技术是（　）。", "options": ["雕版印刷", "活字印刷", "激光照排", "喷墨印刷"], "answer": 1, "analysis": "第三次信息技术革命标志是印刷术的发明，<span style='font-weight:600;color:#059669'>我国最早使用活字印刷</span>。"}, {"section": 1, "stem": "信息管理的过程包括（　）。", "options": ["收集、存储、加工、输出", "收集、传输、加工、存储", "采集、处理、传输、应用", "收集、加工、反馈、更新"], "answer": 1, "analysis": "信息管理的过程包括<span style='font-weight:600;color:#059669'>信息收集、信息传输、信息加工和信息存储</span>。"}, {"section": 1, "stem": "智能代理是一种具有（　）等特征的计算机系统。", "options": ["自主性、社会能力、反应性和能动性", "高速性、大容量、数字化", "普遍性、依附性、时效性", "准确性、客观性、权威性"], "answer": 0, "analysis": "智能代理本身是一个程序，按用户参数搜集感兴趣的信息，具有<span style='font-weight:600;color:#059669'>自主性、社会能力、反应性和能动性</span>等特征。"}, {"section": 1, "stem": "用数字化的方法把地球、地球上的活动及整个地球环境的时空变化存入计算机中，实现网络流通，这属于信息技术应用中的（　）。", "options": ["虚拟现实", "数字地球", "智能代理", "电子警察"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>数字地球</span>就是用数字化方法把地球、地球上的活动及整个地球环境的时空变化存入计算机，实现在网络上的流通。"}, {"section": 1, "stem": "1946年，美国研制出第一台电子计算机，其名称是（　）。", "options": ["EDVAC", "ENIAC", "UNIVAC", "EDSAC"], "answer": 1, "analysis": "1946年美国研制出第一台电子计算机<span style='font-weight:600;color:#059669'>ENIAC</span>，计算机联网实现了数据通信和数据共享。"}, {"section": 2, "stem": "书籍、报刊等属于（　）。", "options": ["文献型信息源", "口头型信息源", "电子型信息源", "实物型信息源"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>文献型信息源</span>指文献是记录知识的一种载体，如书籍、报刊等。"}, {"section": 2, "stem": "同学、父母、朋友、老师等属于（　）。", "options": ["文献型信息源", "口头型信息源", "电子型信息源", "实物型信息源"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>口头型信息源（个人型信息源）</span>如同同学、父母、朋友、老师等。"}, {"section": 2, "stem": "运动会、动物园、各类公共场所及事件属于（　）。", "options": ["文献型信息源", "口头型信息源", "电子型信息源", "实物型信息源"], "answer": 3, "analysis": "<span style='font-weight:600;color:#059669'>实物型信息源（现场信息源）</span>如运动会、动物园、各类公共场所及事件。"}, {"section": 2, "stem": "信息获取过程的第一步是（　）。", "options": ["选择信息来源", "定位信息需求", "确定信息获取方法", "保存信息"], "answer": 1, "analysis": "信息获取的一般过程：<span style='font-weight:600;color:#059669'>①定位信息需求</span>②选择信息来源③确定获取方法④保存信息⑤评价信息⑥反馈信息。"}, {"section": 2, "stem": "在信息获取的一般过程中，直接涉及信息获取效益、贯穿整个获取过程的重要步骤是（　）。", "options": ["保存信息", "反馈信息", "评价信息", "定位需求"], "answer": 2, "analysis": "<span style='font-weight:600;color:#059669'>评价信息</span>是以先前所确定的信息需求为依据对获取的信息进行评价，贯穿整个信息获取过程。"}, {"section": 2, "stem": "判断信息的各个要素是否真实可靠，分析论点论据，与同一信息进行比较，这属于信息价值判断原则中的（　）。", "options": ["准确性", "客观性", "权威性", "时效性"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>准确性</span>：判断信息的各个要素是否真实可靠，分析论点论据，运用逻辑推理和查阅的方法进行考证和调查。"}, {"section": 2, "stem": "考察信息提供者的身份及资质，属于信息价值判断原则中的（　）。", "options": ["准确性", "客观性", "权威性", "适用性"], "answer": 2, "analysis": "<span style='font-weight:600;color:#059669'>权威性</span>：考察信息提供者的身份及资质。"}, {"section": 2, "stem": "法官断案时，准确性、客观性、权威性应是判断的重点；而信息本身是不断发展变化的，则（　）是判断的重点。", "options": ["准确性", "客观性", "权威性", "时效性"], "answer": 3, "analysis": "信息本身是不断发展变化的，<span style='font-weight:600;color:#059669'>时效性</span>是判断的重点。这体现了信息判断的适用性原则——根据需求及使用目的不同有所侧重。"}, {"section": 2, "stem": "通过现场观察、问卷调查、访谈等方式获取信息的方法属于（　）。", "options": ["信息获取方法", "信息分类方法", "信息存储方法", "信息评价方法"], "answer": 0, "analysis": "常用的信息获取方法有：<span style='font-weight:600;color:#059669'>现场观察法、问卷调查法、访谈法、检索法、阅读法和视听法</span>等。"}, {"section": 2, "stem": "下列属于非实时信息交流的是（　）。", "options": ["QQ聊天", "微信语音", "E-mail收发邮件", "视频会议"], "answer": 2, "analysis": "非实时信息交流指双方可以不用同时在线，如<span style='font-weight:600;color:#059669'>E-mail、微博、BBS</span>；QQ、微信属于实时信息交流。"}, {"section": 3, "stem": "能直接作用于人的感官让人产生感觉的媒体是（　）。", "options": ["感觉媒体", "表示媒体", "表现媒体", "存储媒体"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>感觉媒体</span>指能直接作用于人的感官让人产生感觉的媒体，如语言、文字、音乐、图像、动画等。"}, {"section": 3, "stem": "内存、硬盘、软盘、磁带和光盘等属于（　）。", "options": ["感觉媒体", "表示媒体", "表现媒体", "存储媒体"], "answer": 3, "analysis": "<span style='font-weight:600;color:#059669'>存储媒体</span>指用于存储表示媒体的介质，包括内存、硬盘、软盘、磁带和光盘等。"}, {"section": 3, "stem": "流媒体最突出的特点是（　）。", "options": ["高压缩和可变流速率，可以边下载边播放", "必须下载完整文件才能播放", "只支持单播方式", "只能传输文字信息"], "answer": 0, "analysis": "流媒体采用流式传输方式，<span style='font-weight:600;color:#059669'>可以边下载边播放</span>，不需要等所有数据下载完才能播放。播放方式有单播、组播、广播。"}, {"section": 3, "stem": "JPEG标准主要针对的是（　）。", "options": ["运动图像", "静止图像", "音频信息", "三维动画"], "answer": 1, "analysis": "JPEG（联合图像专家组）是1986年制定的主要针对<span style='font-weight:600;color:#059669'>静止图像</span>的第一个图像压缩国际标准；MPEG针对运动图像（视频）。"}, {"section": 3, "stem": "用于压缩全动画视频的标准方法是（　）。", "options": ["JPEG", "MPEG", "PNG", "GIF"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>MPEG</span>是压缩全动画视频的一种标准方法，平均压缩比为50:1，常用于多媒体CD-ROM、硬盘、局域网等。"}, {"section": 3, "stem": "VOD的中文名称是（　）。", "options": ["视频点播系统", "计算机协同工作系统", "视频会议系统", "远程教学系统"], "answer": 0, "analysis": "VOD（Video On Demand）中文名称是<span style='font-weight:600;color:#059669'>视频点播系统</span>，根据观众的要求播放节目；CSCW是计算机支持的协同工作系统。"}, {"section": 3, "stem": "多媒体技术中，所有信息（文字、符号、图形、图像、声音和视频）都必须采样、编码变成二进制数字后才能由计算机综合处理，这是多媒体技术的（　）特征。", "options": ["数字化", "集成性", "交互性", "非线性"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>数字化</span>是多媒体技术的本质特征。所有媒体信息都必须转成二进制数才能由计算机处理。"}, {"section": 4, "stem": "下列关于PPI和DPI的说法，正确的是（　）。", "options": ["PPI只存在于计算机显示领域，DPI出现于打印或印刷领域", "PPI指每英寸的像点数，DPI指每英寸的像素数", "PPI和DPI都只存在于打印领域", "PPI和DPI含义完全相同"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>PPI指每英寸长度上的像素数，只存在于计算机显示领域；DPI指每英寸长度上的像点数，只出现于打印或印刷领域</span>。"}, {"section": 4, "stem": "CMYK色彩模式中的K代表（　）。", "options": ["青色", "洋红色", "黄色", "黑色"], "answer": 3, "analysis": "CMYK中C代表青色（Cyan）、M代表洋红色（Magenta）、Y代表黄色（Yellow）、<span style='font-weight:600;color:#059669'>K代表黑色（Black）</span>。CMYK采用减色法，用于印刷行业。"}, {"section": 4, "stem": "达到人眼分辨极限、发色数为1677万多色的颜色深度是（　）。", "options": ["8位", "16位", "24位", "32位"], "answer": 2, "analysis": "<span style='font-weight:600;color:#059669'>24位</span>色被称为真彩色，发色数是2的24次方，即1677万多色，可达到人眼分辨的极限；16位色的发色总数是65536色。"}, {"section": 4, "stem": "下列图像格式中，支持无损压缩且支持透明图片制作的是（　）。", "options": ["BMP", "PNG", "JPEG", "WMF"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>PNG</span>是无损压缩的网络图像格式，可把图像文件压缩到极限以利于网络传输，并支持透明图片的制作。"}, {"section": 5, "stem": "声音的音调高低取决于（　）。", "options": ["振幅", "频率", "波形", "响度"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>音调的高低与发声体振动的频率有关</span>，频率越低音调越低，频率越高音调越高；音量（响度）与振幅成正比。"}, {"section": 5, "stem": "关于MIDI文件，下列说法错误的是（　）。", "options": ["MIDI是乐器数字接口的简称", "MIDI文件中存储的是一些指令", "MIDI文件由声卡按照指令将声音合成出来", "MIDI文件可以记录人的声音"], "answer": 3, "analysis": "MIDI文件只能记录<span style='font-weight:600;color:#dc2626'>乐器的声音</span>，不能记录人的声音；而波形文件（如WAV）不仅可以记录乐器的声音，还可以记录人的声音。"}, {"section": 5, "stem": "在Flash动画制作中，按下F7键可以（　）。", "options": ["插入一个关键帧", "创建一个普通帧", "创建一个空白关键帧", "删除当前帧"], "answer": 2, "analysis": "Flash快捷键：<span style='font-weight:600;color:#059669'>F6插入关键帧、F5创建普通帧、F7创建空白关键帧</span>。"}, {"section": 5, "stem": "元件在舞台中的实际应用称为（　）。", "options": ["实例", "图层", "场景", "组件"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>元件在舞台中的实际应用称为实例</span>。一个元件可以创建多个实例；更改实例不影响元件，更改元件实例随之改变。"}, {"section": 6, "stem": "因特网（Internet）是（　）。", "options": ["世界上规模最大的计算机网络", "一种网络操作系统", "一个网站", "一种网络协议"], "answer": 0, "analysis": "因特网是一组全球信息资源的总汇，是<span style='font-weight:600;color:#059669'>世界范围内规模最大的计算机网络</span>，由许多子网互联而成的逻辑网。"}, {"section": 6, "stem": "采用“网页，仅HTML”方式保存网页，下列说法正确的是（　）。", "options": ["能保存网页中的图片", "只能保存当前页面，图片等无法保存", "会自动生成文件夹", "保存的文件是mht格式"], "answer": 1, "analysis": "“网页，仅HTML”方式<span style='font-weight:600;color:#059669'>只能保存当前页面</span>，如果页面涉及图片等是无法保存的。网页全部方式才会生成页面文件和文件夹。"}, {"section": 6, "stem": "同时按下（　）组合键，可以打开浏览过的历史记录窗口。", "options": ["Ctrl+F", "Ctrl+H", "Ctrl+N", "Ctrl+S"], "answer": 1, "analysis": "打开我的电脑或浏览器，同时按下<span style='font-weight:600;color:#059669'>Ctrl+H</span>组合键，窗口左侧会弹出浏览过的历史记录的小窗口。"}, {"section": 6, "stem": "统一资源标识符的英文缩写是（　）。", "options": ["HTTP", "HTML", "URL", "WWW"], "answer": 2, "analysis": "Web信息资源由统一资源标识符（<span style='font-weight:600;color:#059669'>URL</span>）所标记，它是一张网页、一张图片、一段视频或任何在Web上呈现的内容。"}, {"section": 6, "stem": "市场占有率第一且支持Windows、Linux、Mac多平台，同时提供移动端应用的浏览器是（　）。", "options": ["IE", "Chrome", "Safari", "Firefox"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>Chrome浏览器</span>由Google开发，市场占有率第一，不仅支持Windows平台，还支持Linux、Mac系统，也提供了移动端应用。"}, {"section": 6, "stem": "使用Gecko排版引擎的自由及开放源代码的网页浏览器是（　）。", "options": ["Chrome", "IE", "Firefox", "Safari"], "answer": 2, "analysis": "<span style='font-weight:600;color:#059669'>Firefox（火狐）</span>是自由及开放源代码的网页浏览器，使用Gecko排版引擎，支持Windows、Mac OSX及GNU/Linux等操作系统。"}, {"section": 6, "stem": "基于IE和Chrome双内核，拥有全国最大恶意网址库的浏览器是（　）。", "options": ["360安全浏览器", "Safari", "Chrome", "Firefox"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>360安全浏览器</span>是360安全中心推出的基于IE和Chrome双内核的浏览器，拥有全国最大的恶意网址库，可自动拦截挂马、欺诈等恶意网址。"}, {"section": 6, "stem": "主要为Mac系统量身打造，主要应用在Mac和iOS系统中的浏览器是（　）。", "options": ["IE", "Chrome", "Firefox", "Safari"], "answer": 3, "analysis": "<span style='font-weight:600;color:#059669'>Safari浏览器</span>是Apple公司为Mac系统量身打造的一款浏览器，主要应用在Mac和iOS系统中。"}, {"section": 6, "stem": "在“文件”菜单上指向“发送”，然后点击“电子邮件页面”或“电子邮件链接”，这属于（　）。", "options": ["保存网页", "用电子邮件发送网页", "创建桌面快捷方式", "设置网页为墙纸"], "answer": 1, "analysis": "在“文件”菜单上指向“发送”，然后点击“电子邮件页面”或“电子邮件链接”，是<span style='font-weight:600;color:#059669'>用电子邮件发送网页</span>的操作。注意必须设置电子邮件账户和程序。"}, {"section": 7, "stem": "既包括数值数据的检索、算术运算、比较和数学推导，也包括非数值数据（如事实、概念、思想、知识等）的检索、比较、演绎和逻辑推理，这种检索是（　）。", "options": ["数据检索", "事实检索", "文献检索", "全文检索"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>事实检索</span>既包括数值数据的检索、运算比较，也包括非数值数据的检索、演绎和逻辑推理；数据检索侧重准确数据；文献检索以文献为对象。"}, {"section": 7, "stem": "以文献为对象，查找某个课题的有关文献的一种检索是（　）。", "options": ["数据检索", "事实检索", "文献检索", "多媒体检索"], "answer": 2, "analysis": "<span style='font-weight:600;color:#059669'>文献检索</span>以文献为对象，是查找某个课题的有关文献的一种检索。"}, {"section": 7, "stem": "目前最大的基于互联网出版的知识搜索引擎是（　）。", "options": ["百度", "谷歌", "中国知网", "雅虎"], "answer": 2, "analysis": "知识搜索是建立在以用户需求为基础上的知识整合传播，国内的代表是<span style='font-weight:600;color:#059669'>中国知网</span>，是目前最大的基于互联网出版的知识搜索引擎。"}, {"section": 7, "stem": "CARS评价指标中，C代表（　）。", "options": ["可信度", "准确度", "合理性", "相关支持"], "answer": 0, "analysis": "CARS指标：<span style='font-weight:600;color:#059669'>C-可信度（credibility）</span>、A-准确度（accuracy）、R-合理性（reasonable）、S-相关支持（support）。"}, {"section": 7, "stem": "CARS评价指标中，影响准确度的要素有时效性、全面性和（　）。", "options": ["针对性", "公正性", "客观性", "一致性"], "answer": 0, "analysis": "看信息资源的准确度主要看网页的更新时间是否及时、信息是否全面而不单一，即影响准确度的要素有<span style='font-weight:600;color:#059669'>时效性、全面性和针对性</span>。"}, {"section": 7, "stem": "因特网信息资源评价标准中，最重要、最基本的标准是（　）。", "options": ["范围", "信息质量", "易用性", "稳定性"], "answer": 1, "analysis": "因特网信息资源评价标准：信息质量（<span style='font-weight:600;color:#059669'>最重要、最基本的标准</span>）、范围、易用性、稳定性和连续性。"}, {"section": 7, "stem": "检索“中国 AND 经济危机”，表示（　）。", "options": ["同时包含“中国”和“经济危机”两个词的网页", "包含“中国”或“经济危机”任一词的网页", "不包含“经济危机”的网页", "只包含“中国”的网页"], "answer": 0, "analysis": "AND（逻辑与）表示查询结果必须<span style='font-weight:600;color:#059669'>同时包含两个词</span>；OR表示任意一个词出现即可；NOT表示不包含指定词。"}, {"section": 8, "stem": "下列不属于5G技术特点的是（　）。", "options": ["高速率", "低时延", "大连接", "高资费"], "answer": 3, "analysis": "5G的特点：<span style='font-weight:600;color:#059669'>高速率、大带宽、低时延、高可靠、广覆盖、大连接</span>。高资费不属于5G技术特点。"}, {"section": 8, "stem": "云计算服务模式中，SaaS表示（　）。", "options": ["基础设施即服务", "平台即服务", "应用即服务", "数据即服务"], "answer": 2, "analysis": "云计算四种服务模式：IaaS基础设施即服务、PaaS平台即服务、<span style='font-weight:600;color:#059669'>SaaS应用即服务</span>、DaaS数据即服务。"}, {"section": 8, "stem": "物联网整体架构中，由各种传感器构成、负责识别物体和采集信息的是（　）。", "options": ["感知层", "网络层", "平台层", "应用层"], "answer": 0, "analysis": "物联网四层架构：<span style='font-weight:600;color:#059669'>感知层</span>（传感器识别采集）、网络层（中枢传递）、平台层（数据存储检索核心）、应用层（用户接口）。"}, {"section": 8, "stem": "大数据5V特点中，Variety表示（　）。", "options": ["大量", "高速", "多样", "真实性"], "answer": 2, "analysis": "大数据5V特点（IBM提出）：Volume大量、Velocity高速、<span style='font-weight:600;color:#059669'>Variety多样</span>、Value低价值密度、Veracity真实性。"}, {"section": 8, "stem": "区块链最主要的两个特征是（　）。", "options": ["去中心化和信息不可篡改", "开放性和匿名性", "自治性和开放性", "去中心化和开放性"], "answer": 0, "analysis": "区块链五大特征：去中心化、开放性、自治性、信息不可篡改、匿名性。<span style='font-weight:600;color:#059669'>最主要的两个特征：去中心化和信息不可篡改</span>。"}, {"section": 8, "stem": "京东、当当属于电子商务模式中的（　）。", "options": ["B2B", "B2C", "C2C", "O2O"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>B2C（企业对个人）</span>如沃尔玛超市、京东、当当；B2B（企业对企业）如阿里巴巴；C2C（个人对个人）如淘宝；O2O（线上线下结合）如美团。"}, {"section": 9, "stem": "信息在传输、交换、存储和处理过程中保持非修改、非破坏和非丢失的特性，即保持信息的原样性，这是信息安全目标中的（　）。", "options": ["机密性", "完整性", "可用性", "可控性"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>完整性</span>指信息在传输、交换、存储和处理过程中保持非修改、非破坏、非丢失，是最基本的安全特征。"}, {"section": 9, "stem": "衡量网络信息系统面向用户的一种安全性能，指信息能够被授权用户正确访问，这是信息安全目标中的（　）。", "options": ["机密性", "完整性", "可用性", "可审查性"], "answer": 2, "analysis": "<span style='font-weight:600;color:#059669'>可用性</span>指信息能够被授权用户正确访问，包括系统正常运行时能正确存取所需信息，遭受攻击时能恢复数据。"}, {"section": 9, "stem": "参与信息通信的双方在信息交换过程中都不可能否认或抵赖本人的真实身份，这是信息安全目标中的（　）。", "options": ["机密性", "完整性", "可用性", "可审查性"], "answer": 3, "analysis": "<span style='font-weight:600;color:#059669'>可审查性（不可否认性）</span>指参与信息通信的双方在信息交换过程中都不可能否认或抵赖本人的真实身份，以及提供信息的原样性和完成的操作与承诺。"}, {"section": 9, "stem": "下列属于主动防御保护技术的是（　）。", "options": ["防火墙技术", "数据加密", "口令验证", "审计跟踪"], "answer": 1, "analysis": "主动防御保护技术一般包括：<span style='font-weight:600;color:#059669'>数据加密、身份鉴别、存取控制、权限设置和虚拟专用网</span>；防火墙、口令验证、审计跟踪属于被动防御技术。"}, {"section": 9, "stem": "被公认是保护网络信息安全的最实用方法的是（　）。", "options": ["数据加密", "身份鉴别", "存取控制", "权限设置"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>数据加密</span>被公认为保护网络信息安全的最实用方法，对数据最有效的保护就是加密。"}, {"section": 9, "stem": "应用相关技术主动发现入侵者的入侵行为和入侵企图，向用户发出警报，是防火墙技术的重要补充，这种技术是（　）。", "options": ["安全扫描器", "入侵检测技术", "口令验证", "物理保护"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>入侵检测</span>与防火墙的被动防御不同，是应用相关技术主动发现入侵行为和入侵企图，是防火墙技术的重要补充。应用较广的开源软件有snort。"}, {"section": 9, "stem": "防火墙技术的核心思想是（　）。", "options": ["包过滤技术", "数据加密", "入侵检测", "身份鉴别"], "answer": 0, "analysis": "防火墙是内部网与Internet间实现安全策略要求的访问控制保护，其<span style='font-weight:600;color:#059669'>核心思想是包过滤技术</span>。"}, {"section": 9, "stem": "对网络信息系统的运行状态进行详尽审计，并保持审计记录和日志，帮助发现系统存在的安全弱点和入侵点，这种被动防御技术是（　）。", "options": ["安全扫描器", "口令验证", "审计跟踪", "防火墙"], "answer": 2, "analysis": "<span style='font-weight:600;color:#059669'>审计跟踪</span>对网络信息系统的运行状态进行详尽审计并保持审计记录和日志，帮助发现安全弱点和入侵点。审计是一种独立的、权威的、公正的监督行为。"}, {"section": 9, "stem": "信息安全目标中，消息层次上包括完整性、机密性和（　）。", "options": ["可用性", "可控性", "可审查性", "真实性"], "answer": 2, "analysis": "信息安全五大目标分为两类：<span style='font-weight:600;color:#059669'>消息层次上包括完整性、机密性和可审查性</span>；网络层次上包括可用性和可控性。"}, {"section": 10, "stem": "主要感染磁盘的引导区，在使用受感染的磁盘启动计算机时首先取得系统控制权的病毒是（　）。", "options": ["文件型病毒", "引导型病毒", "宏病毒", "蠕虫病毒"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>引导型病毒</span>主要感染磁盘的引导区，启动计算机时首先取得系统控制权，驻留内存后再引导系统，一般不对磁盘文件进行感染。"}, {"section": 10, "stem": "用BASIC语言编写的、寄存在Office文档上的宏代码中的病毒是（　）。", "options": ["引导型病毒", "文件型病毒", "宏病毒", "蠕虫病毒"], "answer": 2, "analysis": "<span style='font-weight:600;color:#059669'>宏病毒</span>指用BASIC语言编写的病毒程序寄存在Office文档上的宏代码，通常感染doc、docx、ppt、xls、xlsx等类型的文件。"}, {"section": 10, "stem": "关于蠕虫病毒，下列说法正确的是（　）。", "options": ["必须寄宿在其他文件中才能传播", "是一套完整程序，不需要寄宿在其他文件中", "只感染磁盘引导区", "对文件进行寄生"], "answer": 1, "analysis": "蠕虫病毒是危害网络安全的恶性病毒，通过扫描网络漏洞传播。<span style='font-weight:600;color:#059669'>它是一套完整程序，能够依靠网络来传播自己，不需要寄宿在其他文件当中</span>。"}, {"section": 10, "stem": "计算机病毒随着正常程序的执行而繁殖，随着数据或程序代码的传送而传播，这体现了病毒的（　）。", "options": ["传染性", "寄生性", "潜伏性", "破坏性"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>传染性</span>指计算机病毒随着正常程序的执行而繁殖，随数据或程序代码的传送而传播，可以迅速在程序之间、计算机之间、网络之间传播。"}, {"section": 10, "stem": "计算机病毒寄生于其他程序之中，当执行这个程序时，病毒就起破坏作用，这体现了病毒的（　）。", "options": ["传染性", "寄生性", "隐蔽性", "可触发性"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>寄生性</span>指计算机病毒寄生于其他程序之中，当执行这个程序时病毒就起破坏作用，而在未启动该程序时不容易被发现。"}, {"section": 11, "stem": "一个端口就是一个潜在的通信通道，对目标计算机进行端口扫描能（　）。", "options": ["直接控制目标计算机", "发现系统的安全漏洞", "窃取目标计算机密码", "破坏目标计算机数据"], "answer": 1, "analysis": "端口扫描能得到许多有用的信息，<span style='font-weight:600;color:#059669'>从而发现系统的安全漏洞</span>。扫描方法有手工扫描和端口扫描软件扫描。"}, {"section": 11, "stem": "在密码学中，绕过对加密算法的繁琐分析，利用密码算法硬件实现的运算中泄露的信息（如执行时间、功耗、电磁辐射）快速破解密码系统的攻击方式是（　）。", "options": ["网络监听", "旁路攻击", "信息炸弹", "网络钓鱼"], "answer": 1, "analysis": "<span style='font-weight:600;color:#059669'>旁路攻击（SCA）</span>指利用密码算法硬件实现的运算中泄露的信息（执行时间、功耗、电磁辐射等），结合统计理论快速破解密码系统。"}, {"section": 11, "stem": "短时间内向目标服务器发送大量超出系统负荷的信息，造成目标服务器超负荷、网络堵塞、系统崩溃的攻击手段是（　）。", "options": ["信息炸弹", "端口扫描", "网络监听", "旁路攻击"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>信息炸弹</span>指使用特殊工具软件，短时间内向目标服务器发送大量超出系统负荷的信息。目前常见的有邮件炸弹、逻辑炸弹等。"}, {"section": 11, "stem": "加密密钥与解密密钥相同的密码体制，常见算法有凯撒密码、DES等，这种加密方式是（　）。", "options": ["对称加密", "非对称加密", "数字签名", "数字认证"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>对称加密</span>即加密密钥与解密密钥相同，算法公开、计算量小、加密速度快，缺点是一把钥匙开一把锁，安全性得不到保证。常见算法有凯撒密码、DES。"}, {"section": 11, "stem": "使用不同的加密密钥和解密密钥，加密密钥向公众公开、解密密钥保密的加密体制，常见算法是（　）。", "options": ["DES", "凯撒密码", "RSA", "AES"], "answer": 2, "analysis": "<span style='font-weight:600;color:#059669'>RSA</span>是常见的非对称加密算法（公开密钥加密），A用B的公钥加密，B用自己的私钥解密，其他收到报文的人无法解密。"}, {"section": 11, "stem": "数字证书在日常生活中常见的应用有（　）。", "options": ["U盾、短信验证码", "指纹锁、人脸识别", "二维码、条形码", "杀毒软件、防火墙"], "answer": 0, "analysis": "数字证书是以数字证书为核心的加密技术，<span style='font-weight:600;color:#059669'>在日常生活中常见的有U盾、短信验证码</span>等，保障网上交易的安全。"}, {"section": 12, "stem": "利用信息网络诽谤他人，同一诽谤信息实际被点击、浏览达到5000次以上，或被转发次数达到500次以上，应认定为（　）。", "options": ["一般违法行为", "情节严重，可构成诽谤罪", "民事纠纷", "治安管理处罚"], "answer": 1, "analysis": "同一诽谤信息被点击浏览<span style='font-weight:600;color:#059669'>5000次以上</span>或转发<span style='font-weight:600;color:#059669'>500次以上</span>，应认定为“情节严重”，可构成诽谤罪。不知情转发不构成诽谤罪。"}, {"section": 12, "stem": "《中华人民共和国网络安全法》自（　）起施行。", "options": ["2016年11月7日", "2017年6月1日", "2018年1月1日", "2015年6月1日"], "answer": 1, "analysis": "《中华人民共和国网络安全法》由全国人民代表大会常务委员会于2016年11月7日发布，<span style='font-weight:600;color:#059669'>自2017年6月1日起施行</span>。"}, {"section": 12, "stem": "知识产权包括两个部分，分别是（　）。", "options": ["工业产权和著作权", "专利权和商标权", "版权和发明权", "财产权和人身权"], "answer": 0, "analysis": "知识产权包括两部分：<span style='font-weight:600;color:#059669'>工业产权和著作权</span>。知识产权最主要的特点是专有性。"}, {"section": 12, "stem": "知识产权最主要的特点是（　）。", "options": ["共享性", "专有性", "时效性", "普遍性"], "answer": 1, "analysis": "知识产权最主要的特征是<span style='font-weight:600;color:#059669'>专有性</span>，除非权利人同意或法律规定，权利人以外的任何人不得享有或使用该权利。"}, {"section": 12, "stem": "为保护我国计算机应用事业的发展，我国政府于1991年6月颁布了（　）。", "options": ["《计算机软件保护条例》", "《中华人民共和国网络安全法》", "《计算机软件著作权登记办法》", "《电子签名法》"], "answer": 0, "analysis": "我国政府于<span style='font-weight:600;color:#059669'>1991年6月颁布了《计算机软件保护条例》</span>，未经著作人同意随意复制其软件的行为是违法行为；2001年颁布了新的《计算机软件保护条例》。"}, {"section": 12, "stem": "在信息活动领域中，利用计算机信息系统或计算机信息知识作为手段，对国家、团体或个人造成危害，依法应当予以刑罚处罚的行为，称为（　）。", "options": ["计算机犯罪", "黑客行为", "网络攻击", "道德失范"], "answer": 0, "analysis": "<span style='font-weight:600;color:#059669'>计算机犯罪</span>是在信息活动领域中利用计算机信息系统或计算机信息知识作为手段，或针对计算机信息系统，对国家、团体或个人造成危害，依法应予以刑罚处罚的行为。"}, {"section": 12, "stem": "下列属于比较严重的网络道德失范行为的是（　）。", "options": ["网络文化侵略", "收发电子邮件", "下载正版软件", "在线学习"], "answer": 0, "analysis": "比较严重的网络道德失范行为主要有：<span style='font-weight:600;color:#059669'>网络犯罪、色情和暴力风暴、网络文化侵略、破坏国家安全</span>。"}]};
+
+// ============ 应用状态 ============
+const STATE = {
+  currentSection: 0,
+  currentTab: 'read',
+  currentQuizIndex: 0,
+  quizAnswers: {},       // {qIndex: selectedOptionIndex}
+  quizSubmitted: {},     // {qIndex: true}
+  doneSections: new Set(),
+  bookmarks: new Set(),
+  errorQuestions: new Set(),
+  openChapters: new Set(['第一章 信息与信息技术']),
+  theme: 'light',
+  searchQuery: ''
+};
+
+// ============ 初始化 ============
+function init() {
+  loadState();
+  renderSidebar();
+  renderContent();
+  updateProgress();
+  updateErrorCount();
+}
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('infotech_kb_state') || '{}');
+    if (saved.doneSections) STATE.doneSections = new Set(saved.doneSections);
+    if (saved.bookmarks) STATE.bookmarks = new Set(saved.bookmarks);
+    if (saved.errorQuestions) STATE.errorQuestions = new Set(saved.errorQuestions);
+    if (saved.openChapters) STATE.openChapters = new Set(saved.openChapters);
+    if (saved.theme) STATE.theme = saved.theme;
+    if (saved.quizAnswers) STATE.quizAnswers = saved.quizAnswers;
+    if (saved.quizSubmitted) STATE.quizSubmitted = saved.quizSubmitted;
+  } catch(e) {}
+  applyTheme();
+}
+
+function saveState() {
+  localStorage.setItem('infotech_kb_state', JSON.stringify({
+    doneSections: [...STATE.doneSections],
+    bookmarks: [...STATE.bookmarks],
+    errorQuestions: [...STATE.errorQuestions],
+    openChapters: [...STATE.openChapters],
+    theme: STATE.theme,
+    quizAnswers: STATE.quizAnswers,
+    quizSubmitted: STATE.quizSubmitted
+  }));
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', STATE.theme);
+  document.getElementById('themeIcon').textContent = STATE.theme === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = STATE.theme === 'dark' ? '亮色模式' : '暗色模式';
+}
+
+// ============ 侧边栏 ============
+function getChapterGroups() {
+  // Group sections by chapter
+  const groups = {};
+  KB_DATA.sections.forEach((s, si) => {
+    const ch = s.chapter || '其他';
+    if (!groups[ch]) groups[ch] = [];
+    groups[ch].push({section: s, si: si});
+  });
+  return groups;
+}
+
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  let html = '';
+  const groups = getChapterGroups();
+  Object.keys(groups).forEach((chName) => {
+    const items = groups[chName];
+    const isOpen = STATE.openChapters.has(chName);
+    const chDone = items.filter(it => STATE.doneSections.has(it.si)).length;
+    html += '<div class="chapter-group">';
+    html += `<button class="chapter-title ${isOpen ? 'open' : ''}" onclick="toggleChapter('${chName.replace(/'/g, "\\'")}')">`;
+    html += `<span class="arrow">▶</span>${chName}`;
+    html += `<span class="count">${chDone}/${items.length}节</span>`;
+    html += '</button>';
+    html += `<div class="section-list ${isOpen ? 'open' : ''}" id="sectionList-${chName}">`;
+    items.forEach(({section, si}) => {
+      const isActive = si === STATE.currentSection;
+      const isDone = STATE.doneSections.has(si);
+      const quizCount = KB_DATA.quizzes.filter(q => q.section === si).length;
+      html += `<div class="section-row ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}" onclick="selectSection(${si})">`;
+      html += `<span class="check">${isDone ? '✓' : ''}</span>`;
+      html += `<span class="section-title">${section.title}</span>`;
+      html += `<button class="mini-quiz-btn" onclick="event.stopPropagation();selectSectionAndQuiz(${si})" title="本节练习(${quizCount}题)">📝${quizCount}</button>`;
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  nav.innerHTML = html;
+}
+
+function toggleChapter(chName) {
+  if (STATE.openChapters.has(chName)) {
+    STATE.openChapters.delete(chName);
+  } else {
+    STATE.openChapters.add(chName);
+  }
+  renderSidebar();
+}
+
+function selectSection(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'read';
+  // Auto-expand the chapter containing this section
+  const sec = KB_DATA.sections[si];
+  if (sec && sec.chapter) STATE.openChapters.add(sec.chapter);
+  switchTab('read');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function selectSectionAndQuiz(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'quiz';
+  const sec = KB_DATA.sections[si];
+  if (sec && sec.chapter) STATE.openChapters.add(sec.chapter);
+  // Find first quiz question index for this section
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === si);
+  if (firstQ >= 0) STATE.currentQuizIndex = firstQ;
+  switchTab('quiz');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ============ 标签页切换 ============
+function switchTab(tab) {
+  STATE.currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+  document.getElementById('readContent').style.display = tab === 'read' ? 'block' : 'none';
+  document.getElementById('quizContent').style.display = tab === 'quiz' ? 'block' : 'none';
+  document.getElementById('bookmarksContent').style.display = tab === 'bookmarks' ? 'block' : 'none';
+  document.getElementById('errorsContent').style.display = tab === 'errors' ? 'block' : 'none';
+  renderContent();
+  if (tab === 'read') document.getElementById('searchInput').value = STATE.searchQuery;
+}
+
+// ============ 内容渲染 ============
+function renderContent() {
+  if (STATE.currentTab === 'read' || STATE.currentTab === 'bookmarks' || STATE.currentTab === 'errors') {
+    renderReadContent();
+  }
+  if (STATE.currentTab === 'quiz') {
+    renderQuizContent();
+  }
+  document.getElementById('breadcrumbCurrent').textContent = (KB_DATA.sections[STATE.currentSection]?.chapter || '') +
+    (KB_DATA.sections[STATE.currentSection] ? ' › ' : '') + (KB_DATA.sections[STATE.currentSection]?.title || '第一章');
+}
+
+function renderReadContent() {
+  const container = document.getElementById('readContent');
+  const section = KB_DATA.sections[STATE.currentSection];
+  let cards = section.cards;
+
+  // Handle bookmarks tab
+  if (STATE.currentTab === 'bookmarks') {
+    const allCards = KB_DATA.sections.flatMap((s, si) => s.cards.map(c => ({...c, sectionIdx: si, sectionTitle: s.title})));
+    cards = allCards.filter(c => STATE.bookmarks.has(c.id));
+    if (cards.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+      container.style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'block';
+      document.getElementById('errorsContent').style.display = 'none';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'block';
+    document.getElementById('errorsContent').style.display = 'none';
+
+    let html = `<div class="section-header"><h2>⭐ 我的收藏</h2><div class="meta">共 ${cards.length} 个收藏</div></div>`;
+    cards.forEach(c => {
+      html += renderCard(c, true);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Handle errors tab
+  if (STATE.currentTab === 'errors') {
+    const errorQuizList = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+    if (errorQuizList.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">📝</div><h3>暂无错题</h3><p>做错的题目会自动收入错题本</p></div>';
+      document.getElementById('readContent').style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'none';
+      document.getElementById('errorsContent').style.display = 'block';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'none';
+    document.getElementById('errorsContent').style.display = 'block';
+
+    let html = `<div class="section-header"><h2>📝 错题本</h2><div class="meta">共 ${errorQuizList.length} 道错题</div></div>`;
+    errorQuizList.forEach((q, idx) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderErrorQuiz(q, qi, idx + 1);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Normal read mode
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'none';
+
+  let html = `<div class="section-header">`;
+  html += `<h2>${section.title}</h2>`;
+  html += `<div class="meta">`;
+  html += `<span>📄 ${section.cards.length} 个知识点</span>`;
+  html += `<span>📝 ${KB_DATA.quizzes.filter(q => q.section === STATE.currentSection).length} 道练习题</span>`;
+  html += `</div></div>`;
+
+  let filteredCards = cards;
+  if (STATE.searchQuery) {
+    const q = STATE.searchQuery.toLowerCase();
+    filteredCards = cards.filter(c => {
+      const text = c.title + c.html.replace(/<[^>]*>/g, '');
+      return text.toLowerCase().includes(q);
+    });
+    if (filteredCards.length === 0) {
+      html += '<div class="empty-state"><div class="icon">🔍</div><h3>未找到匹配的知识点</h3><p>试试其他关键词</p></div>';
+    }
+  }
+
+  filteredCards.forEach(c => {
+    html += renderCard(c);
+  });
+
+  html += `<div style="text-align:center;margin-top:24px">`;
+  html += `<button class="btn btn-primary" onclick="markSectionDone(${STATE.currentSection})" ${STATE.doneSections.has(STATE.currentSection) ? 'disabled' : ''}>`;
+  html += STATE.doneSections.has(STATE.currentSection) ? '✅ 已学完本节' : '✓ 标记本节为已学';
+  html += '</button>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderCard(card, showSection = false) {
+  let html = `<div class="knowledge-card" id="card-${card.id}">`;
+  html += `<h3><span class="icon">${card.icon}</span>${card.title}</h3>`;
+  if (showSection && card.sectionTitle) {
+    html += `<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">📂 ${card.sectionTitle}</div>`;
+  }
+  html += card.html;
+  if (card.tags) {
+    html += '<div class="tag-row">';
+    card.tags.forEach(t => {
+      html += `<span class="tag">${t}</span>`;
+    });
+    html += '</div>';
+  }
+  html += `<div class="card-actions">`;
+  html += `<button class="card-action-btn ${STATE.bookmarks.has(card.id) ? 'bookmarked':''}" onclick="toggleBookmark('${card.id}')">`;
+  html += STATE.bookmarks.has(card.id) ? '⭐ 已收藏' : '☆ 收藏';
+  html += '</button>';
+  html += '</div></div>';
+  return html;
+}
+
+function renderErrorQuiz(q, qi, num) {
+  const sectionTitle = KB_DATA.sections[q.section]?.title || '';
+  const labels = ['A','B','C','D'];
+  let html = `<div class="quiz-container">`;
+  html += `<div class="quiz-header"><span class="quiz-section-label">${sectionTitle}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += `<div class="quiz-options">`;
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if (oi === q.answer) cls = 'correct';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += `<div class="quiz-actions">`;
+  html += `<button class="btn btn-outline" onclick="removeError(${qi})">✓ 已掌握，移除</button>`;
+  html += '</div></div>';
+  return html;
+}
+
+// ============ 练习模式 ============
+function renderQuizContent() {
+  const container = document.getElementById('quizContent');
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  const total = KB_DATA.quizzes.length;
+  const sectionTotal = sectionQuizzes.length;
+
+  // Show score summary if all questions in current section are answered
+  const allAnswered = sectionQuizzes.every((_, i) => {
+    const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+    return STATE.quizSubmitted[qi];
+  });
+
+  if (allAnswered) {
+    const correct = sectionQuizzes.filter((_, i) => {
+      const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+      return STATE.quizAnswers[qi] === sectionQuizzes[i].answer;
+    }).length;
+    const pct = Math.round((correct / sectionTotal) * 100);
+
+    let html = '<div class="score-display">';
+    html += `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">${KB_DATA.sections[STATE.currentSection].title} · 练习成绩</div>`;
+    html += `<div class="score-number">${pct}%</div>`;
+    html += '<div class="stats-row">';
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--success)">${correct}</div><div class="stat-label">正确</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--danger)">${sectionTotal - correct}</div><div class="stat-label">错误</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value">${sectionTotal}</div><div class="stat-label">总计</div></div>`;
+    html += '</div>';
+    html += '<div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">';
+    html += '<button class="btn btn-primary" onclick="resetSectionQuiz()">🔄 重新练习</button>';
+    if (sectionQuizzes.some((_, i) => STATE.quizAnswers[KB_DATA.quizzes.indexOf(sectionQuizzes[i])] !== sectionQuizzes[i].answer)) {
+      html += '<button class="btn btn-outline" onclick="reviewSectionErrors()">📝 回看本节错题</button>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // Show all questions with results
+    sectionQuizzes.forEach((q, si) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderQuizResult(q, qi, si + 1);
+    });
+
+    container.innerHTML = html;
+    return;
+  }
+
+  const q = sectionQuizzes[STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0])] || sectionQuizzes[0];
+  const qi = KB_DATA.quizzes.indexOf(q);
+  const localIdx = STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0]);
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const labels = ['A','B','C','D'];
+
+  let html = '<div class="section-header">';
+  html += `<h2>${KB_DATA.sections[STATE.currentSection].title} · 章节练习</h2>`;
+  html += `<div class="meta"><span>第 ${localIdx + 1}/${sectionTotal} 题</span></div>`;
+  html += '</div>';
+
+  html += '<div class="quiz-container">';
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if (submitted) {
+      if (oi === q.answer) cls = 'correct';
+      else if (oi === selected && oi !== q.answer) cls = 'wrong';
+    } else if (oi === selected) {
+      cls = 'selected';
+    }
+    html += `<div class="quiz-option ${cls}" onclick="selectOption(${qi}, ${oi})">`;
+    html += `<span class="option-letter">${labels[oi]}</span>${opt}`;
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Analysis
+  html += `<div class="analysis-box ${submitted ? 'show' : ''}" id="analysis${qi}">${q.analysis}</div>`;
+
+  // Actions
+  html += '<div class="quiz-actions">';
+  if (!submitted) {
+    html += `<button class="btn btn-primary" onclick="submitAnswer(${qi})" ${selected === undefined ? 'disabled' : ''}>确认提交</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="prevQuiz()">上一题</button>`;
+  html += `<button class="btn btn-outline" onclick="nextQuiz()">下一题</button>`;
+  if (STATE.errorQuestions.has(qi)) {
+    html += `<button class="btn btn-outline" style="color:var(--danger)" onclick="removeError(${qi})">从错题本移除</button>`;
+  }
+  html += '</div>';
+  html += '</div>';
+
+  // Dots navigation
+  html += '<div class="quiz-nav">';
+  sectionQuizzes.forEach((sq, idx) => {
+    const qi2 = KB_DATA.quizzes.indexOf(sq);
+    let dotCls = '';
+    if (idx === localIdx) dotCls += ' current';
+    if (STATE.quizSubmitted[qi2]) {
+      dotCls += STATE.quizAnswers[qi2] === sq.answer ? ' correct-dot' : ' wrong-dot';
+    }
+    html += `<button class="quiz-nav-dot ${dotCls}" onclick="goToQuestion(${qi2})">${idx + 1}</button>`;
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderQuizResult(q, qi, num) {
+  const labels = ['A','B','C','D'];
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const correct = submitted && selected === q.answer;
+
+  let html = '<div class="quiz-container">';
+  html += `<div class="quiz-header"><span class="quiz-section-label" style="background:${correct ? 'var(--success-light)' : 'var(--danger-light)'};color:${correct ? 'var(--success)' : 'var(--danger)'}">${correct ? '✓ 正确' : '✗ 错误'}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if (oi === q.answer) cls = 'correct';
+    else if (oi === selected && oi !== q.answer) cls = 'wrong';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += '</div>';
+  return html;
+}
+
+// ============ 练习操作 ============
+function selectOption(qi, oi) {
+  if (STATE.quizSubmitted[qi]) return;
+  STATE.quizAnswers[qi] = oi;
+  saveState();
+  renderQuizContent();
+}
+
+function submitAnswer(qi) {
+  if (STATE.quizAnswers[qi] === undefined) return;
+  STATE.quizSubmitted[qi] = true;
+  const q = KB_DATA.quizzes[qi];
+  if (STATE.quizAnswers[qi] !== q.answer) {
+    STATE.errorQuestions.add(qi);
+  }
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function findLastSectionQuizIdx(sectionIdx) {
+  let last = -1;
+  for (let i = 0; i < KB_DATA.quizzes.length; i++) {
+    if (KB_DATA.quizzes[i].section === sectionIdx) last = i;
+  }
+  return last;
+}
+
+function prevQuiz() {
+  const sectionStart = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex > sectionStart) {
+    STATE.currentQuizIndex--;
+  }
+  renderQuizContent();
+}
+
+function nextQuiz() {
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex < sectionEnd) {
+    STATE.currentQuizIndex++;
+  }
+  renderQuizContent();
+}
+
+function goToQuestion(qi) {
+  STATE.currentQuizIndex = qi;
+  renderQuizContent();
+}
+
+function resetSectionQuiz() {
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  sectionQuizzes.forEach(q => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    delete STATE.quizAnswers[qi];
+    delete STATE.quizSubmitted[qi];
+     STATE.errorQuestions.delete(qi);
+  });
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  STATE.currentQuizIndex = firstQ >= 0 ? firstQ : 0;
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function reviewSectionErrors() {
+  // Switch to errors tab
+  STATE.currentTab = 'errors';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('errorsTab').classList.add('active');
+  document.getElementById('errorsTab').style.display = '';
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'block';
+  renderContent();
+}
+
+function removeError(qi) {
+  STATE.errorQuestions.delete(qi);
+  saveState();
+  updateErrorCount();
+  if (STATE.currentTab === 'errors') renderContent();
+  if (STATE.currentTab === 'quiz') renderQuizContent();
+}
+
+// ============ 收藏 ============
+function toggleBookmark(cardId) {
+  if (STATE.bookmarks.has(cardId)) {
+    STATE.bookmarks.delete(cardId);
+    showToast('已取消收藏');
+  } else {
+    STATE.bookmarks.add(cardId);
+    showToast('已加入收藏夹');
+  }
+  saveState();
+  renderContent();
+}
+
+function toggleBookmarks() {
+  const tabBtn = document.getElementById('bookmarksTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'bookmarks';
+  switchTab('bookmarks');
+  const allBookmarks = KB_DATA.sections.flatMap(s => s.cards).filter(c => STATE.bookmarks.has(c.id));
+  if (allBookmarks.length === 0) {
+    document.getElementById('bookmarksContent').innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+  }
+}
+
+function toggleErrors() {
+  const tabBtn = document.getElementById('errorsTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'errors';
+  switchTab('errors');
+}
+
+// ============ 节完成标记 ============
+function markSectionDone(si) {
+  STATE.doneSections.add(si);
+  saveState();
+  updateProgress();
+  renderSidebar();
+  renderContent();
+  setTimeout(() => showToast('✅ 已标记本节为已学'), 300);
+}
+
+function updateProgress() {
+  const total = KB_DATA.sections.length;
+  const done = STATE.doneSections.size;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function updateErrorCount() {
+  document.getElementById('errorCount').textContent = STATE.errorQuestions.size > 0 ? `(${STATE.errorQuestions.size})` : '';
+}
+
+// ============ 搜索 ============
+function onSearch() {
+  STATE.searchQuery = document.getElementById('searchInput').value.trim();
+  if (STATE.currentTab !== 'read') {
+    switchTab('read');
+  }
+  renderContent();
+}
+
+// ============ 主题 ============
+function toggleTheme() {
+  STATE.theme = STATE.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  saveState();
+}
+
+// ============ 错题导出 ============
+function exportErrorsCSV() {
+  const errors = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+  if (errors.length === 0) {
+    showToast('暂无错题可导出');
+    return;
+  }
+  const labels = ['A','B','C','D'];
+  let csv = '\uFEFF序号,题目,选项A,选项B,选项C,选项D,正确答案,你的答案,解析\n';
+  errors.forEach((q, idx) => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    const yourAnswer = STATE.quizAnswers[qi] !== undefined ? labels[STATE.quizAnswers[qi]] : '未答';
+    const correctAnswer = labels[q.answer];
+    const stem = q.stem.replace(/"/g, '""');
+    const opts = q.options.map(o => o.replace(/"/g, '""'));
+    const analysis = q.analysis.replace(/<[^>]*>/g, '').replace(/"/g, '""');
+    csv += `${idx + 1},"${stem}","${opts[0] || ''}","${opts[1] || ''}","${opts[2] || ''}","${opts[3] || ''}","${correctAnswer}","${yourAnswer}","${analysis}"\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '信息技术_错题导出.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============ 移动端 ============
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ============ Toast ============
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.getElementById('toastContainer').appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+// ============ 启动 ============
+document.addEventListener('DOMContentLoaded', function() {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+});
+// 兜底：如果DOMContentLoaded已触发
+if (document.readyState !== 'loading') {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+}
+</script>
+</body>
+</html>

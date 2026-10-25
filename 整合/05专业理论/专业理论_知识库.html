@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>专业理论（计算机基础） · 知识库</title>
+<style>
+:root {
+  --bg: #f8f9fb;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #5a5d6e;
+  --text-muted: #9498a8;
+  --border: #e8eaef;
+  --accent: #4f46e5;
+  --accent-light: #eef0ff;
+  --success: #059669;
+  --success-light: #ecfdf5;
+  --warning: #d97706;
+  --warning-light: #fffbeb;
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --info: #2563eb;
+  --info-light: #eff6ff;
+  --tag-bg: #f1f5f9;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-sidebar: #1e293b;
+  --text: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #334155;
+  --accent: #818cf8;
+  --accent-light: #1e1b4b;
+  --tag-bg: #334155;
+  --shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.4;
+}
+
+.sidebar-header .subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+}
+
+.chapter-group {
+  margin-bottom: 4px;
+}
+
+.chapter-title {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: background var(--transition);
+}
+
+.chapter-title:hover { background: var(--accent-light); }
+.chapter-title .arrow {
+  font-size: 10px;
+  transition: transform var(--transition);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.chapter-title.open .arrow { transform: rotate(90deg); }
+.chapter-title .count {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.section-list {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+}
+
+.section-list.open { max-height: 500px; }
+
+.section-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.section-item:hover { background: var(--accent-light); color: var(--accent); }
+.section-item.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+
+.section-item .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.section-item.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.section-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all var(--transition);
+  border-radius: var(--radius-xs);
+  margin: 1px 8px;
+  width: calc(100% - 16px);
+}
+
+.section-row:hover { background: var(--accent-light); color: var(--accent); }
+.section-row.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+.section-row .section-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.section-row .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.section-row.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.mini-quiz-btn {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.mini-quiz-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-bar-wrap { margin-bottom: 4px; }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text-muted); margin-bottom: 6px;
+}
+.progress-bar {
+  height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease;
+}
+
+.sidebar-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: var(--radius-xs);
+  font-size: 12px; color: var(--text-secondary); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg-card);
+  transition: all var(--transition);
+  width: 100%;
+}
+
+.sidebar-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sidebar-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+
+.top-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 50;
+}
+
+.breadcrumb {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.breadcrumb span { color: var(--text); font-weight: 500; }
+
+.search-box {
+  margin-left: auto;
+  position: relative;
+}
+
+.search-box input {
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-size: 13px; width: 240px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.search-box input:focus { border-color: var(--accent); }
+.search-box .search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); font-size: 14px;
+}
+
+.content-area {
+  padding: 24px;
+  max-width: 900px;
+}
+
+.tab-bar {
+  display: flex; gap: 4px; margin-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  font-size: 14px; font-weight: 500; color: var(--text-muted);
+  border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn .badge {
+  font-size: 11px; background: var(--tag-bg); color: var(--text-secondary);
+  padding: 1px 8px; border-radius: 10px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 20px; font-weight: 700; color: var(--text);
+  margin-bottom: 4px;
+}
+
+.section-header .meta {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; gap: 16px;
+}
+
+.knowledge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--transition);
+}
+
+.knowledge-card:hover { box-shadow: var(--shadow-md); }
+
+.knowledge-card h3 {
+  font-size: 16px; font-weight: 600; color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.knowledge-card h3 .icon {
+  font-size: 18px;
+}
+
+.knowledge-card p {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.knowledge-card ul, .knowledge-card ol {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.knowledge-card li {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.knowledge-card .highlight {
+  background: var(--warning-light);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.knowledge-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.knowledge-table th, .knowledge-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.knowledge-table th {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.knowledge-table td { color: var(--text-secondary); }
+
+.tag-row {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 12px; background: var(--tag-bg);
+  color: var(--text-secondary);
+}
+
+.tag.accent { background: var(--accent-light); color: var(--accent); }
+.tag.success { background: var(--success-light); color: var(--success); }
+.tag.warning { background: var(--warning-light); color: var(--warning); }
+
+.card-actions {
+  display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.card-action-btn {
+  font-size: 12px; padding: 5px 12px;
+  border-radius: var(--radius-xs); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 4px;
+}
+
+.card-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.card-action-btn.bookmarked { border-color: #f59e0b; color: #f59e0b; background: #fffbeb; }
+
+.quiz-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+
+.quiz-section-label {
+  font-size: 12px; color: var(--text-muted);
+  background: var(--tag-bg);
+  padding: 3px 10px; border-radius: 12px;
+}
+
+.quiz-question {
+  font-size: 15px; font-weight: 500; color: var(--text);
+  margin-bottom: 16px; line-height: 1.6;
+}
+
+.quiz-options {
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.quiz-option {
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 14px; color: var(--text-secondary);
+  background: var(--bg);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.quiz-option:hover { border-color: var(--accent); }
+.quiz-option.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.quiz-option.correct { border-color: var(--success); background: var(--success-light); color: var(--success); font-weight: 600; }
+.quiz-option.wrong { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.quiz-option .option-letter {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-weight: 600; font-size: 13px;
+  background: var(--tag-bg); color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.quiz-option.selected .option-letter { background: var(--accent); color: #fff; }
+.quiz-option.correct .option-letter { background: var(--success); color: #fff; }
+.quiz-option.wrong .option-letter { background: var(--danger); color: #fff; }
+
+.analysis-box {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--info-light);
+  border: 1px solid #93c5fd;
+  font-size: 13px; color: #1e40af;
+  line-height: 1.7;
+  display: none;
+}
+
+.analysis-box.show { display: block; }
+
+.analysis-box strong { color: #1e3a5f; }
+
+.quiz-actions {
+  display: flex; gap: 8px; margin-top: 12px;
+}
+
+.btn {
+  padding: 8px 16px; border-radius: var(--radius-xs);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: none; transition: all var(--transition);
+}
+
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
+
+.quiz-nav {
+  display: flex; justify-content: center; gap: 8px; margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.quiz-nav-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg);
+  font-size: 12px; cursor: pointer; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+
+.quiz-nav-dot:hover { border-color: var(--accent); }
+.quiz-nav-dot.current { border-color: var(--accent); background: var(--accent); color: #fff; font-weight: 600; }
+.quiz-nav-dot.correct-dot { border-color: var(--success); background: var(--success-light); }
+.quiz-nav-dot.wrong-dot { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state h3 { font-size: 16px; margin-bottom: 8px; color: var(--text); }
+.empty-state p { font-size: 13px; }
+
+.score-display {
+  text-align: center; padding: 40px 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.score-number {
+  font-size: 48px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stats-row {
+  display: flex; justify-content: center; gap: 32px;
+  margin: 16px 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value { font-size: 20px; font-weight: 600; color: var(--text); }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.bookmark-list-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.bookmark-list-item:hover { background: var(--bg); }
+
+.bookmark-list-item .title { font-size: 13px; color: var(--text); font-weight: 500; }
+.bookmark-list-item .meta { font-size: 11px; color: var(--text-muted); }
+
+.mobile-menu-btn {
+  display: none;
+  width: 36px; height: 36px; border: none; background: none;
+  font-size: 20px; cursor: pointer; color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .search-box input { width: 160px; }
+  .content-area { padding: 16px; }
+}
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  padding: 10px 20px; background: var(--text); color: var(--bg);
+  border-radius: 20px; font-size: 13px; z-index: 1000;
+  animation: toastIn 0.3s ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>专业理论（计算机基础）</h1>
+      <div class="subtitle">专业理论 · 知识库 · 全四章</div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+    <div class="sidebar-footer">
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>学习进度</span><span id="progressPercent">0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+      <button class="sidebar-btn" onclick="toggleBookmarks()" id="bookmarkBtn">
+        <span>⭐</span> 收藏夹
+      </button>
+      <button class="sidebar-btn" onclick="toggleErrors()" id="errorBtn">
+        <span>📝</span> 错题本 <span style="font-size:10px;color:var(--text-muted)" id="errorCount"></span>
+      </button>
+      <button class="sidebar-btn" onclick="exportErrorsCSV()">
+        <span>📥</span> 导出错题CSV
+      </button>
+      <button class="sidebar-btn" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">暗色模式</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="breadcrumb" id="breadcrumb">
+        首页 <span style="margin:0 4px;color:var(--text-muted)">›</span> <span id="breadcrumbCurrent">第一章</span>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜索知识点..." oninput="onSearch()">
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="read" onclick="switchTab('read')">
+          📖 知识阅读
+        </button>
+        <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">
+          📝 章节练习 <span class="badge" id="quizBadge">200题</span>
+        </button>
+        <button class="tab-btn" data-tab="bookmarks" onclick="switchTab('bookmarks')" style="display:none" id="bookmarksTab">
+          ⭐ 收藏夹
+        </button>
+        <button class="tab-btn" data-tab="errors" onclick="switchTab('errors')" style="display:none" id="errorsTab">
+          📝 错题本
+        </button>
+      </div>
+
+      <div id="readContent"></div>
+      <div id="quizContent" style="display:none"></div>
+      <div id="bookmarksContent" style="display:none"></div>
+      <div id="errorsContent" style="display:none"></div>
+    </div>
+  </main>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+// ============ 知识数据 ============
+const KB_DATA = {"title": "专业理论（计算机基础） · 知识库", "sections": [{"chapter": "第一章 计算机的组成", "title": "第一节 计算机概述", "cards": [{"id": "c101", "title": "计算机的诞生", "icon": "🎂", "html": "<p><strong>世界第一台电子计算机 ENIAC</strong>：</p><ul><li>时间：<span class='highlight'>1946 年</span></li><li>地点：美国宾夕法尼亚大学</li><li>最初用途：弹道计算（军事国防、科学计算）</li></ul><p>电子计算机的发展以<span class='highlight'>构成元件</span>为依据划分为四个时代。</p>", "tags": ["诞生", "ENIAC", "必考"]}, {"id": "c102", "title": "计算机发展的四代", "icon": "📜", "html": "<table class='knowledge-table'><tr><th>代</th><th>时间</th><th>主要逻辑元件</th></tr><tr><td>第一代</td><td>1946–1958</td><td>电子管</td></tr><tr><td>第二代</td><td>1958–1964</td><td>晶体管</td></tr><tr><td>第三代</td><td>1965–1970</td><td>中、小规模集成电路</td></tr><tr><td>第四代</td><td>1971–至今</td><td>大规模 / 超大规模集成电路</td></tr></table><p><span class='highlight'>划分时代的唯一依据 = 构成元件（电子元器件）。</span></p>", "tags": ["发展史", "四代", "必考"]}, {"id": "c103", "title": "计算机的特点", "icon": "⭐", "html": "<p>五大特点：</p><ul><li><strong>运算速度快</strong>（每秒亿亿次）</li><li><strong>运算精度高</strong>（字长 32/64 位，有效数字可达上亿位）</li><li><strong>存储容量大</strong></li><li><strong>具有记忆和逻辑判断能力</strong></li><li><strong>具有自动运行能力</strong>（与其他计算工具的本质区别）</li></ul>", "tags": ["特点"]}, {"id": "c104", "title": "计算机的应用领域", "icon": "🧩", "html": "<ul><li><strong>科学计算</strong>（数值计算）：最早的应用领域，计算量大、数值范围大。</li><li><strong>数据处理</strong>（非数值计算）：最重要、应用最广的领域，&gt;80% 的计算机用于数据处理（如财务数据）。</li><li><strong>过程控制</strong>（实时控制）：实时采集、检测、自动控制。</li><li><strong>计算机辅助</strong>：CAD 辅助设计、CAM 辅助制造、CAE 辅助工程、CAT 辅助测试、CAI 辅助教学。</li><li><strong>人工智能、网络通信、多媒体</strong>等。</li></ul>", "tags": ["应用领域", "CAx", "必考"]}, {"id": "c105", "title": "计算机的分类", "icon": "🗂️", "html": "<ul><li><strong>按工作原理</strong>：数字计算机、模拟计算机、数字模拟混合式计算机（当前主流是数字电子计算机）。</li><li><strong>按用途</strong>：通用计算机、专用计算机。</li><li><strong>按性能</strong>：巨型机、大型机、中型机、小型机、微型机。</li></ul>", "tags": ["分类"]}, {"id": "c106", "title": "计算机的发展趋势", "icon": "🚀", "html": "<p>五大趋势：<strong>巨型化、微型化、网络化、智能化、多媒体化</strong>。</p><p><span class='highlight'>巨型化</span>=高速度大容量；<span class='highlight'>智能化</span>=具备推理、判断、感觉等类似人类思维的能力。</p>", "tags": ["发展趋势"]}]}, {"chapter": "第一章 计算机的组成", "title": "第二节 计算机系统组成", "cards": [{"id": "c111", "title": "计算机系统的组成", "icon": "🧱", "html": "<p>计算机系统由<span class='highlight'>硬件系统</span>和<span class='highlight'>软件系统</span>两大部分组成，二者相辅相成、缺一不可。</p><ul><li>硬件：看得见的物理设备（物质基础），只有硬件无软件称为“裸机”。</li><li>软件：程序、数据及技术文档，是发挥硬件功能的关键（“灵魂”）。</li><li>硬件为软件的载体，软件是硬件的体现。</li></ul>", "tags": ["系统组成", "硬件", "软件", "必考"]}, {"id": "c112", "title": "冯·诺依曼原理", "icon": "🧠", "html": "<p>冯·诺依曼提出<span class='highlight'>“存储程序与程序控制”</span>的设计思想，奠定现代计算机结构理论：</p><ul><li>计算机由<strong>运算器、控制器、存储器、输入设备、输出设备</strong>五大部件组成。</li><li>指令在存储器中顺序存放，机器自动执行程序。</li></ul><p>计算机采用二进制的原因：①容易表示（电平高低/开关通断）；②节省设备、抗干扰强、可靠性高；③易于与十进制互换。</p>", "tags": ["冯诺依曼", "五大部件", "二进制", "必考"]}, {"id": "c113", "title": "计算机硬件系统", "icon": "🔧", "html": "<ul><li><strong>CPU</strong>（控制器+运算器+寄存器）：计算机的核心/“大脑”。</li><li><strong>存储器</strong>：内存（RAM/ROM/Cache）与外存。</li><li><strong>输入设备</strong>：键盘、鼠标、扫描仪、手写笔等。</li><li><strong>输出设备</strong>：显示器、打印机、绘图仪等。</li><li><strong>总线 Bus</strong>：数据总线、地址总线、控制总线（传输信息的公共干线）。</li><li><strong>主机</strong>：主板、内存、硬盘、CPU、显卡、光驱、电源、风扇等。</li></ul>", "tags": ["硬件", "CPU", "总线", "主机"]}, {"id": "c114", "title": "存储器（内存 / 外存 / Cache）", "icon": "💾", "html": "<table class='knowledge-table'><tr><th>类型</th><th>特点</th><th>代表</th></tr><tr><td>内存 RAM</td><td>断电丢失数据，存当前运行程序</td><td>DRAM 主存、SRAM 做 Cache</td></tr><tr><td>内存 ROM</td><td>永久保存，存微型机重要信息</td><td>只读存储器</td></tr><tr><td>Cache</td><td>CPU 与内存间高速缓冲，缓和速度差</td><td>SRAM</td></tr><tr><td>外存</td><td>容量大、速度慢、断电不丢</td><td>硬盘/光盘/U盘/移动硬盘</td></tr></table><p><span class='highlight'>RAM 断电信息全部丢失；外存存取速度比内存慢但容量大、便宜。</span></p>", "tags": ["存储器", "RAM", "ROM", "Cache", "必考"]}, {"id": "c115", "title": "计算机软件系统", "icon": "📦", "html": "<p>软件按功能分为<span class='highlight'>系统软件</span>与<span class='highlight'>应用软件</span>。</p><ul><li>系统软件：操作系统（Windows/Linux/UNIX）、语言处理程序、数据库管理系统。</li><li>应用软件：为特定用途开发的软件（如 Office、12306）。</li></ul><p>计算机语言三代：<strong>机器语言</strong>（0/1，唯一可直接执行）→ <strong>汇编语言</strong>（符号语言，需翻译）→ <strong>高级语言</strong>（类自然语言，需编译/解释）。翻译方式：解释（逐句执行）、编译（先译后运行）。</p>", "tags": ["软件系统", "系统软件", "应用软件", "语言", "必考"]}, {"id": "c116", "title": "计算机性能指标", "icon": "📊", "html": "<table class='knowledge-table'><tr><th>指标</th><th>含义</th></tr><tr><td>字长</td><td>CPU 一次能同时处理的二进制位数（2 的若干次方，越长能力越强）</td></tr><tr><td>主频</td><td>CPU 单位时间执行的指令条数，单位 MHz/GHz</td></tr><tr><td>存储容量</td><td>内存/外存可存数据量</td></tr><tr><td>运算速度</td><td>单位 MIPS（百万条指令/秒）</td></tr></table>", "tags": ["性能指标", "字长", "主频"]}]}, {"chapter": "第一章 计算机的组成", "title": "第三节 数据与编码", "cards": [{"id": "c121", "title": "数制与进制转换", "icon": "🔢", "html": "<p>核心概念：<strong>数码</strong>（基本符号）、<strong>基数</strong>（数码个数）、<strong>位权</strong>（某位 1 表示的大小）。常用二、八、十、十六进制。</p><ul><li><strong>N 进制→十进制</strong>：按位权展开求和。</li><li><strong>十进制→N 进制</strong>：整数“除 N 倒序取余”，小数“乘 N 正序取整”。</li><li><strong>二↔八 / 十六</strong>：三位并一位 / 一位拆三位；四位并一位 / 一位拆四位（以二进制为桥梁）。</li></ul>", "tags": ["进制", "转换", "必考"]}, {"id": "c122", "title": "数据的存储单位", "icon": "📏", "html": "<table class='knowledge-table'><tr><th>单位</th><th>说明</th></tr><tr><td>位 bit</td><td><span class='highlight'>最小存储单位</span></td></tr><tr><td>字节 Byte</td><td><span class='highlight'>基本单位</span>，1B = 8bit</td></tr><tr><td>KB/MB/GB/TB/PB</td><td>1KB=1024B，依次 ×1024</td></tr><tr><td>字 / 字长</td><td>一次处理传送的数据；字长=CPU 一次处理位数</td></tr></table><p>例：1TB ÷ 80GB ≈ 12.8 倍；1000 万汉字 ≈ 20MB（1 汉字=2B）。</p>", "tags": ["存储单位", "bit", "Byte", "必考"]}, {"id": "c123", "title": "数值编码（原码/反码/补码）", "icon": "➗", "html": "<p>机器数最高位为符号位（正 0 负 1），常用三种表示：</p><ul><li><strong>原码</strong>：符号位 + 真值绝对值。</li><li><strong>反码</strong>：正数同原码；负数符号位 1、数值位逐位取反。</li><li><strong>补码</strong>：正数同原码；负数 = 反码 + 1（即原码除符号位取反再加 1）。</li></ul><p><span class='highlight'>计算机中数值一律以补码存储和运算。</span></p>", "tags": ["数值编码", "原码", "反码", "补码"]}, {"id": "c124", "title": "字符编码（ASCII / 汉字 / Unicode）", "icon": "🔤", "html": "<ul><li><strong>ASCII</strong>：7 位编码、8 位存储，共 128 种；'0'–'9'=48–57，'A'–'Z'=65–90，'a'–'z'=97–122。</li><li><strong>汉字编码</strong>：输入码（外码）→ 国标码（区位码+2020H）→ 机内码（区位码+A0A0H，两字节最高位均为 1）→ 字形码（点阵输出）。</li><li><strong>Unicode</strong>：16 位编码，任意语言字符均用 2 字节表示（Office 采用）。</li></ul><p><span class='highlight'>1 个汉字 = 2 字节；汉字机内码是计算机内部存储处理汉字的代码。</span></p>", "tags": ["ASCII", "汉字编码", "Unicode", "必考"]}]}, {"chapter": "第二章 计算机网络", "title": "第一节 计算机网络基础", "cards": [{"id": "c201", "title": "计算机网络概述", "icon": "🌐", "html": "<p><strong>诞生</strong>：1969 年美国国防部 ARPANET（第一个分组交换网）；我国 1994 年接入因特网。</p><p><strong>定义</strong>：将分布在不同地理位置、具有独立功能的多台计算机通过通信设备和线路连接，在网络软件管理下实现<strong>数据通信与资源共享</strong>的系统，是计算机技术与通信技术相结合的产物。</p><p><strong>组成</strong>：<span class='highlight'>资源子网</span>（终端/服务器，负责数据处理）+ <span class='highlight'>通信子网</span>（网卡、路由器、线路，负责数据传输）。</p>", "tags": ["定义", "组成", "ARPANET"]}, {"id": "c202", "title": "网络功能 / 分类 / 拓扑", "icon": "🗺️", "html": "<p><strong>三大功能</strong>：数据通信、资源共享（最突出优点）、分布处理。</p><p><strong>网络管理五功能域</strong>：配置、故障、性能、安全、计费管理。</p><p><strong>按覆盖范围</strong>：局域网 LAN、城域网 MAN、广域网 WAN（Internet 属国际互联网）。按使用范围：公用网、专用网。</p><p><strong>拓扑结构</strong>：总线型、环型、星型（中心故障则全网瘫）、树型、<span class='highlight'>网型（可靠性最高）</span>。</p>", "tags": ["功能", "分类", "拓扑", "必考"]}]}, {"chapter": "第二章 计算机网络", "title": "第二节 计算机体系结构与网络协议", "cards": [{"id": "c211", "title": "网络协议与 OSI 参考模型", "icon": "📐", "html": "<p><strong>网络体系结构</strong> = 层 + 协议的集合。</p><p><strong>网络协议三要素</strong>：语法（如何讲/数据格式）、语义（讲什么/控制信息）、同步（讲话次序）。</p><p><strong>OSI 七层</strong>（低→高）：物理层、数据链路层、网络层、传输层、会话层、表示层、应用层。</p><p><span class='highlight'>物理寻址（MAC 地址）在数据链路层；逻辑寻址（IP）在网络层。</span></p>", "tags": ["OSI", "协议", "七层", "必考"]}, {"id": "c212", "title": "TCP/IP 模型与网络设备", "icon": "🔌", "html": "<p><strong>TCP/IP 四层</strong>（低→高）：网络接口层、网际层、传输层、应用层。</p><p><strong>设备所在层次</strong>：中继器/集线器→物理层；网桥/交换机→数据链路层；路由器→网络层；网关→高层。</p><p><strong>关键协议</strong>：TCP/UDP 运行于传输层；IP 负责寻址与路由；<span class='highlight'>ARP</span> 将 IP 解析为 MAC 地址；调制解调器完成数字↔模拟信号转换。</p>", "tags": ["TCP/IP", "设备", "ARP", "必考"]}]}, {"chapter": "第二章 计算机网络", "title": "第三节 网络通信基础", "cards": [{"id": "c221", "title": "数据通信方式与技术指标", "icon": "📡", "html": "<p><strong>通信方式</strong>：单工（单向）、半双工（双向但不同时）、全双工（双向同时）。</p><p><strong>技术指标</strong>：数据传输速率（比特率，单位 bps）、信号传输速率（波特率 baud）、误码率、信道容量、带宽。</p><p><strong>传输类型</strong>：基带（数字信号直接传，局域网常用）、频带（数字→模拟，远距离）、宽带。</p><p><strong>交换技术</strong>：电路交换（独占信道，利用率低）、报文交换、分组交换（利用率高，IP 电话用）。</p>", "tags": ["通信方式", "交换技术", "必考"]}]}, {"chapter": "第二章 计算机网络", "title": "第四节 IP 地址", "cards": [{"id": "c231", "title": "IP 地址（IPv4）与分类", "icon": "🔢", "html": "<p>IPv4 由 <span class='highlight'>32 位</span>二进制组成，点分十进制表示（每组 0~255）。</p><table class='knowledge-table'><tr><th>类别</th><th>第一字节范围</th><th>默认子网掩码</th></tr><tr><td>A 类</td><td>1 – 126</td><td>255.0.0.0</td></tr><tr><td>B 类</td><td>128 – 191</td><td>255.255.0.0</td></tr><tr><td>C 类</td><td>192 – 223</td><td>255.255.255.0</td></tr><tr><td>D 类</td><td>组播地址</td><td>—</td></tr><tr><td>E 类</td><td>保留</td><td>—</td></tr></table><p><span class='highlight'>特殊地址</span>：网络地址（主机号全 0）、广播地址（主机号全 1）、回送地址 127（本地测试）。</p>", "tags": ["IP地址", "分类", "子网掩码", "必考"]}, {"id": "c232", "title": "子网掩码 / IPv6 / 管理", "icon": "🧱", "html": "<p><strong>子网掩码</strong>：32 位，与 IP 逻辑与得出网络号；默认 A/B/C 如上。将主机号部分划出作子网号可细分网络。</p><p><strong>IPv6</strong>：<span class='highlight'>128 位</span>，冒分十六进制，解决 IPv4 地址耗尽问题。</p><p><strong>管理</strong>：IANA 负责全球，CNNIC 负责中国。主机跨网迁移需改 IP 地址（MAC 不变）。</p>", "tags": ["子网掩码", "IPv6", "管理"]}]}, {"chapter": "第二章 计算机网络", "title": "第五节 DNS 域名系统", "cards": [{"id": "c241", "title": "域名与 DNS 解析", "icon": "🌍", "html": "<p><strong>域名</strong>：因特网上服务器/系统的名字，全球唯一。主机域名一般结构：<span class='highlight'>主机名.三级域名.二级域名.顶级域名</span>（左低右高，不超过 255 字符）。</p><p><strong>域名解析</strong>：域名须由 DNS 解析为 IP 才能访问。查询方式：递归查询（主机→本地域名服务器）、迭代查询（本地→根）。</p><p><strong>常见顶级域名</strong>：cn=中国，com=商业，edu=教育，gov=政府，mil=军事，org=非营利，int=国际组织。</p><p><strong>管理</strong>：ICANN 全球，CNNIC 中国。注册过的域名不可再注册。</p>", "tags": ["DNS", "域名", "顶级域名", "必考"]}]}, {"chapter": "第二章 计算机网络", "title": "第六节 因特网服务", "cards": [{"id": "c251", "title": "Internet 接入与服务", "icon": "🔗", "html": "<p><strong>接入方式</strong>：拨号（Modem+电话线）、ISDN（一线通）、xDSL（ADSL 非对称）、DDN 专线、无线接入、小区宽带（光纤+LAN）。</p><p><strong>WWW 服务</strong>：采用 B/S 模式；网页是 HTML 编写的超文本；URL 格式：协议://主机名/目录/文件名；HTTP 基于 TCP。</p><p><strong>FTP</strong>：C/S 模式，文件传输，匿名登录用 anonymous；<strong>Telnet</strong>：远程登录；<strong>端口</strong>：80(HTTP)、21(FTP)、23(Telnet)。</p><p><strong>电子邮件</strong>：格式 <span class='highlight'>用户名@域名</span>；POP3 收信、SMTP 发信。</p>", "tags": ["接入", "WWW", "FTP", "E-mail", "端口", "必考"]}]}, {"chapter": "第二章 计算机网络", "title": "第七节 局域网技术", "cards": [{"id": "c261", "title": "局域网组建与故障诊断", "icon": "🖧", "html": "<p><strong>标准</strong>：IEEE 802 系列（802.3 以太网、802.11 无线等）。</p><p><strong>网线</strong>：直通线（异种设备，如计算机—交换机，两头同标准 568B）；交叉线（同种设备，一头 568A 一头 568B）。</p><p><strong>IP 配置</strong>：静态（固定，易管理但浪费）、动态（DHCP，节约但安全性差）。</p><p><strong>常用 DOS 命令</strong>：<span class='highlight'>ping</span>（连通性测试，127.0.0.1 测本机 TCP/IP）、<span class='highlight'>ipconfig</span>（查本机 IP 配置）、tracert（追踪路径）、netstat（监视连接）。</p><p><strong>故障分类</strong>：物理故障（线路/插头）、逻辑故障（配置错误）；按对象分线路、路由、主机故障。</p>", "tags": ["局域网", "网线", "DOS命令", "故障", "必考"]}]}, {"chapter": "第二章 计算机网络", "title": "第八节 网页设计基础知识", "cards": [{"id": "c271", "title": "网站 / 网页 / 超链接", "icon": "🌐", "html": "<p><strong>网站</strong>：服务器上完整信息的集合，由多个网页通过超链接组成。</p><p><strong>静态网站</strong>：纯 HTML，无数据库，易收录、安全，但维护繁琐；<strong>动态网站</strong>：ASP/JSP/PHP，以数据库为基础，交互强（动态网页并非指有动画）。</p><p><strong>主页</strong>：一般为 index.htm。<strong>超链接</strong>：从一个网页指向目标的连接，鼠标移上变“小手”。</p>", "tags": ["网站", "静态", "动态", "超链接"]}, {"id": "c272", "title": "网页设计与 HTML", "icon": "🎨", "html": "<p><strong>设计六原则</strong>：明确内容、色彩和谐统一、定期更新、平台兼容、打开速度快（≤30s）、导航明朗（5~9 个链接）。</p><p><strong>常用工具</strong>：FrontPage（入门，所见即所得）、Dreamweaver（“网页三剑客”之一）。</p><p><strong>HTML 基本结构</strong>：&lt;html&gt;&lt;head&gt;&lt;title&gt;&lt;/head&gt;&lt;body&gt;…；常用标签：&lt;a&gt;超链接、&lt;img src=\"路径\"&gt;图像、&lt;br&gt;换行、&lt;table&gt;表格（排版常用）、&lt;font&gt;字体。</p><p><strong>CSS</strong>：实现网页表现与内容分离。</p>", "tags": ["设计原则", "HTML", "工具", "必考"]}]}, {"chapter": "第三章 数据库管理", "title": "第一节 数据库系统基础", "cards": [{"id": "c301", "title": "数据、数据库与数据库系统", "icon": "🗄️", "html": "<p><strong>数据（Data）</strong>：描述事物的符号记录，是数据库中存储的基本对象。</p><p><strong>数据库（DB）</strong>：长期存储在计算机内、有组织可共享的数据集合。</p><p><strong>数据库管理系统（DBMS）</strong>：位于用户与 OS 之间的一层数据管理软件，是核心（如 MySQL、Access）。</p><p><strong>数据库系统（DBS）</strong> = 数据库 + 硬件 + 软件（DBMS + OS + 应用）+ 人员。<span class='highlight'>DBS 包含 DB 与 DBMS，DBMS 是 DBS 的核心。</span></p>", "tags": ["DB", "DBMS", "DBS", "必考"]}, {"id": "c302", "title": "数据管理的发展阶段", "icon": "🪜", "html": "<p>数据管理经历了三个阶段：</p><ul><li><strong>人工管理</strong>：数据与程序不独立、无共享、冗余大（无 OS 时期）。</li><li><strong>文件系统</strong>：数据可长期保存、由文件系统管理，但共享性差、冗余大、独立性差。</li><li><strong>数据库系统</strong>：数据结构化、共享性高、冗余小、独立性高、由 DBMS 统一控制。</li></ul><p><span class='highlight'>数据库系统的核心特征是数据结构化与数据共享。</span></p>", "tags": ["发展阶段", "文件系统", "必考"]}, {"id": "c303", "title": "三级模式与二级映射", "icon": "🏛️", "html": "<table class='knowledge-table'><tr><th>模式</th><th>层次</th><th>作用</th></tr><tr><td>外模式</td><td>用户级（子模式/用户视图）</td><td>用户看到的局部逻辑结构</td></tr><tr><td>模式</td><td>概念级（逻辑模式）</td><td>全体数据全局逻辑结构，核心</td></tr><tr><td>内模式</td><td>物理级（存储模式）</td><td>数据物理存储与存取方式</td></tr></table><p><strong>二级映射</strong>：外模式/模式映像 → 保证<strong>逻辑独立性</strong>；模式/内模式映像 → 保证<strong>物理独立性</strong>。</p>", "tags": ["三级模式", "二级映射", "独立性", "必考"]}]}, {"chapter": "第三章 数据库管理", "title": "第二节 数据模型", "cards": [{"id": "c311", "title": "数据模型的概念与三要素", "icon": "📐", "html": "<p><strong>数据模型</strong>：现实世界数据特征的抽象，是数据库系统的核心与基础。</p><p><strong>三要素</strong>：<strong>数据结构</strong>（静态特性）、<strong>数据操作</strong>（查询与更新）、<strong>完整性约束</strong>。</p><p>按应用目的分：<strong>概念模型</strong>（E-R 图，信息世界）、<strong>逻辑模型</strong>（关系/层次/网状/面向对象，机器世界）、<strong>物理模型</strong>（底层存储）。</p>", "tags": ["数据模型", "三要素", "必考"]}, {"id": "c312", "title": "四种逻辑数据模型", "icon": "🌲", "html": "<ul><li><strong>层次模型</strong>：树形结构，结点间 1:N 联系，如 IMS。</li><li><strong>网状模型</strong>：图结构，支持 M:N，如 DBTG。</li><li><strong>关系模型</strong>：二维表，最常用，如 MySQL、Access、SQL Server。</li><li><strong>面向对象模型</strong>：对象+类+继承，适合复杂数据。</li></ul><p><span class='highlight'>关系模型是当今主流；层次、网状已较少使用。</span></p>", "tags": ["层次", "网状", "关系", "面向对象"]}, {"id": "c313", "title": "E-R 模型（概念模型）", "icon": "🔗", "html": "<p>E-R 图（实体-联系图）用于建立<strong>概念模型</strong>。</p><ul><li><strong>实体</strong>：矩形框，写实体名。</li><li><strong>属性</strong>：椭圆框，用线段连到实体。</li><li><strong>联系</strong>：菱形框，写联系名，连相关实体并标注类型。</li></ul><p><strong>联系类型</strong>：<strong>1:1</strong>（一对一）、<strong>1:N</strong>（一对多）、<strong>M:N</strong>（多对多）。</p>", "tags": ["E-R", "实体", "属性", "联系", "必考"]}, {"id": "c314", "title": "关系模型与三类完整性", "icon": "📊", "html": "<p>关系 = 二维表；<strong>元组</strong>=行（记录），<strong>属性</strong>=列（字段），<strong>域</strong>=属性取值范围，<strong>码</strong>=唯一标识。</p><ul><li><strong>候选码</strong>：能唯一标识元组的最小属性组；<strong>主码</strong>：被选用的候选码；<strong>外码</strong>：引用其他表主码的属性。</li><li><strong>实体完整性</strong>：主码值不为空。</li><li><strong>参照完整性</strong>：外码要么为空、要么等于被参照表的主码值。</li><li><strong>用户定义完整性</strong>：针对具体应用的其他约束。</li></ul>", "tags": ["关系模型", "主码", "外码", "完整性", "必考"]}, {"id": "c315", "title": "关系代数运算", "icon": "➕", "html": "<p>传统集合运算：<strong>并 ∪</strong>、<strong>差 −</strong>、<strong>交 ∩</strong>、<strong>笛卡尔积 ×</strong>。</p><p>专门关系运算：<strong>选择 σ</strong>（按条件选行）、<strong>投影 π</strong>（选列）、<strong>连接 ⋈</strong>（按条件拼接两表）、<strong>除 ÷</strong>。</p><p><span class='highlight'>选择是对行的运算，投影是对列的运算。</span></p>", "tags": ["关系代数", "选择", "投影", "连接"]}]}, {"chapter": "第三章 数据库管理", "title": "第三节 SQL 语言", "cards": [{"id": "c321", "title": "SQL 概述与功能", "icon": "🗣️", "html": "<p>SQL（结构化查询语言）是关系数据库的标准语言。</p><p><strong>特点</strong>：综合统一、高度非过程化、面向集合、同一种语法两种使用方式（交互/嵌入式）、语言简洁。</p><p><strong>四大功能</strong>：数据定义 <strong>DDL</strong>（CREATE/DROP/ALTER）、数据操纵 <strong>DML</strong>（SELECT/INSERT/UPDATE/DELETE）、数据控制 <strong>DCL</strong>（GRANT/REVOKE）、<span class='highlight'>数据查询是核心</span>。</p>", "tags": ["SQL", "DDL", "DML", "DCL", "必考"]}, {"id": "c322", "title": "数据定义（表与视图）", "icon": "🏗️", "html": "<ul><li>创建表：<code>CREATE TABLE 表名(列 类型, …);</code></li><li>修改表：<code>ALTER TABLE 表名 ADD/ALTER 列;</code></li><li>删除表：<code>DROP TABLE 表名;</code></li><li>视图：<code>CREATE VIEW 视图名 AS SELECT …;</code>（虚表，不存数据）。</li></ul><p>常用数据类型：整型、浮点、字符（char 定长 / varchar 变长）、日期、逻辑等。</p>", "tags": ["CREATE", "ALTER", "DROP", "视图"]}, {"id": "c323", "title": "数据查询 SELECT", "icon": "🔍", "html": "<p>基本格式：</p><p><code>SELECT [DISTINCT] 列 FROM 表 WHERE 条件 GROUP BY 列 HAVING 条件 ORDER BY 列 [ASC|DESC];</code></p><ul><li><strong>DISTINCT</strong>：去重。</li><li><strong>聚合函数</strong>：COUNT（计数）、SUM、AVG、MAX、MIN，常与 GROUP BY 配合。</li><li><strong>条件</strong>：<code>LIKE</code>（模糊，% 任意串 / _ 单字符）、<code>BETWEEN…AND</code>（区间）、<code>IN</code>（集合）。</li></ul>", "tags": ["SELECT", "GROUP BY", "聚合函数", "LIKE", "必考"]}, {"id": "c324", "title": "数据操纵与数据控制", "icon": "✏️", "html": "<ul><li><strong>INSERT</strong>：<code>INSERT INTO 表(列) VALUES(值);</code></li><li><strong>UPDATE</strong>：<code>UPDATE 表 SET 列=值 WHERE 条件;</code></li><li><strong>DELETE</strong>：<code>DELETE FROM 表 WHERE 条件;</code></li><li><strong>授权</strong>：<code>GRANT 权限 ON 表 TO 用户;</code></li><li><strong>收回</strong>：<code>REVOKE 权限 ON 表 FROM 用户;</code></li></ul>", "tags": ["INSERT", "UPDATE", "DELETE", "GRANT", "REVOKE"]}]}, {"chapter": "第三章 数据库管理", "title": "第四节 数据库设计", "cards": [{"id": "c331", "title": "数据库设计六阶段", "icon": "📋", "html": "<p>采用<strong>新奥尔良（New Orleans）方法</strong>，分为六个阶段：</p><ol><li><strong>需求分析</strong>：收集分析用户需求，产出数据流图、数据字典。</li><li><strong>概念设计</strong>：综合抽象成独立于 DBMS 的概念模型（E-R 图）。</li><li><strong>逻辑设计</strong>：将概念模型转换为某 DBMS 支持的逻辑模型（关系模型）并优化。</li><li><strong>物理设计</strong>：选取物理结构（存储结构、存取方法）。</li><li><strong>数据库实施</strong>：建库、编程序、装入数据、试运行。</li><li><strong>运行与维护</strong>：评价、调整、修改。</li></ol><p><span class='highlight'>E-R 图用于概念设计；E-R→关系模型转换属于逻辑设计。</span></p>", "tags": ["六阶段", "新奥尔良", "概念设计", "逻辑设计", "必考"]}, {"id": "c332", "title": "函数依赖与范式", "icon": "🔑", "html": "<p><strong>函数依赖</strong>：X→Y（X 决定 Y）。分<strong>完全函数依赖</strong>、<strong>部分函数依赖</strong>、<strong>传递函数依赖</strong>。</p><table class='knowledge-table'><tr><th>范式</th><th>要求</th></tr><tr><td>1NF</td><td>每个属性<strong>不可再分</strong>（原子性），最基本要求</td></tr><tr><td>2NF</td><td>满足 1NF 且<strong>消除非主属性对主码的部分函数依赖</strong></td></tr><tr><td>3NF</td><td>满足 2NF 且<strong>消除传递函数依赖</strong></td></tr><tr><td>BCNF</td><td>每个决定因素都包含候选码</td></tr></table>", "tags": ["函数依赖", "1NF", "2NF", "3NF", "BCNF", "必考"]}]}, {"chapter": "第三章 数据库管理", "title": "第五节 Access 数据库", "cards": [{"id": "c341", "title": "Access 基本对象", "icon": "📁", "html": "<p>Access 是微软出品的小型关系型数据库管理系统，<span class='highlight'>数据库文件扩展名为 .mdb</span>。</p><p>由<strong>七个对象</strong>组成：<strong>表、查询、窗体、报表、页、宏、模块</strong>。</p><ul><li><strong>表</strong>：存储数据的容器，最多 255 个字段，是数据库的核心。</li><li><strong>查询</strong>：从一个或多个表按条件映射出的虚拟视图（虚表）。</li><li><strong>窗体</strong>：友好的人机交互界面。</li><li><strong>报表</strong>：用于打印输出；<strong>页</strong>：唯一独立于库文件之外的对象。</li><li><strong>宏 / 模块</strong>：自动化操作集合 / 用 VBA 编写的功能模块。</li></ul>", "tags": ["Access", ".mdb", "七个对象", "必考"]}, {"id": "c342", "title": "查询类型与筛选的区别", "icon": "🔎", "html": "<p>Access 共 5 种查询：<strong>选择查询、参数查询、交叉表查询、操作查询、SQL 查询</strong>。</p><ul><li><strong>操作查询</strong>：生成表、追加、更新、删除查询（结果是转换后的表）。</li><li><strong>查询 vs 筛选</strong>：① 查找范围——查询查整个数据库，筛选仅当前表；② 显示字段——查询可指定字段，筛选显示全部字段。</li></ul><p><span class='highlight'>检索某学生学籍信息 = 查询操作。</span></p>", "tags": ["查询类型", "操作查询", "查询筛选区别"]}]}, {"chapter": "第四章 操作系统", "title": "第一节 操作系统概述", "cards": [{"id": "c401", "title": "操作系统的概念与地位", "icon": "🖥️", "html": "<p><strong>操作系统（OS）</strong>：控制和管理计算机软硬件资源、合理调度各类作业、方便用户使用的<strong>程序集合</strong>，是配置在计算机硬件上的<strong>第一层软件</strong>，是<strong>最基本、最重要的系统软件</strong>。</p><p>提供两类接口：面向用户的命令接口 + 程序接口（系统调用）；介于硬件与用户程序之间。</p>", "tags": ["OS", "系统软件", "第一层软件", "必考"]}, {"id": "c402", "title": "操作系统的发展与分类", "icon": "🧭", "html": "<p>三种基本类型：<strong>批处理系统</strong>（单道/多道）、<strong>分时系统</strong>、<strong>实时系统</strong>。</p><ul><li><strong>多道批处理</strong>：多道性、无序性、调度性；优点资源利用率高、吞吐量大，缺点无交互、周转长。</li><li><strong>分时系统</strong>：时间片轮转，特点<strong>多路性、独立性、及时性、交互性</strong>。</li><li><strong>实时系统</strong>：响应时间要求更高（秒/毫秒/微秒级），高可靠性。</li><li>其他：微机 OS、网络 OS（网络的心脏）、嵌入式 OS、分布式 OS。</li></ul>", "tags": ["批处理", "分时", "实时", "必考"]}, {"id": "c403", "title": "操作系统的四大特征", "icon": "🎯", "html": "<p>四个基本特征：<strong>并发性、共享性、虚拟性、异步性</strong>。</p><ul><li><strong>并发</strong>：同一时间间隔内多个事件同时发生（宏观同时、微观交替）；<strong>并行</strong>是同一时刻。</li><li><strong>共享</strong>：资源被多个并发进程共同使用。</li><li><span class='highlight'>并发与共享是最基本的特征，互为存在条件。</span></li><li><strong>虚拟</strong>：一个物理实体变为多个逻辑实体；<strong>异步</strong>：程序走走停停、运行时间不确定。</li></ul>", "tags": ["四大特征", "并发", "共享", "虚拟", "异步", "必考"]}, {"id": "c404", "title": "操作系统的功能", "icon": "⚙️", "html": "<p>从资源管理角度五大功能：<strong>处理器管理、存储器管理、设备管理、文件管理</strong> + <strong>作业管理及用户接口</strong>。</p><ul><li>处理器管理：进程控制、同步、通信、调度。</li><li>存储器管理：内存分配、保护、地址映射、扩充。</li><li>设备管理：缓冲、分配、处理、独立性、虚拟设备。</li><li>文件管理：空间管理、目录管理、操作管理、保护。</li></ul>", "tags": ["五大功能", "处理器", "存储器", "设备", "文件"]}]}, {"chapter": "第四章 操作系统", "title": "第二节 进程管理", "cards": [{"id": "c411", "title": "进程的概念与特征", "icon": "🏃", "html": "<p><strong>进程</strong>：程序在一个数据集合上的一次<strong>运行过程</strong>，是系统进行<strong>资源分配和调度的基本单位</strong>。</p><p>进程五大特征：<strong>动态性、并发性、独立性、异步性、结构性</strong>（程序段+数据段+PCB）。</p><p>进程 vs 程序：程序是<strong>静态、永存</strong>；进程是<strong>动态、暂时</strong>，一个程序可对应多个进程。</p>", "tags": ["进程", "程序", "动态性", "必考"]}, {"id": "c412", "title": "进程三态与 PCB", "icon": "🎚️", "html": "<p>三种基本状态：<strong>就绪</strong>（已分配除 CPU 外所有资源）、<strong>执行</strong>（占用 CPU）、<strong>阻塞</strong>（等事件暂停）。</p><p>状态转换：就绪→运行、运行→就绪、运行→阻塞、阻塞→就绪。</p><p><strong>PCB（进程控制块）</strong>：系统感知进程存在的<strong>唯一标志</strong>，记录程序计数器、状态、寄存器等。</p>", "tags": ["三态", "就绪", "阻塞", "PCB", "必考"]}, {"id": "c413", "title": "线程的概念", "icon": "🧵", "html": "<p><strong>线程</strong>：进程内一个相对独立、可调度执行的单元，是<strong>调度和分派的基本单位</strong>。</p><p>引入线程目的：减少并发开销、提高并发性。进程是<strong>资源拥有</strong>的基本单位，线程共享进程资源。</p><p>线程分类：<strong>内核级线程</strong>（由 OS 创建）、<strong>用户级线程</strong>（由应用程序创建）。</p>", "tags": ["线程", "内核级", "用户级"]}, {"id": "c414", "title": "临界资源、临界区与信号量", "icon": "🔒", "html": "<p><strong>临界资源</strong>：一次仅允许一个进程使用的资源；<strong>临界区</strong>：进程中访问临界资源的那段代码。</p><p>互斥准则：一次只允许一个进程进临界区；有限时间内退出；进不去则让出 CPU 避免“忙等”。</p><p><strong>信号量 S</strong>：由值与指针组成，值仅能由 <strong>P、V 操作</strong>改变。</p><ul><li><strong>P(S)</strong>：S=S−1；若 S&lt;0 则阻塞等待。</li><li><strong>V(S)</strong>：S=S+1；若 S≤0 则唤醒一个等待进程。</li></ul><p>S&gt;0 时表示可用资源数；S&lt;0 时绝对值 = 等待进程数。</p>", "tags": ["临界资源", "临界区", "信号量", "P操作", "V操作", "必考"]}, {"id": "c415", "title": "进程调度算法", "icon": "📅", "html": "<table class='knowledge-table'><tr><th>算法</th><th>思想</th><th>特点</th></tr><tr><td>先来先服务 FCFS</td><td>按就绪队列先后</td><td>非抢占式，简单公平</td></tr><tr><td>优先数 HPF</td><td>高优先数先执行</td><td>可抢占 / 非抢占</td></tr><tr><td>时间片轮转 RR</td><td>轮流用一个时间片</td><td>抢占式，用于分时系统</td></tr></table><p><strong>调度方式</strong>：可剥夺（高优先级立即抢占）、非剥夺（运行完或阻塞才让出）。</p>", "tags": ["FCFS", "HPF", "RR", "调度算法", "必考"]}]}, {"chapter": "第四章 操作系统", "title": "第三节 处理机调度与死锁", "cards": [{"id": "c421", "title": "处理机三级调度", "icon": "🔁", "html": "<p>三级调度：</p><ul><li><strong>高级调度（作业调度）</strong>：从后备队列选作业进内存，频率低、宏观。</li><li><strong>中级调度（交换调度）</strong>：内外存间换入换出进程，短期调整负荷。</li><li><strong>低级调度（进程调度）</strong>：将 CPU 分配给就绪进程，<span class='highlight'>必须配置、常驻内存</span>。</li></ul>", "tags": ["三级调度", "作业调度", "进程调度", "必考"]}, {"id": "c422", "title": "死锁", "icon": "💀", "html": "<p><strong>死锁</strong>：多个进程因竞争资源或推进顺序不当而相互阻塞，无外力则永远不能前进。</p><p><strong>四个必要条件</strong>（同时成立）：①<strong>互斥</strong>；②<strong>请求和保持</strong>；③<strong>不剥夺</strong>；④<strong>环路等待</strong>。</p><p><strong>解决</strong>：预防（破坏其一）、避免（<strong>银行家算法</strong>，分配前判断安全性）、检测（死锁定理：资源分配图不可完全简化）、解除（剥夺资源 / 撤销进程）。</p>", "tags": ["死锁", "四条件", "银行家算法", "必考"]}]}, {"chapter": "第四章 操作系统", "title": "第四节 作业管理", "cards": [{"id": "c431", "title": "作业的概念", "icon": "📨", "html": "<p><strong>作业</strong>：用户交给计算机完成的具有独立功能的任务。<span class='highlight'>作业存在的唯一标志是 JCB（作业控制块）</span>。</p><p>作业步：作业中每个步骤；作业流：批处理中依次读入的一批作业。</p><p>作业经历阶段：提交 → 后备 → 运行 → 完成。</p>", "tags": ["作业", "JCB", "作业步", "必考"]}, {"id": "c432", "title": "作业调度算法", "icon": "🗳️", "html": "<ul><li><strong>先来先服务 FCFS</strong>：按进入输入井先后。</li><li><strong>短作业优先 SJF</strong>：优先短作业，平均周转时间短但利于短不利长。</li><li><strong>高响应比优先</strong>：响应比 = (等待+执行)/执行，兼顾长短作业，最均衡。</li><li><strong>优先级 / 均衡调度</strong>。</li></ul><p><strong>响应比</strong> = (等待时间 + 执行时间) / 执行时间。</p>", "tags": ["作业调度", "SJF", "高响应比", "响应比", "必考"]}]}, {"chapter": "第四章 操作系统", "title": "第五节 存储器管理", "cards": [{"id": "c441", "title": "存储层次与地址重定位", "icon": "🧮", "html": "<p>存储层次：寄存器 → 高速缓存 → 主存 → 磁盘缓存 → 辅存。</p><p><strong>逻辑地址</strong>（相对地址）：用户程序以 0 为基址编址；<strong>物理地址</strong>：内存实际单元地址。</p><p><strong>重定位</strong>：逻辑地址→物理地址。静态重定位（装入时一次完成）；动态重定位（执行时，靠硬件）。</p><p><strong>碎片</strong>：容量太小无法利用的小空间。</p>", "tags": ["逻辑地址", "物理地址", "重定位", "碎片"]}, {"id": "c442", "title": "分区、分页与分段存储", "icon": "📦", "html": "<p><strong>分页</strong>：逻辑地址分为页（程序侧）与页框（内存侧），离散分配；地址 = 页号 + 页内地址；靠<strong>页表</strong>映射；页大小通常 1KB~8KB，为 2 的幂。</p><p><strong>分段</strong>：按逻辑意义划分为段，每段完整；地址 = 段号 + 段内地址；靠<strong>段表</strong>映射。每段最大长度 = 2<sup>段内地址位数</sup>。</p><p><strong>段页式</strong>：先分段再分页，地址 = 段号 + 段内页号 + 页内地址，兼具二者优点。</p>", "tags": ["分页", "页表", "分段", "段表", "段页式", "必考"]}, {"id": "c443", "title": "虚拟存储器", "icon": "👻", "html": "<p><strong>虚拟存储器</strong>：由 OS 提供的“假想”特大存储器，逻辑上扩充内存。特征：虚拟扩充、部分装入、离散分配、多次对换。</p><p><strong>页面置换算法</strong>：<strong>FIFO</strong>（先进先出）、<strong>OPT</strong>（最佳，换最远将来用）、<strong>LRU</strong>（最近最少使用）、<strong>NUR</strong>（最近未用，LRU 近似）。</p><p><strong>抖动（颠簸）</strong>：刚换出的页很快又要访问，频繁换入换出，主因是<strong>置换算法选择不当</strong>。</p>", "tags": ["虚拟存储", "FIFO", "LRU", "抖动", "必考"]}]}, {"chapter": "第四章 操作系统", "title": "第六节 文件管理", "cards": [{"id": "c451", "title": "文件与文件系统", "icon": "📄", "html": "<p><strong>文件</strong>：命名存储在<strong>外存</strong>上的一组相关信息集合，是 OS 管理计算机的最小单位。</p><p><strong>文件系统</strong>：负责操纵管理文件，实现<strong>按名存取</strong>。</p><p>文件分类：按性质用途（系统/库/用户文件）；按逻辑结构（流式无结构 / 记录式有结构）；按物理结构（顺序/链接/索引）。</p>", "tags": ["文件", "文件系统", "按名存取", "必考"]}, {"id": "c452", "title": "文件存取方式与磁盘调度", "icon": "💽", "html": "<p><strong>三种存取方式</strong>：顺序存取、直接（随机）存取、索引存取。</p><p><strong>磁盘调度算法</strong>：</p><ul><li><strong>FCFS</strong> 先来先服务：简单公平，但效率低。</li><li><strong>SSTF</strong> 最短寻道优先：寻道短，但会产生“饥饿”。</li><li><strong>SCAN 扫描（电梯）</strong>：按当前方向移动，兼顾距离与方向。</li><li><strong>CSCAN 循环扫描</strong>：单向移动，回程不服务，消除两端不公平。</li></ul>", "tags": ["存取方式", "FCFS", "SSTF", "电梯算法", "必考"]}, {"id": "c453", "title": "文件目录管理", "icon": "📑", "html": "<p><strong>FCB（文件控制块）</strong>：与文件一一对应，记录文件属性；<strong>文件目录</strong>=FCB 有序集合，<strong>目录项</strong>=一个 FCB。</p><p>目录结构：<strong>单级</strong>（简单、易重名）、<strong>二级</strong>（按用户，允许重名）、<strong>树形</strong>（多级，UNIX 采用，最常用）、<strong>非循环图（带链接树形）</strong>。</p><p><strong>路径</strong>：<strong>绝对路径</strong>从根开始（UNIX 用 /）；<strong>相对路径</strong>从当前目录开始。</p>", "tags": ["FCB", "目录", "树形", "绝对路径", "相对路径", "必考"]}]}], "quizzes": [{"type": "single", "section": 0, "stem": "世界上第一台电子计算机 ENIAC 诞生于（ ）。", "options": ["1946 年，美国", "1946 年，德国", "1946 年，英国", "1946 年，苏联"], "answer": 0, "analysis": "本题考查计算机诞生。1946 年世界第一台电子计算机 ENIAC 诞生于美国宾夕法尼亚大学，最初用于弹道计算。故 A 正确。"}, {"type": "single", "section": 0, "stem": "主要逻辑元件采用晶体管的计算机属于（ ）。", "options": ["第一代", "第二代", "第三代", "第四代"], "answer": 1, "analysis": "本题考查计算机发展四代。第一代电子管、第二代晶体管、第三代中小规模集成电路、第四代大规模/超大规模集成电路。晶体管对应第二代，故 B 正确。"}, {"type": "single", "section": 0, "stem": "自计算机问世至今经历四个时代，划分时代的主要依据是计算机的（ ）。", "options": ["规模", "功能", "性能", "构成元件"], "answer": 3, "analysis": "本题考查时代划分依据。计算机四个时代是依据构成元件（电子元器件）划分的，故 D 正确。"}, {"type": "single", "section": 0, "stem": "用来表示计算机辅助设计的英文缩写是（ ）。", "options": ["CAI", "CAM", "CAD", "CAT"], "answer": 2, "analysis": "本题考查计算机辅助缩写。CAD=计算机辅助设计，CAI=辅助教学，CAM=辅助制造，CAT=辅助测试。故 C 正确。"}, {"type": "single", "section": 0, "stem": "CAL（应为 CAI）的含义是（ ）。", "options": ["计算机辅助教学", "计算机辅助设计", "计算机辅助制造", "计算机辅助工程分析"], "answer": 0, "analysis": "本题考查 CAI 含义。CAI 是计算机辅助教学，故 A 正确。"}, {"type": "single", "section": 1, "stem": "从系统角度看，计算机系统应包括（ ）。", "options": ["系统硬件和系统软件", "硬件系统和软件系统", "主机和外部设备", "主机、键盘、显示器和辅助存储器"], "answer": 1, "analysis": "本题考查计算机系统组成。计算机系统由硬件系统和软件系统两大部分组成，二者相辅相成、缺一不可。故 B 正确。"}, {"type": "single", "section": 1, "stem": "现代电子计算机采用冯·诺依曼原理，该原理的核心是（ ）。", "options": ["存储程序与程序控制", "采用高速电子元件", "使用高级语言", "采用输入设备"], "answer": 0, "analysis": "本题考查冯·诺依曼原理。其核心是“存储程序与程序控制”：把程序和数据一起输入计算机，机器自动按程序执行。故 A 正确。"}, {"type": "single", "section": 1, "stem": "计算机内部采用的是（ ）。", "options": ["二进制", "八进制", "十进制", "十六进制"], "answer": 0, "analysis": "本题考查计算机数制。计算机内部数据以二进制方式传输、处理和存储。故 A 正确。"}, {"type": "single", "section": 1, "stem": "计算机硬件系统中最核心的部件是（ ）。", "options": ["内存储器", "输入输出设备", "硬盘", "CPU"], "answer": 3, "analysis": "本题考查 CPU 地位。CPU 是计算机系统的运算和控制核心，是信息处理、程序运行的最终执行单元，故 D 正确。"}, {"type": "single", "section": 1, "stem": "控制器和（ ）共同组成中央处理器（CPU）。", "options": ["存储器", "软件", "运算器", "硬盘"], "answer": 2, "analysis": "本题考查 CPU 组成。中央处理器由控制器和运算器组成，运算器负责算术与逻辑运算。故 C 正确。"}, {"type": "single", "section": 1, "stem": "计算机断电后信息会全部丢失、再次通电也不恢复的存储器是（ ）。", "options": ["U盘", "RAM", "ROM", "硬盘"], "answer": 1, "analysis": "本题考查 RAM。RAM（随机存储器）断电后数据易失、全部丢失；ROM、硬盘、U盘属非易失存储。故 B 正确。"}, {"type": "single", "section": 1, "stem": "计算机中的 Cache 是指（ ）。", "options": ["外存储器", "只读存储器", "高速缓冲存储器", "内存"], "answer": 2, "analysis": "本题考查 Cache。高速缓冲存储器位于 CPU 与主存之间，用于缓和二者速度不匹配的矛盾，故 C 正确。"}, {"type": "single", "section": 2, "stem": "十进制数 92 对应的二进制数为（ ）。", "options": ["1101111", "1110101", "1010111", "1011100"], "answer": 3, "analysis": "本题考查进制转换。92 = 64+16+8+4 = 1011100，故 D 正确。"}, {"type": "single", "section": 2, "stem": "十进制数 456 转化成十六进制数是（ ）。", "options": ["1A8H", "1B8H", "1C8H", "108H"], "answer": 2, "analysis": "本题考查十进制转十六进制。456÷16=28 余 8，28÷16=1 余 12(C)，1÷16=0 余 1，倒序得 1C8H，故 C 正确。"}, {"type": "single", "section": 2, "stem": "在计算机中数据存储的最小单位是（ ）。", "options": ["Word", "Bit", "Byte", "Word Length"], "answer": 1, "analysis": "本题考查存储单位。数据存储最小单位是比特（Bit），基本单位是字节（Byte）。故 B 正确。"}, {"type": "single", "section": 2, "stem": "计算机中一个字节表示（ ）位。", "options": ["1", "4", "8", "16"], "answer": 2, "analysis": "本题考查单位换算。1 字节（Byte）= 8 位（bit），故 C 正确。"}, {"type": "single", "section": 2, "stem": "ASCII 码的全称是（ ）。", "options": ["美国字符二进制代码", "美国标准信息交换代码", "美国标准二进制代码", "美国标准信息字符代码"], "answer": 1, "analysis": "本题考查 ASCII。ASCII（American Standard Code for Information Interchange）即美国标准信息交换代码。故 B 正确。"}, {"type": "single", "section": 2, "stem": "计算机内部用于汉字信息的存储、运算的信息代码称为（ ）。", "options": ["汉字输入码", "汉字机内码", "汉字字形码", "汉字输出码"], "answer": 1, "analysis": "本题考查汉字编码。汉字机内码是计算机内部存储和处理汉字的代码；输入码是外码，字形码用于显示/打印。故 B 正确。"}, {"type": "single", "section": 3, "stem": "计算机网络本质上是一个（ ）。", "options": ["计算机数据管理系统", "计算机信息管理系统", "计算机编译系统", "在协议控制下的多机互连系统"], "answer": 3, "analysis": "本题考查计算机网络本质。计算机网络是计算机技术与通信技术结合的产物，本质是由网络软件系统和协议控制的多机互连系统。故 D 正确。"}, {"type": "single", "section": 3, "stem": "计算机网络最突出的优点是（ ）。", "options": ["精度高", "运算速度快", "存储容量大", "资源共享"], "answer": 3, "analysis": "本题考查网络功能。资源共享（软件、硬件、数据通用）是计算机网络最突出的优点。故 D 正确。"}, {"type": "single", "section": 3, "stem": "将计算机网络划分为公用网和专用网是按（ ）划分的。", "options": ["使用范围", "连接方式", "覆盖范围", "以上都不是"], "answer": 0, "analysis": "本题考查网络分类。按使用范围分为公用网和专用网；按覆盖范围分为 LAN/MAN/WAN。故 A 正确。"}, {"type": "single", "section": 3, "stem": "系统可靠性最高的网络拓扑结构是（ ）。", "options": ["总线型", "网状型", "星型", "树型"], "answer": 1, "analysis": "本题考查拓扑结构。网状型拓扑一个节点损坏可由其他路径绕过，可靠性最高。故 B 正确。"}, {"type": "single", "section": 3, "stem": "下列通信方式中，不属于无线通信方式的是（ ）。", "options": ["红外线", "蓝牙", "光纤", "微波"], "answer": 2, "analysis": "本题考查传输介质。光纤是有线通信方式；红外线、蓝牙、微波均为无线。故 C 正确。"}, {"type": "single", "section": 4, "stem": "为解决不同网络间通信，ISO 提出开放系统互联参考模型，简称（ ）。", "options": ["OSI 参考模型", "IOS 参考模型", "ISO 参考模型", "SOL 参考模型"], "answer": 0, "analysis": "本题考查 OSI。OSI（Open System Interconnection）即开放系统互联参考模型，定义了七层框架。故 A 正确。"}, {"type": "single", "section": 4, "stem": "在 OSI 参考模型中，处于数据链路层与传输层之间的是（ ）。", "options": ["物理层", "网络层", "会话层", "表示层"], "answer": 1, "analysis": "本题考查 OSI 分层。从下到上物理层、数据链路层、网络层、传输层……，数据链路层与传输层之间为网络层。故 B 正确。"}, {"type": "single", "section": 4, "stem": "计算机网络中，利用（ ）协议可以获得对方的 MAC 地址。", "options": ["ARP", "TCP", "RARP", "UDP"], "answer": 0, "analysis": "本题考查地址解析。ARP（地址解析协议）将 IP 地址解析为 MAC 地址；RARP 反向。故 A 正确。"}, {"type": "single", "section": 4, "stem": "TCP/IP 协议集中，TCP 与 UDP 协议运行于（ ）。", "options": ["网络层", "传输层", "应用层", "表示层"], "answer": 1, "analysis": "本题考查 TCP/IP。TCP 和 UDP 都运行于传输层，分别提供可靠和不可靠传输。故 B 正确。"}, {"type": "single", "section": 4, "stem": "手机开放热点让朋友上网，此时手机相当于（ ）。", "options": ["中继器", "集线器", "交换机", "路由器"], "answer": 3, "analysis": "本题考查网络设备。热点设备能智能选择最佳路径转发数据，相当于路由器。故 D 正确。"}, {"type": "single", "section": 5, "stem": "下列关于数据交换技术的叙述，不正确的是（ ）。", "options": ["分组交换通常用在 IP 电话中", "分组交换比电路交换线路利用率高", "电路交换比报文交换线路利用率高", "电路交换通常用在传统电话中"], "answer": 2, "analysis": "本题考查交换技术。电路交换建立物理通路后独占信道，利用率低；报文/分组交换利用率高。故 C 表述不正确，符合题意。"}, {"type": "single", "section": 6, "stem": "目前许多 IP 地址采用点分十进制，它由（ ）位二进制组成。", "options": ["8", "16", "32", "128"], "answer": 2, "analysis": "本题考查 IPv4。IPv4 地址由 32 位二进制组成，点分十进制表示。故 C 正确。"}, {"type": "single", "section": 6, "stem": "下列 IP 地址中，错误的是（ ）。", "options": ["172.16.5.27", "10.1.1.0", "256.256.129.1", "192.168.12.34"], "answer": 2, "analysis": "本题考查 IP 表示。每组取值 0~255，256 超出范围，故 C 错误，符合题意。"}, {"type": "single", "section": 6, "stem": "下列地址中属于 A 类 IP 地址的是（ ）。", "options": ["201.119.230.80", "192.9.200.13", "168.28.0.1", "59.16.5.168"], "answer": 3, "analysis": "本题考查 IP 分类。A 类第一字节 1~126，59 在此范围；201/192/168 分别属 C/B 类。故 D 正确。"}, {"type": "single", "section": 6, "stem": "一台 IP 为 130.168.10.25 的计算机，其网络地址是（ ）。", "options": ["130.168", "130.168.10", "130", "25"], "answer": 0, "analysis": "本题考查 B 类网络号。130 开头为 B 类，前两个字节是网络地址，即 130.168。故 A 正确。"}, {"type": "single", "section": 7, "stem": "域名解析系统的英文缩写为（ ）。", "options": ["DNS", "SMTP", "FTP", "POP"], "answer": 0, "analysis": "本题考查 DNS。域名解析系统 Domain Name System 缩写为 DNS。故 A 正确。"}, {"type": "single", "section": 7, "stem": "在 WWW.SXEDU.GOV.CN 中，“CN” 表示的国家是（ ）。", "options": ["澳大利亚", "美国", "韩国", "中国"], "answer": 3, "analysis": "本题考查顶级域名。CN 表示中国；AU 澳大利亚、US 美国、KR 韩国。故 D 正确。"}, {"type": "single", "section": 7, "stem": "域名后缀 .edu 表示的机构类型是（ ）。", "options": ["政府机构", "商业公司", "军事机构", "教育机构"], "answer": 3, "analysis": "本题考查域名含义。edu=教育机构，com=商业，gov=政府，mil=军事，org=非营利。故 D 正确。"}, {"type": "single", "section": 8, "stem": "通过 Internet 发送和接收电子邮件，正确格式是（ ）。", "options": ["用户名 @ 域名", "用户名 # 域名", "用户名 / 域名", "用户名 . 域名"], "answer": 0, "analysis": "本题考查邮箱格式。电子邮件地址格式为：用户名@邮件服务器域名，如 apple@163.com。故 A 正确。"}, {"type": "single", "section": 8, "stem": "下列 DOS 命令中，用于查看本机网卡 IP 配置信息的是（ ）。", "options": ["ping", "msconfig", "regedit", "ipconfig"], "answer": 3, "analysis": "本题考查网络命令。ipconfig 用于查看本机 IP、子网掩码、网关等；ping 测连通性。故 D 正确。"}, {"type": "single", "section": 8, "stem": "在邮件传输系统中，SMTP 的中文含义是（ ）。", "options": ["传输控制协议", "文件传输协议", "超文本协议", "简单邮件传输协议"], "answer": 3, "analysis": "本题考查 SMTP。SMTP（Simple Mail Transfer Protocol）即简单邮件传输协议，负责发信。故 D 正确。"}, {"type": "single", "section": 9, "stem": "用于浏览网页、显示 HTML 文件内容并让用户交互的软件是（ ）。", "options": ["电子邮件", "即时通讯软件", "资源管理器", "浏览器"], "answer": 3, "analysis": "本题考查浏览器。浏览器用于显示网页服务器 HTML 文件内容并与文件交互。故 D 正确。"}, {"type": "single", "section": 9, "stem": "网页排版一般利用（ ）来控制文本、图片、动画及视频的位置。", "options": ["段落", "章节", "层", "表格"], "answer": 3, "analysis": "本题考查网页排版。网页排版一般用表格控制各元素位置。故 D 正确。（注：选项中表格对应正确项）"}, {"type": "single", "section": 10, "stem": "超文本标记语言中，用于换行的标签是（ ）。", "options": ["<Body>", "<Font>", "<P>", "<Br>"], "answer": 3, "analysis": "本题考查 HTML 标签。<Br> 是换行标签；<Body> 定义主体，<Font> 字体，<P> 段落。故 D 正确。"}, {"type": "single", "section": 10, "stem": "HTML 中插入图像代码 <img src=\"...\"> 的 src 含义是（ ）。", "options": ["图像的属性", "链接的地址", "图像的路径", "以上都正确"], "answer": 2, "analysis": "本题考查 HTML。src 表示图像的引用地址（路径）。故 C 正确。"}, {"type": "single", "section": 10, "stem": "下列关于网站的叙述，不正确的是（ ）。", "options": ["组成网站的网页必须全是动态的", "一个网站一般包含多个网页", "网站整体风格与工具选择关系不大", "必须经常更新以保持吸引力"], "answer": 0, "analysis": "本题考查网站概念。网站既可有静态网页也可有动态网页，并非必须全是动态。故 A 不正确，符合题意。"}, {"type": "single", "section": 11, "stem": "数据库系统中，位于用户与操作系统之间的一层数据管理软件是（ ）。", "options": ["数据库 DB", "数据库系统 DBS", "数据库管理系统 DBMS", "数据结构"], "answer": 2, "analysis": "本题考查 DBMS。DBMS 是位于用户与 OS 之间、负责数据定义、操纵、控制与运行管理的数据管理软件，是 DBS 的核心；DBS 包含 DBMS。故 C 正确。"}, {"type": "single", "section": 11, "stem": "在数据库系统的三级模式结构中，描述全体数据全局逻辑结构的是（ ）。", "options": ["外模式", "模式", "内模式", "存储模式"], "answer": 1, "analysis": "本题考查三级模式。模式（概念模式）描述全体数据的全局逻辑结构，是核心；外模式是用户局部视图，内模式描述物理存储。故 B 正确。"}, {"type": "single", "section": 11, "stem": "数据库系统通过二级映射实现了数据的（ ）。", "options": ["集中存储", "逻辑独立性与物理独立性", "高速缓存", "分布式处理"], "answer": 1, "analysis": "本题考查二级映射。外模式/模式映像保证逻辑独立性，模式/内模式映像保证物理独立性，二者共同保障数据独立性。故 B 正确。"}, {"type": "single", "section": 11, "stem": "与文件系统相比，数据库系统的主要特点不包括（ ）。", "options": ["数据结构化", "共享性高、冗余度小", "数据完全由应用程序自己管理", "由 DBMS 统一管理与控制"], "answer": 2, "analysis": "本题考查数据库系统特点。数据库系统由 DBMS 统一管理控制数据，而非由应用程序各自管理；A、B、D 均为数据库系统特点。故 C 符合题意。"}, {"type": "single", "section": 12, "stem": "E-R 图是数据库设计的工具之一，它适用于建立数据库的（ ）。", "options": ["概念模型", "逻辑模型", "结构模型", "物理模型"], "answer": 0, "analysis": "本题考查 E-R 图作用。E-R 图也称实体-联系图，用来描述现实世界的概念模型，是概念设计阶段的工具。故 A 正确。"}, {"type": "single", "section": 12, "stem": "在关系模型中，一个“关系”对应（ ）。", "options": ["一张二维表", "一个数据库", "一个索引", "一个视图"], "answer": 0, "analysis": "本题考查关系模型。关系模型中，关系就是一张二维表，元组为行、属性为列。故 A 正确。"}, {"type": "single", "section": 12, "stem": "关系数据库中，实体完整性规则规定关系中的主码（ ）。", "options": ["可以为空", "不能取空值", "必须唯一但可为空", "由用户随意设定"], "answer": 1, "analysis": "本题考查实体完整性。实体完整性要求主码的值不能为空（且唯一），以保证能唯一标识每个元组。故 B 正确。"}, {"type": "single", "section": 12, "stem": "层次模型、网状模型和关系模型划分的依据是（ ）。", "options": ["数据结构", "数据操作", "完整性约束", "查询语言"], "answer": 0, "analysis": "本题考查数据模型三要素。模型间的根本区别在于数据结构不同：层次为树、网状为图、关系为表。故 A 正确。"}, {"type": "single", "section": 12, "stem": "关系代数中，从关系中选出满足给定条件的元组，对应的运算是（ ）。", "options": ["投影", "选择", "连接", "并"], "answer": 1, "analysis": "本题考查关系代数。选择（σ）是按条件对行进行筛选；投影（π）是对列进行筛选。故 B 正确。"}, {"type": "single", "section": 13, "stem": "SQL 语言中，用于数据查询且处于核心地位的语句是（ ）。", "options": ["SELECT", "INSERT", "UPDATE", "DELETE"], "answer": 0, "analysis": "本题考查 SQL。SELECT 是数据查询语句，也是 SQL 的核心；INSERT/UPDATE/DELETE 属于数据操纵。故 A 正确。"}, {"type": "single", "section": 13, "stem": "要查询学生表中所有不重复的姓名，应使用的子句是（ ）。", "options": ["SELECT 姓名", "SELECT DISTINCT 姓名", "SELECT ALL 姓名", "SELECT TOP 姓名"], "answer": 1, "analysis": "本题考查 SELECT。DISTINCT 关键字用于去掉结果中的重复行，故 B 正确。"}, {"type": "single", "section": 13, "stem": "在 SELECT 语句中，用于对分组后的结果进行筛选的子句是（ ）。", "options": ["WHERE", "GROUP BY", "ORDER BY", "HAVING"], "answer": 3, "analysis": "本题考查分组查询。HAVING 用于对 GROUP BY 分组后的聚合结果进行筛选；WHERE 作用于分组前。故 D 正确。"}, {"type": "single", "section": 13, "stem": "在 SQL 中授予用户权限的语句是（ ）。", "options": ["GRANT", "REVOKE", "COMMIT", "ROLLBACK"], "answer": 0, "analysis": "本题考查数据控制。GRANT 用于授权，REVOKE 用于收回权限。故 A 正确。"}, {"type": "single", "section": 13, "stem": "已知查询：SELECT COUNT(*) FROM 学生 WHERE 性别='女'，其中 COUNT 的作用是（ ）。", "options": ["求平均值", "求和", "计数", "求最大值"], "answer": 2, "analysis": "本题考查聚合函数。COUNT 用于统计行数（计数），SUM 求和、AVG 求平均、MAX 求最大。故 C 正确。"}, {"type": "single", "section": 14, "stem": "将 E-R 模型转换成关系模型，属于数据库设计的（ ）。", "options": ["需求分析", "概念设计", "逻辑设计", "物理设计"], "answer": 2, "analysis": "本题考查设计阶段。逻辑设计将概念模型（E-R 图）转换为某 DBMS 支持的逻辑模型（如关系模型）。故 C 正确。"}, {"type": "single", "section": 14, "stem": "满足第二范式（2NF）的关系是（ ）。", "options": ["满足 1NF 且消除非主属性对主码的部分函数依赖", "满足 1NF 且消除传递依赖", "属性不可再分", "每个决定因素都含候选码"], "answer": 0, "analysis": "本题考查 2NF。2NF 要求满足 1NF 并消除非主属性对主码的部分函数依赖。A 正确；C 是 1NF，B 是 3NF，D 是 BCNF。"}, {"type": "single", "section": 14, "stem": "在数据库设计的需求分析阶段，通常使用的工具是（ ）。", "options": ["E-R 图", "数据流图和数据字典", "关系模式", "索引结构"], "answer": 1, "analysis": "本题考查需求分析。需求分析阶段收集分析用户需求，成果为数据流图与数据字典；E-R 图用于概念设计。故 B 正确。"}, {"type": "single", "section": 15, "stem": "Access 数据库文件的扩展名是（ ）。", "options": [".doc", ".xls", ".mdb", ".ppt"], "answer": 2, "analysis": "本题考查 Access。Access 数据库文件的扩展名为 .mdb。故 C 正确。"}, {"type": "single", "section": 15, "stem": "在学籍管理系统中检索某个学生的学籍信息，需要对数据库进行的操作是（ ）。", "options": ["分类", "查询", "筛选", "排序"], "answer": 1, "analysis": "本题考查查询。查询是在数据库中按条件查找满足条件的记录项，检索学生信息即查询操作。故 B 正确。"}, {"type": "single", "section": 15, "stem": "下列关于 Access 数据表的描述，正确的是（ ）。", "options": ["数据表最多 255 个字段", "一个数据库只能有一张表", "查询是真实存储数据的表", "报表用于人机交互界面"], "answer": 0, "analysis": "本题考查 Access。Access 表最多 255 个字段；一个库可含多张表；查询是虚表不存储数据；窗体才是交互界面。故 A 正确。"}, {"type": "single", "section": 16, "stem": "现代计算机系统中，最基本、最重要的系统软件是（ ）。", "options": ["操作系统", "文字处理系统", "语言处理系统", "数据库管理系统"], "answer": 0, "analysis": "本题考查 OS。操作系统是配置在硬件上的第一层软件，是最基本、最重要的系统软件。故 A 正确。"}, {"type": "single", "section": 16, "stem": "现代操作系统的两个最基本的特征是（ ）和资源共享。", "options": ["多道程序设计", "中断处理", "程序的并发执行", "实现分时与实时处理"], "answer": 2, "analysis": "本题考查 OS 特征。并发性和共享性是最基本的特征，二者互为存在条件。故 C 正确。"}, {"type": "single", "section": 16, "stem": "内存中同时有多个系统和用户程序被启动、交替穿插执行，这体现了操作系统的（ ）。", "options": ["并发性", "共享性", "虚拟性", "异步性"], "answer": 0, "analysis": "本题考查并发性。并发性指多个事件在同一时间间隔内发生，宏观同时、微观交替执行。故 A 正确。"}, {"type": "single", "section": 16, "stem": "下列选项中，（ ）是网络的心脏，提供网络最基本的核心功能。", "options": ["路由器", "网络操作系统", "工作站", "通信协议"], "answer": 1, "analysis": "本题考查网络 OS。网络操作系统是网络的心脏与灵魂，提供文件、存储管理等核心功能。故 B 正确。"}, {"type": "single", "section": 17, "stem": "进程与程序的本质区别在于（ ）。", "options": ["前者动态、后者静态", "前者存内存、后者存外存", "前者单文件、后者多文件", "前者分时、后者独占 CPU"], "answer": 0, "analysis": "本题考查进程程序区别。进程是程序的执行过程，是动态的；程序是静态的指令集合，动态与静态是本质区别。故 A 正确。"}, {"type": "single", "section": 17, "stem": "一个已经获得除 CPU 以外所有必要资源的进程处于（ ）。", "options": ["运行状态", "就绪状态", "自由状态", "阻塞状态"], "answer": 1, "analysis": "本题考查进程三态。就绪态指已分配除 CPU 外所有必要资源，一旦获得 CPU 即可运行。故 B 正确。"}, {"type": "single", "section": 17, "stem": "系统感知进程存在的唯一标志是（ ）。", "options": ["程序", "数据", "PCB 进程控制块", "CPU 寄存器"], "answer": 2, "analysis": "本题考查 PCB。进程控制块是系统感知进程存在的唯一标志，记录进程全部特征。故 C 正确。"}, {"type": "single", "section": 17, "stem": "时间片轮转调度算法主要用于（ ）。", "options": ["批处理系统", "分时系统", "实时系统", "分布式系统"], "answer": 1, "analysis": "本题考查 RR。时间片轮转是抢占式调度，主要用于分时系统，响应快且对各进程公平。故 B 正确。"}, {"type": "single", "section": 18, "stem": "在一般操作系统中必不可少的调度是（ ）。", "options": ["高级调度", "中级调度", "作业调度", "进程调度"], "answer": 3, "analysis": "本题考查低级调度。进程调度（低级调度）是最基本的调度，在批处理、分时、实时 OS 中都必须配置。故 D 正确。"}, {"type": "single", "section": 18, "stem": "产生死锁的四个必要条件中，不包括（ ）。", "options": ["互斥条件", "请求和保持条件", "不剥夺条件", "资源充足条件"], "answer": 3, "analysis": "本题考查死锁四条件：互斥、请求和保持、不剥夺、环路等待。资源充足反而不易死锁，故 D 不包括，符合题意。"}, {"type": "single", "section": 18, "stem": "为避免死锁，在分配资源前判断系统是否处于安全状态的经典算法是（ ）。", "options": ["FCFS 算法", "银行家算法", "LRU 算法", "最短寻道算法"], "answer": 1, "analysis": "本题考查死锁避免。银行家算法在分配前预判断系统安全性，安全才分配。故 B 正确。"}, {"type": "single", "section": 19, "stem": "作业在系统中存在的唯一标志是（ ）。", "options": ["PCB", "FCB", "JCB 作业控制块", "DCB"], "answer": 2, "analysis": "本题考查 JCB。作业控制块是作业在系统中存在的唯一标志，系统据 JCB 感知作业。故 C 正确。"}, {"type": "single", "section": 19, "stem": "运行时间最短的作业被优先调度，这种作业调度算法是（ ）。", "options": ["优先级调度", "响应比高者优先", "短作业优先", "先来先服务"], "answer": 2, "analysis": "本题考查 SJF。短作业优先算法优先选择估计执行时间短的作业。故 C 正确。"}, {"type": "single", "section": 19, "stem": "一种既有利于短作业又兼顾长作业的作业调度算法是（ ）。", "options": ["先来先服务", "轮转调度", "高响应比优先", "短作业优先"], "answer": 2, "analysis": "本题考查高响应比。响应比=(等待+执行)/执行，兼顾等待时间长短，既照顾短作业又避免长作业饥饿。故 C 正确。"}, {"type": "single", "section": 20, "stem": "在页式存储管理中，实现从页号到物理块号地址映射的是（ ）。", "options": ["页表", "段表", "PCB", "JCB"], "answer": 0, "analysis": "本题考查分页。页表实现从逻辑页号到内存物理块号的映射。故 A 正确。"}, {"type": "single", "section": 20, "stem": "请求分页系统中，系统出现“抖动（颠簸）”现象的主要原因是（ ）。", "options": ["置换算法选择不当", "交换信息量大", "内存容量不足", "采用页式管理"], "answer": 0, "analysis": "本题考查抖动。抖动指刚换出的页很快又被访问而频繁换入换出，主因是页面置换算法选择不当。故 A 正确。"}, {"type": "single", "section": 20, "stem": "下列存储管理方案中，能扩充主存容量的是（ ）。", "options": ["固定分区分配", "可变分区分配", "分页虚拟存储管理", "基本页式存储管理"], "answer": 2, "analysis": "本题考查虚拟存储。分页虚拟存储管理具有请求调入和置换功能，能从逻辑上扩充内存容量。故 C 正确。"}, {"type": "single", "section": 21, "stem": "操作系统管理计算机的最小单位是（ ）。", "options": ["文件卷", "磁道", "文件", "字节"], "answer": 2, "analysis": "本题考查文件。在操作系统中，所有任务和资源都以文件形式存在，文件是管理的最小单位。故 C 正确。"}, {"type": "single", "section": 21, "stem": "文件系统实现“按名存取”主要是通过（ ）。", "options": ["查找位示图", "查找文件目录", "查找作业表", "内存地址转换"], "answer": 1, "analysis": "本题考查文件目录。文件目录是实现按名存取的有效手段，通过目录检索定位文件。故 B 正确。"}, {"type": "single", "section": 21, "stem": "下列磁盘调度算法中，只有（ ）考虑请求到达的先后次序。", "options": ["最短寻道优先 SSTF", "电梯算法 SCAN", "循环扫描 CSCAN", "先来先服务 FCFS"], "answer": 3, "analysis": "本题考查磁盘调度。FCFS 按请求到达先后次序服务，最简单公平；其他算法按寻道距离等调度。故 D 正确。"}, {"type": "single", "section": 21, "stem": "UNIX 系统采用的目录结构是（ ）。", "options": ["单级目录", "二级目录", "树形目录（带链接）", "非循环图目录（无链接）"], "answer": 2, "analysis": "本题考查目录结构。UNIX 采用树形目录，且是带链接的树形目录（非循环图）。故 C 正确。"}, {"type": "single", "section": 0, "stem": "世界上第一台电子计算机的名字是（ ）。", "options": ["ENIAC", "EDVAC", "EDSAC", "UNIVAC"], "answer": 0, "analysis": "本题考查计算机诞生。第一台电子计算机名为 ENIAC。"}, {"type": "single", "section": 0, "stem": "ENIAC 最初主要用于（ ）。", "options": ["弹道计算（军事国防）", "文字处理", "图像处理", "网络通信"], "answer": 0, "analysis": "本题考查 ENIAC 用途。它最初用于弹道计算等科学计算。"}, {"type": "single", "section": 0, "stem": "计算机发展的四代是以（ ）为唯一依据来划分的。", "options": ["构成元件（电子元器件）", "运算速度", "存储容量", "体积大小"], "answer": 0, "analysis": "本题考查四代划分依据。划分时代的唯一依据是构成元件。"}, {"type": "single", "section": 0, "stem": "第一代计算机（1946—1958）的主要逻辑元件是（ ）。", "options": ["电子管", "晶体管", "中、小规模集成电路", "大规模集成电路"], "answer": 0, "analysis": "本题考查第一代。第一代使用电子管。"}, {"type": "single", "section": 0, "stem": "第二代计算机（1958—1964）的主要逻辑元件是（ ）。", "options": ["晶体管", "电子管", "集成电路", "超大规模集成电路"], "answer": 0, "analysis": "本题考查第二代。第二代使用晶体管。"}, {"type": "single", "section": 0, "stem": "第三代计算机（1965—1970）采用的是（ ）。", "options": ["中、小规模集成电路", "电子管", "晶体管", "大规模集成电路"], "answer": 0, "analysis": "本题考查第三代。第三代采用中、小规模集成电路。"}, {"type": "single", "section": 0, "stem": "第四代计算机（1971 至今）采用的是（ ）。", "options": ["大规模 / 超大规模集成电路", "晶体管", "电子管", "中小规模集成电路"], "answer": 0, "analysis": "本题考查第四代。第四代采用大规模、超大规模集成电路。"}, {"type": "single", "section": 0, "stem": "目前广泛使用的微型计算机属于第（ ）代计算机。", "options": ["四", "一", "二", "三"], "answer": 0, "analysis": "本题考查代际。当前使用的计算机属于第四代。"}, {"type": "multi", "section": 0, "stem": "下列属于计算机特点的有（ ）。", "options": ["运算速度快", "具有记忆和逻辑判断能力", "具有自动运行能力", "需要人工逐条干预"], "answer": [0, 1, 2], "analysis": "本题考查计算机特点。五大特点含运算速度快、精度高、存储容量大、记忆与逻辑判断、自动运行；自动运行是与其他工具的本质区别。"}, {"type": "single", "section": 0, "stem": "具有自动运行能力，是计算机与任何其他计算工具之间的（ ）。", "options": ["本质区别", "唯一相同点", "性能劣势", "体积差异"], "answer": 0, "analysis": "本题考查特点。自动运行是计算机与其他计算工具的本质区别。"}, {"type": "single", "section": 0, "stem": "计算机最早的应用领域是（ ）。", "options": ["科学计算（数值计算）", "数据处理", "过程控制", "人工智能"], "answer": 0, "analysis": "本题考查应用领域。科学计算是最早的应用领域。"}, {"type": "single", "section": 0, "stem": "当前应用最广、最重要的计算机应用领域是（ ）。", "options": ["数据处理（非数值计算）", "科学计算", "人工智能", "过程控制"], "answer": 0, "analysis": "本题考查应用领域。超过 80% 的计算机用于数据处理，是最重要、最广的领域。"}, {"type": "single", "section": 0, "stem": "过程控制又被称为（ ）。", "options": ["实时控制", "科学计算", "数据处理", "辅助设计"], "answer": 0, "analysis": "本题考查过程控制。过程控制即实时控制。"}, {"type": "multi", "section": 0, "stem": "下列计算机辅助技术中，属于“计算机辅助”范畴的有（ ）。", "options": ["CAD（辅助设计）", "CAM（辅助制造）", "CAI（辅助教学）", "科学计算"], "answer": [0, 1, 2], "analysis": "本题考查计算机辅助。CAD/CAM/CAE/CAI/CAT 均属计算机辅助。"}, {"type": "single", "section": 0, "stem": "CAD 指的是（ ）。", "options": ["计算机辅助设计", "计算机辅助制造", "计算机辅助教学", "计算机辅助测试"], "answer": 0, "analysis": "本题考查 CAx。CAD 为计算机辅助设计。"}, {"type": "single", "section": 0, "stem": "CAI 指的是（ ）。", "options": ["计算机辅助教学", "计算机辅助制造", "计算机辅助设计", "计算机辅助工程"], "answer": 0, "analysis": "本题考查 CAx。CAI 为计算机辅助教学。"}, {"type": "single", "section": 0, "stem": "按工作原理划分，当前主流的计算机是（ ）。", "options": ["数字电子计算机", "模拟计算机", "混合式计算机", "机械计算机"], "answer": 0, "analysis": "本题考查分类。当前主流是数字电子计算机。"}, {"type": "single", "section": 0, "stem": "按计算机性能由大到小，通常不包括以下哪一项表述？（ ）", "options": ["中型机是性能最大的一类", "巨型机", "大型机", "微型机"], "answer": 0, "analysis": "本题考查性能分类。按性能分为巨型、大型、中型、小型、微型机，巨型机性能最大。"}, {"type": "single", "section": 0, "stem": "按用途，计算机可分为（ ）。", "options": ["通用计算机和专用计算机", "数字计算机和模拟计算机", "巨型机和微型机", "批处理系统和分时系统"], "answer": 0, "analysis": "本题考查用途分类。按用途分为通用计算机与专用计算机。"}, {"type": "single", "section": 0, "stem": "计算机发展的五大趋势不包括（ ）。", "options": ["机械化", "巨型化", "网络化", "智能化"], "answer": 0, "analysis": "本题考查发展趋势。五大趋势为巨型化、微型化、网络化、智能化、多媒体化。"}, {"type": "single", "section": 0, "stem": "计算机“智能化”是指（ ）。", "options": ["具备推理、判断、感觉等类似人类思维的能力", "体积越来越小", "速度越来越慢", "只能做数值计算"], "answer": 0, "analysis": "本题考查智能化。智能化指具备类似人类思维的能力。"}, {"type": "single", "section": 0, "stem": "计算机“巨型化”是指（ ）。", "options": ["高速度、大容量", "体积巨大笨重", "价格便宜", "功能单一"], "answer": 0, "analysis": "本题考查巨型化。巨型化即高速度、大容量。"}, {"type": "multi", "section": 0, "stem": "下列属于计算机发展趋势的有（ ）。", "options": ["网络化", "智能化", "多媒体化", "机械化"], "answer": [0, 1, 2], "analysis": "本题考查趋势。趋势为巨型化、微型化、网络化、智能化、多媒体化。"}, {"type": "single", "section": 0, "stem": "按工作原理，计算机可分为数字计算机、模拟计算机和（ ）。", "options": ["数字模拟混合式计算机", "专用计算机", "通用计算机", "巨型机"], "answer": 0, "analysis": "本题考查工作原理分类。含数字、模拟、混合式三类。"}, {"type": "single", "section": 0, "stem": "计算机运算精度高，其有效数字可达到（ ）。", "options": ["上亿位", "十位", "百位", "千位"], "answer": 0, "analysis": "本题考查特点。运算精度高，有效数字可达上亿位。"}, {"type": "single", "section": 0, "stem": "计算机与其他计算工具最本质的区别是（ ）。", "options": ["具有自动运行能力", "计算速度快", "体积大", "耗电多"], "answer": 0, "analysis": "本题考查本质区别。自动运行能力是本质区别。"}, {"type": "single", "section": 0, "stem": "世界上第一台电子计算机诞生于（ ）年。", "options": ["1946", "1956", "1964", "1971"], "answer": 0, "analysis": "本题考查诞生年份。ENIAC 诞生于 1946 年。"}, {"type": "single", "section": 0, "stem": "计算机网络诞生的标志是 1969 年美国的（ ）。", "options": ["ARPANET", "ENIAC", "Internet", "NSFNET"], "answer": 3, "analysis": "本题考查网络诞生。1969 年美国国防部 ARPANET 是第一个分组交换网。"}, {"type": "single", "section": 1, "stem": "计算机系统由（ ）两大部分组成。", "options": ["硬件系统和软件系统", "主机和外部设备", "CPU 和内存", "运算器和控制器"], "answer": 0, "analysis": "本题考查系统组成。计算机系统 = 硬件 + 软件，二者相辅相成、缺一不可。"}, {"type": "single", "section": 1, "stem": "只有硬件系统、没有软件的计算机被称为（ ）。", "options": ["裸机", "主机", "微型机", "终端"], "answer": 0, "analysis": "本题考查。无软件的硬件机器称为“裸机”。"}, {"type": "single", "section": 1, "stem": "在计算机系统中，硬件与软件的关系是（ ）。", "options": ["硬件是物质基础，软件是发挥硬件功能的关键，二者相辅相成", "软件可脱离硬件独立运行", "硬件无关紧要", "软件比硬件重要得多"], "answer": 0, "analysis": "本题考查关系。硬件为软件载体，软件是“灵魂”，相辅相成。"}, {"type": "single", "section": 1, "stem": "冯·诺依曼提出的计算机核心设计思想是（ ）。", "options": ["存储程序与程序控制", "采用十进制运算", "使用电子管", "仅由运算器组成"], "answer": 0, "analysis": "本题考查冯·诺依曼。核心是“存储程序与程序控制”。"}, {"type": "multi", "section": 1, "stem": "冯·诺依曼体系计算机由以下哪些部件组成？（ ）", "options": ["运算器", "控制器", "存储器", "输入 / 输出设备"], "answer": [0, 1, 2, 3], "analysis": "本题考查五大部件。含运算器、控制器、存储器、输入设备、输出设备。"}, {"type": "single", "section": 1, "stem": "冯·诺依曼计算机采用（ ）数制。", "options": ["二进制", "十进制", "八进制", "十六进制"], "answer": 0, "analysis": "本题考查。采用二进制，因其易表示、抗干扰、易与十进制互换。"}, {"type": "single", "section": 1, "stem": "计算机采用二进制的原因不包括（ ）。", "options": ["二进制运算速度最慢", "容易用电平高低 / 开关通断表示", "抗干扰强、可靠性高", "易于与十进制互换"], "answer": 0, "analysis": "本题考查二进制优点。运算速度慢并非采用二进制的原因。"}, {"type": "single", "section": 1, "stem": "被称为计算机“大脑”、是计算机核心的部件是（ ）。", "options": ["CPU", "内存", "硬盘", "显示器"], "answer": 0, "analysis": "本题考查硬件。CPU 是计算机的核心 / 大脑。"}, {"type": "single", "section": 1, "stem": "CPU 主要包含（ ）。", "options": ["运算器和控制器", "内存和外存", "输入和输出设备", "总线和接口"], "answer": 0, "analysis": "本题考查 CPU 组成。CPU = 运算器 + 控制器 + 寄存器。"}, {"type": "single", "section": 1, "stem": "下列（ ）不属于计算机硬件系统五大基本部件。", "options": ["编译器", "运算器", "控制器", "存储器"], "answer": 0, "analysis": "本题考查。编译器属于软件，不是硬件五大部件。"}, {"type": "multi", "section": 1, "stem": "下列属于计算机输入设备的有（ ）。", "options": ["键盘", "鼠标", "扫描仪", "打印机"], "answer": [0, 1, 2], "analysis": "本题考查。键盘、鼠标、扫描仪是输入设备；打印机是输出设备。"}, {"type": "single", "section": 1, "stem": "下列（ ）属于计算机输出设备。", "options": ["打印机", "键盘", "鼠标", "扫描仪"], "answer": 0, "analysis": "本题考查。打印机是输出设备。"}, {"type": "single", "section": 1, "stem": "总线（Bus）按功能一般分为数据总线、地址总线和（ ）。", "options": ["控制总线", "运算总线", "存储总线", "显示总线"], "answer": 0, "analysis": "本题考查总线。含数据、地址、控制三类总线。"}, {"type": "single", "section": 1, "stem": "断电后其中信息会全部丢失的存储器是（ ）。", "options": ["RAM", "ROM", "硬盘", "光盘"], "answer": 0, "analysis": "本题考查存储器。RAM 断电丢失；ROM 与外存断电不丢。"}, {"type": "single", "section": 1, "stem": "以下属于内存且断电后信息不丢失的是（ ）。", "options": ["ROM", "RAM", "Cache（由 SRAM 构成）", "寄存器"], "answer": 0, "analysis": "本题考查。ROM 只读、断电不丢；RAM/Cache 断电丢失。"}, {"type": "multi", "section": 1, "stem": "关于存储器的说法，正确的有（ ）。", "options": ["RAM 断电后数据丢失", "外存容量大、速度慢、断电不丢", "Cache 用于缓和 CPU 与内存的速度差", "ROM 可随意改写"], "answer": [0, 1, 2], "analysis": "本题考查。ROM 为只读，不可随意改写，故 D 错。"}, {"type": "single", "section": 1, "stem": "位于 CPU 与内存之间、用于缓和二者速度差的高速缓冲存储器是（ ）。", "options": ["Cache", "ROM", "硬盘", "寄存器"], "answer": 0, "analysis": "本题考查 Cache。Cache 是 CPU 与内存间的高速缓冲。"}, {"type": "single", "section": 1, "stem": "软件按功能可分为系统软件与（ ）。", "options": ["应用软件", "操作系统", "数据库", "编译程序"], "answer": 0, "analysis": "本题考查软件分类。分为系统软件与应用软件。"}, {"type": "single", "section": 1, "stem": "下列（ ）属于系统软件。", "options": ["操作系统", "Word", "Excel", "微信"], "answer": 0, "analysis": "本题考查。操作系统是系统软件；其余为应用软件。"}, {"type": "multi", "section": 1, "stem": "下列属于应用软件的有（ ）。", "options": ["Office", "12306 购票软件", "微信", "Windows 操作系统"], "answer": [0, 1, 2], "analysis": "本题考查。Windows 是系统软件，其余为应用软件。"}, {"type": "single", "section": 1, "stem": "计算机语言中，唯一能直接被计算机执行的是（ ）。", "options": ["机器语言", "汇编语言", "高级语言", "自然语言"], "answer": 0, "analysis": "本题考查语言。机器语言（0/1）是唯一可直接执行的语言。"}, {"type": "single", "section": 1, "stem": "汇编语言相对于机器语言，使用（ ）来编写。", "options": ["助记符（符号）", "二进制代码", "自然语言", "汉字"], "answer": 0, "analysis": "本题考查。汇编语言使用助记符，需翻译后执行。"}, {"type": "single", "section": 1, "stem": "高级语言编写的程序必须经过（ ）才能被计算机执行。", "options": ["编译或解释", "直接运行", "手工抄写", "无需处理"], "answer": 0, "analysis": "本题考查。高级语言需编译或解释。"}, {"type": "single", "section": 1, "stem": "将高级语言源程序翻译成目标程序的两种方式中，一种是编译，另一种是（ ）。", "options": ["解释", "汇编", "直接执行", "手写"], "answer": 0, "analysis": "本题考查翻译方式。解释与编译。"}, {"type": "single", "section": 1, "stem": "衡量 CPU 一次能同时处理二进制位数多少的性能指标是（ ）。", "options": ["字长", "主频", "存储容量", "运算速度"], "answer": 0, "analysis": "本题考查字长。字长是一次处理的二进制位数。"}, {"type": "single", "section": 1, "stem": "CPU 单位时间执行指令的条数用（ ）表示。", "options": ["主频（MHz / GHz）", "字长", "容量", "Byte"], "answer": 0, "analysis": "本题考查主频。主频单位 MHz/GHz。"}, {"type": "single", "section": 1, "stem": "计算机性能指标中，运算速度的单位通常是（ ）。", "options": ["MIPS（百万条指令 / 秒）", "MHz", "GB", "bit"], "answer": 0, "analysis": "本题考查运算速度。单位 MIPS。"}, {"type": "single", "section": 1, "stem": "关于存储容量单位，正确的是（ ）。", "options": ["1KB = 1024B，1GB = 1024MB", "1KB = 1000B", "1GB = 1000MB", "1TB = 1000GB"], "answer": 0, "analysis": "本题考查容量单位。以 1024 递进。"}, {"type": "single", "section": 2, "stem": "数制中的“基数”指的是（ ）。", "options": ["数码的个数", "某位上 1 表示的大小", "基本符号本身", "进位规则"], "answer": 0, "analysis": "本题考查数制概念。基数是数码的个数。"}, {"type": "single", "section": 2, "stem": "数制中的“位权”是指（ ）。", "options": ["数码在某位上表示的数值大小", "数码个数", "进制数", "符号位"], "answer": 0, "analysis": "本题考查位权。位权是某位上 1 表示的大小。"}, {"type": "single", "section": 2, "stem": "将二进制数转换为十进制数应采用（ ）。", "options": ["按位权展开求和", "除 2 倒序取余", "乘 2 取整", "三位并一位"], "answer": 0, "analysis": "本题考查 N 进制→十进制。按位权展开求和。"}, {"type": "single", "section": 2, "stem": "十进制整数转换为二进制数应采用（ ）。", "options": ["除 2 倒序取余", "按位权展开", "乘 2 正序取整", "四位并一位"], "answer": 0, "analysis": "本题考查十进制→二进制。除基取余（倒序）。"}, {"type": "single", "section": 2, "stem": "二进制数 1011 转换为十进制是（ ）。", "options": ["11", "10", "13", "12"], "answer": 0, "analysis": "本题考查。1011 = 8+0+2+1 = 11。"}, {"type": "single", "section": 2, "stem": "十进制数 13 转换为二进制是（ ）。", "options": ["1101", "1011", "1110", "1001"], "answer": 0, "analysis": "本题考查。13 = 8+4+1 = 1101。"}, {"type": "multi", "section": 2, "stem": "关于进制转换，正确的有（ ）。", "options": ["二进制转八进制：三位并一位", "二进制转十六进制：四位并一位", "十进制整数转 N 进制：除 N 倒序取余", "十进制转二进制：按位权展开求和"], "answer": [0, 1, 2], "analysis": "本题考查转换规则。D 错：十进制转二进制用除基取余，不是按位权展开。"}, {"type": "single", "section": 2, "stem": "计算机中最小的数据存储单位是（ ）。", "options": ["位（bit）", "字节（Byte）", "字", "KB"], "answer": 0, "analysis": "本题考查。bit 是最小单位。"}, {"type": "single", "section": 2, "stem": "计算机存储的基本单位是（ ）。", "options": ["字节（Byte）", "位（bit）", "字", "字长"], "answer": 0, "analysis": "本题考查。Byte 是基本单位，1B = 8bit。"}, {"type": "single", "section": 2, "stem": "若 1 个汉字占用 2 字节，则 1000 万个汉字约占用（ ）。", "options": ["20MB", "10MB", "2MB", "200MB"], "answer": 0, "analysis": "本题考查。1000 万 × 2B = 2000 万 B ≈ 19MB ≈ 20MB。"}, {"type": "multi", "section": 2, "stem": "下列存储容量单位关系正确的有（ ）。", "options": ["bit、Byte、KB、MB、GB、TB 依次增大", "Byte 比 bit 小", "PB 的容量大于 TB", "KB 的容量大于 MB"], "answer": [0, 2], "analysis": "本题考查。容量以 1024 递进：bit<Byte<KB<MB<GB<TB<PB，故 B、D 错。"}, {"type": "single", "section": 2, "stem": "计算机中的数值一律以（ ）形式存储和运算。", "options": ["补码", "原码", "反码", "ASCII"], "answer": 0, "analysis": "本题考查。数值一律以补码存储和运算。"}, {"type": "single", "section": 2, "stem": "在原码表示中，符号位的约定是（ ）。", "options": ["正数 0、负数 1", "正数 1、负数 0", "都用 0", "都用 1"], "answer": 0, "analysis": "本题考查原码。原码符号位正 0 负 1。"}, {"type": "single", "section": 2, "stem": "对于正数，其原码、反码、补码三者（ ）。", "options": ["完全相同", "都不同", "反码等于补码", "原码等于反码但不等于补码"], "answer": 0, "analysis": "本题考查。正数原码、反码、补码相同。"}, {"type": "single", "section": 2, "stem": "负数的补码等于其（ ）。", "options": ["反码加 1", "原码加 1", "反码减 1", "原码减 1"], "answer": 0, "analysis": "本题考查。负数补码 = 反码 + 1（即原码除符号位取反再加 1）。"}, {"type": "single", "section": 2, "stem": "ASCII 码采用（ ）位编码。", "options": ["7", "8", "16", "32"], "answer": 0, "analysis": "本题考查 ASCII。7 位编码、8 位存储，共 128 种。"}, {"type": "single", "section": 2, "stem": "字符 “A” 的 ASCII 码值是（ ）。", "options": ["65", "97", "48", "90"], "answer": 0, "analysis": "本题考查。A = 65。"}, {"type": "single", "section": 2, "stem": "字符 “a” 的 ASCII 码值是（ ）。", "options": ["97", "65", "48", "122"], "answer": 0, "analysis": "本题考查。a = 97。"}, {"type": "multi", "section": 2, "stem": "关于 ASCII 码，正确的有（ ）。", "options": ["采用 7 位编码、8 位存储", "共 128 种字符", "\"0\"~\"9\" 的 ASCII 为 48~57", "小写字母 a 比大写字母 A 小"], "answer": [0, 1, 2], "analysis": "本题考查。a(97) > A(65)，故 D 错。"}, {"type": "single", "section": 2, "stem": "一个汉字在计算机内部（机内码）通常占用（ ）。", "options": ["2 个字节", "1 个字节", "4 个字节", "8 个字节"], "answer": 0, "analysis": "本题考查。1 个汉字 = 2 字节。"}, {"type": "single", "section": 2, "stem": "汉字编码流程中，从输入到输出一般不包含（ ）。", "options": ["机内码转换为输入码", "输入码转换为国标码", "国标码转换为机内码", "机内码转换为字形码"], "answer": 0, "analysis": "本题考查汉字编码流程：输入码→国标码→机内码→字形码，机内码不会反向变输入码。"}, {"type": "single", "section": 2, "stem": "汉字机内码每个字节的最高位为（ ）。", "options": ["1", "0", "随机", "与 ASCII 相同"], "answer": 0, "analysis": "本题考查。汉字机内码两字节最高位均为 1，以区别于 ASCII。"}, {"type": "single", "section": 2, "stem": "十进制小数 0.625 转换为二进制是（ ）。", "options": ["0.101", "0.110", "0.011", "0.111"], "answer": 0, "analysis": "本题考查小数转换。0.625×2=1.25→1，0.25×2=0.5→0，0.5×2=1.0→1，得 0.101。"}, {"type": "multi", "section": 2, "stem": "关于汉字编码，正确的有（ ）。", "options": ["输入码用于向计算机输入汉字", "字形码用于显示 / 打印输出", "机内码用于计算机内部存储处理", "汉字用 ASCII 码存储"], "answer": [0, 1, 2], "analysis": "本题考查。汉字用机内码存储，不用 ASCII，故 D 错。"}, {"type": "single", "section": 2, "stem": "二进制数 1111 转换为十进制是（ ）。", "options": ["15", "16", "14", "17"], "answer": 0, "analysis": "本题考查。1111 = 8+4+2+1 = 15。"}, {"type": "single", "section": 3, "stem": "世界上第一个分组交换网络 ARPANET 诞生于（ ）。", "options": ["1969 年，美国国防部", "1969 年，英国", "1971 年，美国", "1983 年，中国"], "answer": 0, "analysis": "本题考查网络诞生。1969 年美国国防部 ARPANET 是第一个分组交换网。"}, {"type": "single", "section": 3, "stem": "我国正式接入因特网的时间是（ ）。", "options": ["1994 年", "1969 年", "1983 年", "2000 年"], "answer": 0, "analysis": "本题考查。我国于 1994 年接入因特网。"}, {"type": "single", "section": 3, "stem": "计算机网络最主要的目标是（ ）。", "options": ["实现数据通信与资源共享", "提高单机运算速度", "缩小计算机体积", "替代通信卫星"], "answer": 0, "analysis": "本题考查定义。网络是计算机与通信技术结合，实现数据通信与资源共享。"}, {"type": "multi", "section": 3, "stem": "计算机网络的三大功能包括（ ）。", "options": ["数据通信", "资源共享", "分布处理", "使计算机体积变小"], "answer": [0, 1, 2], "analysis": "本题考查功能。三大功能：数据通信、资源共享、分布处理。"}, {"type": "single", "section": 3, "stem": "网络管理五大功能域不包括（ ）。", "options": ["绘制管理", "配置管理", "故障管理", "计费管理"], "answer": 0, "analysis": "本题考查。五域为配置、故障、性能、安全、计费管理。"}, {"type": "multi", "section": 3, "stem": "按覆盖范围，计算机网络可分为（ ）。", "options": ["局域网 LAN", "城域网 MAN", "广域网 WAN", "路由器网"], "answer": [0, 1, 2], "analysis": "本题考查分类。按覆盖范围分 LAN、MAN、WAN。"}, {"type": "single", "section": 3, "stem": "Internet 从覆盖范围看属于（ ）。", "options": ["广域网（国际互联网）", "局域网", "城域网", "个人网"], "answer": 0, "analysis": "本题考查。Internet 是国际互联网，属广域网。"}, {"type": "single", "section": 3, "stem": "按使用范围，计算机网络可分为公用网和（ ）。", "options": ["专用网", "局域网", "广域网", "无线网"], "answer": 0, "analysis": "本题考查。按使用范围分公用网与专用网。"}, {"type": "multi", "section": 3, "stem": "常见的网络拓扑结构包括（ ）。", "options": ["总线型", "星型", "网型（网状）", "直线型"], "answer": [0, 1, 2], "analysis": "本题考查拓扑。常见有总线、环、星、树、网型。"}, {"type": "single", "section": 3, "stem": "在常见拓扑中，可靠性最高的是（ ）。", "options": ["网型（网状）", "星型", "总线型", "环型"], "answer": 0, "analysis": "本题考查。网型拓扑可靠性最高。"}, {"type": "single", "section": 3, "stem": "中心节点一旦发生故障就会导致全网瘫痪的拓扑是（ ）。", "options": ["星型", "网型", "总线型", "环型"], "answer": 0, "analysis": "本题考查。星型以中心节点为核心，其故障致全网瘫痪。"}, {"type": "single", "section": 3, "stem": "在计算机网络中，负责数据处理的是（ ）。", "options": ["资源子网", "通信子网", "通信线路", "路由器"], "answer": 0, "analysis": "本题考查组成。资源子网（终端/服务器）负责数据处理。"}, {"type": "single", "section": 3, "stem": "在计算机网络中，负责数据传输的是（ ）。", "options": ["通信子网", "资源子网", "终端", "服务器"], "answer": 0, "analysis": "本题考查。通信子网（网卡、路由器、线路）负责数据传输。"}, {"type": "single", "section": 3, "stem": "下列说法中正确的是（ ）。", "options": ["通信子网由网卡、路由器、通信线路组成", "资源子网由路由器组成", "通信子网负责数据处理", "资源子网负责数据传输"], "answer": 0, "analysis": "本题考查。通信子网由通信设备与线路组成；数据处理属资源子网。"}, {"type": "multi", "section": 3, "stem": "下列（ ）属于计算机网络的资源子网。", "options": ["终端", "服务器", "路由器", "通信线路"], "answer": [0, 1], "analysis": "本题考查。终端与服务器属资源子网；路由器、线路属通信子网。"}, {"type": "single", "section": 3, "stem": "网络体系结构是指（ ）的集合。", "options": ["层与协议", "计算机与电缆", "软件与硬件", "服务器与客户机"], "answer": 0, "analysis": "本题考查。网络体系结构 = 层 + 协议的集合。"}, {"type": "single", "section": 3, "stem": "下列（ ）不属于计算机网络的功能。", "options": ["使计算机体积变小", "数据通信", "资源共享", "分布处理"], "answer": 0, "analysis": "本题考查。体积变小不是网络功能。"}, {"type": "single", "section": 3, "stem": "按拓扑结构分类，不包含下列哪种？（ ）", "options": ["矩阵型", "总线型", "环型", "星型"], "answer": 0, "analysis": "本题考查。常见拓扑无矩阵型。"}, {"type": "multi", "section": 3, "stem": "网络管理功能域包括（ ）。", "options": ["配置管理", "故障管理", "计费管理", "绘制管理"], "answer": [0, 1, 2], "analysis": "本题考查。五域为配置、故障、性能、安全、计费。"}, {"type": "single", "section": 3, "stem": "分布式处理属于网络功能中的（ ）。", "options": ["分布处理", "数据通信", "资源共享", "网络安全"], "answer": 0, "analysis": "本题考查。分布式处理是网络三大功能之一。"}, {"type": "single", "section": 3, "stem": "局域网（LAN）的覆盖范围通常（ ）。", "options": ["限于一个房间或建筑物内", "跨城市", "跨国", "全球"], "answer": 0, "analysis": "本题考查。LAN 覆盖范围小，通常在一幢楼或房间内。"}, {"type": "single", "section": 3, "stem": "广域网（WAN）的典型代表是（ ）。", "options": ["Internet", "一台交换机", "家庭 Wi-Fi", "计算机总线"], "answer": 0, "analysis": "本题考查。Internet 是广域网代表。"}, {"type": "multi", "section": 3, "stem": "关于星型拓扑，正确的有（ ）。", "options": ["中心节点故障则全网瘫痪", "结构简单、布线方便", "可靠性最高", "任意两节点直接相连"], "answer": [0, 1], "analysis": "本题考查。星型中心故障致全网瘫，结构简单；可靠性最高的是网型。"}, {"type": "single", "section": 3, "stem": "总线型拓扑中所有节点共享（ ）。", "options": ["一条公共传输线", "独立的交换机", "中央服务器", "多条专线"], "answer": 0, "analysis": "本题考查。总线型用一条共享传输线。"}, {"type": "single", "section": 3, "stem": "计算机网络是（ ）相结合的产物。", "options": ["计算机技术与通信技术", "计算机与电视", "软件与硬件", "CPU 与内存"], "answer": 0, "analysis": "本题考查。网络是计算机技术与通信技术结合的产物。"}, {"type": "single", "section": 4, "stem": "网络体系结构是指（ ）的集合。", "options": ["层与协议", "硬件与软件", "计算机与电缆", "服务器与浏览器"], "answer": 0, "analysis": "本题考查。网络体系结构 = 层 + 协议的集合。"}, {"type": "single", "section": 4, "stem": "网络协议的三要素是（ ）。", "options": ["语法、语义、同步", "语法、编码、传输", "地址、端口、协议", "发送、接收、确认"], "answer": 0, "analysis": "本题考查。三要素：语法、语义、同步（时序）。"}, {"type": "multi", "section": 4, "stem": "网络协议的三要素包括（ ）。", "options": ["语法（数据格式）", "语义（控制信息）", "同步（次序）", "拓扑（结构类型）"], "answer": [0, 1, 2], "analysis": "本题考查。三要素为语法、语义、同步，不含拓扑。"}, {"type": "single", "section": 4, "stem": "OSI 参考模型共有（ ）层。", "options": ["7", "4", "5", "3"], "answer": 0, "analysis": "本题考查。OSI 为七层模型。"}, {"type": "single", "section": 4, "stem": "OSI 参考模型中，从低到高的第一层是（ ）。", "options": ["物理层", "数据链路层", "网络层", "应用层"], "answer": 0, "analysis": "本题考查。最低层是物理层。"}, {"type": "single", "section": 4, "stem": "OSI 参考模型的最高层是（ ）。", "options": ["应用层", "表示层", "会话层", "传输层"], "answer": 0, "analysis": "本题考查。最高层是应用层。"}, {"type": "single", "section": 4, "stem": "物理寻址（MAC 地址）发生在 OSI 的（ ）。", "options": ["数据链路层", "物理层", "网络层", "传输层"], "answer": 0, "analysis": "本题考查。MAC 地址寻址在数据链路层。"}, {"type": "single", "section": 4, "stem": "逻辑寻址（IP 地址）发生在 OSI 的（ ）。", "options": ["网络层", "数据链路层", "传输层", "应用层"], "answer": 0, "analysis": "本题考查。IP 逻辑寻址在网络层。"}, {"type": "multi", "section": 4, "stem": "下列（ ）属于 OSI 七层模型。", "options": ["物理层", "网络层", "应用层", "传输层"], "answer": [0, 1, 2, 3], "analysis": "本题考查。物理层、网络层、应用层、传输层均为 OSI 七层之一。"}, {"type": "single", "section": 4, "stem": "下列（ ）不属于 OSI 七层。", "options": ["网络接口层", "物理层", "数据链路层", "表示层"], "answer": 0, "analysis": "本题考查。网络接口层属于 TCP/IP 模型，不在 OSI 中。"}, {"type": "single", "section": 4, "stem": "TCP/IP 模型共有（ ）层。", "options": ["4", "7", "5", "3"], "answer": 0, "analysis": "本题考查。TCP/IP 为四层。"}, {"type": "single", "section": 4, "stem": "TCP/IP 模型的最低层是（ ）。", "options": ["网络接口层", "网际层", "传输层", "应用层"], "answer": 0, "analysis": "本题考查。TCP/IP 最低层是网络接口层。"}, {"type": "single", "section": 4, "stem": "TCP 和 UDP 协议运行于 TCP/IP 的（ ）。", "options": ["传输层", "网络层", "应用层", "网络接口层"], "answer": 0, "analysis": "本题考查。TCP/UDP 在传输层。"}, {"type": "single", "section": 4, "stem": "IP 协议主要负责（ ）。", "options": ["寻址与路由", "可靠传输", "文件传输", "域名解析"], "answer": 0, "analysis": "本题考查。IP 负责寻址与路由。"}, {"type": "single", "section": 4, "stem": "ARP 协议的作用是（ ）。", "options": ["将 IP 地址解析为 MAC 地址", "将域名解析为 IP", "路由选择", "加密数据"], "answer": 0, "analysis": "本题考查。ARP 完成 IP→MAC 的解析。"}, {"type": "single", "section": 4, "stem": "调制解调器（Modem）主要完成（ ）。", "options": ["数字信号与模拟信号的相互转换", "路由选择", "放大信号", "地址转换"], "answer": 0, "analysis": "本题考查。Modem 完成数模 / 模数转换。"}, {"type": "multi", "section": 4, "stem": "下列（ ）属于 TCP/IP 四层。", "options": ["网络接口层", "网际层", "传输层", "应用层"], "answer": [0, 1, 2, 3], "analysis": "本题考查。TCP/IP 四层即此四项。"}, {"type": "single", "section": 4, "stem": "中继器、集线器工作于（ ）。", "options": ["物理层", "数据链路层", "网络层", "传输层"], "answer": 0, "analysis": "本题考查。中继器 / 集线器在物理层。"}, {"type": "single", "section": 4, "stem": "网桥、交换机工作于（ ）。", "options": ["数据链路层", "物理层", "网络层", "应用层"], "answer": 0, "analysis": "本题考查。交换机 / 网桥在数据链路层。"}, {"type": "single", "section": 4, "stem": "路由器工作于（ ）。", "options": ["网络层", "数据链路层", "物理层", "传输层"], "answer": 0, "analysis": "本题考查。路由器在网络层。"}, {"type": "single", "section": 4, "stem": "网关一般工作于（ ）。", "options": ["高层（传输层及以上）", "物理层", "数据链路层", "网络层"], "answer": 0, "analysis": "本题考查。网关工作于高层。"}, {"type": "single", "section": 4, "stem": "下列设备工作在网络层的是（ ）。", "options": ["路由器", "集线器", "交换机", "中继器"], "answer": 0, "analysis": "本题考查。路由器在网络层。"}, {"type": "multi", "section": 4, "stem": "关于网络设备与其层次，正确的有（ ）。", "options": ["集线器 — 物理层", "交换机 — 数据链路层", "路由器 — 网络层", "网关 — 物理层"], "answer": [0, 1, 2], "analysis": "本题考查。网关工作于高层而非物理层。"}, {"type": "single", "section": 4, "stem": "OSI 中负责将比特流封装成帧的是（ ）。", "options": ["数据链路层", "物理层", "网络层", "传输层"], "answer": 0, "analysis": "本题考查。数据链路层成帧。"}, {"type": "single", "section": 4, "stem": "OSI 中负责端到端可靠传输的是（ ）。", "options": ["传输层", "网络层", "会话层", "应用层"], "answer": 0, "analysis": "本题考查。传输层提供端到端传输。"}, {"type": "single", "section": 4, "stem": "下列协议中运行在应用层的是（ ）。", "options": ["HTTP", "IP", "TCP", "ARP"], "answer": 0, "analysis": "本题考查。HTTP 在应用层；IP/TCP/ARP 不在应用层。"}, {"type": "multi", "section": 4, "stem": "关于 ARP，正确的有（ ）。", "options": ["将 IP 地址解析为 MAC 地址", "工作在网络层", "用于域名解析", "用于路由选择"], "answer": [0, 1], "analysis": "本题考查。域名解析是 DNS，路由选择由 IP/路由协议完成。"}, {"type": "single", "section": 4, "stem": "TCP/IP 的网络接口层大致对应 OSI 的（ ）。", "options": ["物理层和数据链路层", "网络层和传输层", "会话层和表示层", "应用层"], "answer": 0, "analysis": "本题考查。网络接口层对应 OSI 下两层。"}, {"type": "single", "section": 5, "stem": "只能单向传输的通信方式是（ ）。", "options": ["单工", "半双工", "全双工", "双工"], "answer": 0, "analysis": "本题考查。单工为单向。"}, {"type": "single", "section": 5, "stem": "可以双向但不能同时传输的通信方式是（ ）。", "options": ["半双工", "单工", "全双工", "广播"], "answer": 0, "analysis": "本题考查。半双工双向但不同时。"}, {"type": "single", "section": 5, "stem": "可以同时双向传输的通信方式是（ ）。", "options": ["全双工", "单工", "半双工", "单频"], "answer": 0, "analysis": "本题考查。全双工双向同时。"}, {"type": "multi", "section": 5, "stem": "数据通信方式包括（ ）。", "options": ["单工", "半双工", "全双工", "单频"], "answer": [0, 1, 2], "analysis": "本题考查。三种方式为单工、半双工、全双工。"}, {"type": "single", "section": 5, "stem": "数据传输速率（比特率）的单位是（ ）。", "options": ["bps", "baud", "Hz", "Byte"], "answer": 0, "analysis": "本题考查。比特率单位 bps。"}, {"type": "single", "section": 5, "stem": "信号传输速率（波特率）的单位是（ ）。", "options": ["baud", "bps", "Hz", "b/s"], "answer": 0, "analysis": "本题考查。波特率单位 baud。"}, {"type": "single", "section": 5, "stem": "衡量传输可靠性的指标“误码率”表示（ ）。", "options": ["传输出现错误的概率", "传输速度", "带宽大小", "信道容量"], "answer": 0, "analysis": "本题考查。误码率是出错概率。"}, {"type": "multi", "section": 5, "stem": "数据通信的技术指标包括（ ）。", "options": ["数据传输速率", "误码率", "信道容量", "带宽"], "answer": [0, 1, 2, 3], "analysis": "本题考查。技术指标含比特率、误码率、信道容量、带宽等。"}, {"type": "single", "section": 5, "stem": "直接将数字信号在数字信道上传输的方式称为（ ）。", "options": ["基带传输", "频带传输", "宽带传输", "载波传输"], "answer": 0, "analysis": "本题考查。基带传输直接传数字信号，局域网常用。"}, {"type": "single", "section": 5, "stem": "将数字信号转换为模拟信号后在线路上传输的方式称为（ ）。", "options": ["频带传输", "基带传输", "宽带传输", "直接传输"], "answer": 0, "analysis": "本题考查。频带传输用于远距离。"}, {"type": "single", "section": 5, "stem": "独占一条信道、建立连接后一直占用、利用率较低的交换技术是（ ）。", "options": ["电路交换", "报文交换", "分组交换", "信元交换"], "answer": 0, "analysis": "本题考查。电路交换独占信道、利用率低。"}, {"type": "single", "section": 5, "stem": "IP 电话采用的交换技术是（ ）。", "options": ["分组交换", "电路交换", "报文交换", "频分交换"], "answer": 0, "analysis": "本题考查。IP 电话用分组交换，利用率高。"}, {"type": "multi", "section": 5, "stem": "常见的数据交换技术包括（ ）。", "options": ["电路交换", "报文交换", "分组交换", "量子交换"], "answer": [0, 1, 2], "analysis": "本题考查。三种常见交换技术。"}, {"type": "single", "section": 5, "stem": "下列说法中正确的是（ ）。", "options": ["分组交换利用率高，IP 电话使用分组交换", "电路交换利用率最高", "基带传输用于远距离", "半双工可同时收发"], "answer": 0, "analysis": "本题考查。分组交换利用率高，IP 电话用之。"}, {"type": "single", "section": 5, "stem": "下列（ ）不是数据通信方式。", "options": ["单频", "单工", "半双工", "全双工"], "answer": 0, "analysis": "本题考查。单频不是通信方式。"}, {"type": "single", "section": 6, "stem": "IPv4 地址由（ ）位二进制组成。", "options": ["32", "64", "128", "16"], "answer": 0, "analysis": "本题考查。IPv4 为 32 位。"}, {"type": "single", "section": 6, "stem": "IPv4 点分十进制表示中，每一组的取值范围是（ ）。", "options": ["0 ~ 255", "0 ~ 128", "1 ~ 254", "0 ~ 1024"], "answer": 0, "analysis": "本题考查。每组 8 位，0~255。"}, {"type": "single", "section": 6, "stem": "A 类 IP 地址第一字节的范围是（ ）。", "options": ["1 ~ 126", "128 ~ 191", "192 ~ 223", "224 ~ 239"], "answer": 0, "analysis": "本题考查。A 类 1~126。"}, {"type": "single", "section": 6, "stem": "B 类 IP 地址第一字节的范围是（ ）。", "options": ["128 ~ 191", "1 ~ 126", "192 ~ 223", "224 ~ 239"], "answer": 0, "analysis": "本题考查。B 类 128~191。"}, {"type": "single", "section": 6, "stem": "C 类 IP 地址第一字节的范围是（ ）。", "options": ["192 ~ 223", "1 ~ 126", "128 ~ 191", "224 ~ 239"], "answer": 0, "analysis": "本题考查。C 类 192~223。"}, {"type": "single", "section": 6, "stem": "D 类 IP 地址主要用于（ ）。", "options": ["组播（多播）", "常规主机", "保留实验", "回送测试"], "answer": 0, "analysis": "本题考查。D 类为组播地址。"}, {"type": "single", "section": 6, "stem": "E 类 IP 地址主要用于（ ）。", "options": ["保留", "组播", "常规主机", "回送"], "answer": 0, "analysis": "本题考查。E 类保留。"}, {"type": "single", "section": 6, "stem": "A 类地址的默认子网掩码是（ ）。", "options": ["255.0.0.0", "255.255.0.0", "255.255.255.0", "255.255.255.255"], "answer": 0, "analysis": "本题考查。A 类掩码 255.0.0.0。"}, {"type": "single", "section": 6, "stem": "B 类地址的默认子网掩码是（ ）。", "options": ["255.255.0.0", "255.0.0.0", "255.255.255.0", "255.255.255.255"], "answer": 0, "analysis": "本题考查。B 类掩码 255.255.0.0。"}, {"type": "single", "section": 6, "stem": "C 类地址的默认子网掩码是（ ）。", "options": ["255.255.255.0", "255.255.0.0", "255.0.0.0", "255.255.255.255"], "answer": 0, "analysis": "本题考查。C 类掩码 255.255.255.0。"}, {"type": "multi", "section": 6, "stem": "关于 IP 地址分类，正确的有（ ）。", "options": ["A 类第一字节 1~126", "B 类第一字节 128~191", "C 类第一字节 192~223", "A 类第一字节 128~191"], "answer": [0, 1, 2], "analysis": "本题考查。A 类 1~126，故 D 错。"}, {"type": "single", "section": 6, "stem": "回送地址（用于本地测试）是（ ）。", "options": ["127 段", "192 段", "10 段", "224 段"], "answer": 0, "analysis": "本题考查。127 为回送地址。"}, {"type": "single", "section": 6, "stem": "主机号全为 0 的 IP 地址称为（ ）。", "options": ["网络地址", "广播地址", "回送地址", "组播地址"], "answer": 0, "analysis": "本题考查。主机号全 0 为网络地址。"}, {"type": "single", "section": 6, "stem": "主机号全为 1 的 IP 地址称为（ ）。", "options": ["广播地址", "网络地址", "回送地址", "组播地址"], "answer": 0, "analysis": "本题考查。主机号全 1 为广播地址。"}, {"type": "single", "section": 6, "stem": "子网掩码的作用是（ ）。", "options": ["与 IP 地址逻辑“与”得到网络号", "加密数据", "分配 MAC 地址", "转换域名"], "answer": 0, "analysis": "本题考查。掩码与 IP 逻辑与得网络号。"}, {"type": "single", "section": 6, "stem": "IPv6 地址由（ ）位组成。", "options": ["128", "32", "64", "48"], "answer": 0, "analysis": "本题考查。IPv6 为 128 位。"}, {"type": "single", "section": 6, "stem": "IPv6 地址采用（ ）表示。", "options": ["冒分十六进制", "点分十进制", "二进制", "八进制"], "answer": 0, "analysis": "本题考查。IPv6 用冒分十六进制。"}, {"type": "multi", "section": 6, "stem": "关于 IPv6，正确的有（ ）。", "options": ["地址长度为 128 位", "用于解决 IPv4 地址耗尽问题", "采用冒分十六进制表示", "地址长度为 64 位"], "answer": [0, 1, 2], "analysis": "本题考查。IPv6 为 128 位，故 D 错。"}, {"type": "single", "section": 6, "stem": "全球 IP 地址的分配由（ ）机构负责。", "options": ["IANA", "CNNIC", "ISO", "IEEE"], "answer": 0, "analysis": "本题考查。全球由 IANA 负责；CNNIC 负责中国。"}, {"type": "single", "section": 6, "stem": "负责中国 IP 地址管理的机构是（ ）。", "options": ["CNNIC", "IANA", "ISO", "W3C"], "answer": 0, "analysis": "本题考查。中国由 CNNIC 管理。"}, {"type": "single", "section": 6, "stem": "一台主机从网络 A 迁移到网络 B，通常需要改变的是（ ）。", "options": ["IP 地址", "MAC 地址", "网卡", "主板"], "answer": 0, "analysis": "本题考查。跨网迁移需改 IP；MAC 地址不变。"}, {"type": "single", "section": 6, "stem": "划分子网时，是把 IP 地址中的（ ）部分划分出若干位作为子网号。", "options": ["主机号", "网络号", "整个地址", "默认掩码"], "answer": 0, "analysis": "本题考查。子网号从主机号部分划分。"}, {"type": "single", "section": 6, "stem": "下列（ ）是一个 C 类 IP 地址。", "options": ["192.168.1.1", "10.1.1.1", "172.16.1.1", "224.0.0.1"], "answer": 0, "analysis": "本题考查。192.168.1.1 属 C 类（192~223）。"}, {"type": "single", "section": 6, "stem": "下列（ ）是一个 B 类 IP 地址。", "options": ["130.10.1.1", "8.8.8.8", "200.1.1.1", "127.0.0.1"], "answer": 0, "analysis": "本题考查。130 在 128~191，属 B 类。"}, {"type": "single", "section": 6, "stem": "下列（ ）是一个 A 类 IP 地址。", "options": ["9.1.1.1", "126.0.0.1", "191.1.1.1", "223.1.1.1"], "answer": 2, "analysis": "本题考查。A 类 1~126，9 属 A 类；126 也属 A 类（注意 126 是 A 类边界）。题目问“一个 A 类”，9.1.1.1 正确。"}, {"type": "multi", "section": 6, "stem": "下列（ ）属于特殊 IP 地址。", "options": ["主机号全 0（网络地址）", "主机号全 1（广播地址）", "127 段（回送）", "255.255.255.255（广播）"], "answer": [0, 1, 2, 3], "analysis": "本题考查。以上均为特殊地址。"}, {"type": "single", "section": 6, "stem": "下列（ ）属于组播地址范围。", "options": ["224.0.0.1", "10.0.0.1", "192.168.1.1", "127.0.0.1"], "answer": 0, "analysis": "本题考查。D 类 224~239 为组播，224.0.0.1 在其中。"}, {"type": "single", "section": 6, "stem": "子网掩码中二进制 1 对应（ ），0 对应（ ）。", "options": ["网络位；主机位", "主机位；网络位", "子网位；网络位", "主机位；子网位"], "answer": 0, "analysis": "本题考查。掩码 1 对应网络位，0 对应主机位。"}, {"type": "single", "section": 6, "stem": "推动 IPv6 发展的主要原因是（ ）。", "options": ["IPv4 地址空间即将耗尽", "IPv4 速度太慢", "IPv4 不支持子网", "IPv4 不能路由"], "answer": 0, "analysis": "本题考查。IPv6 主要为解决 IPv4 地址耗尽。"}, {"type": "single", "section": 7, "stem": "主机域名的一般结构从右到左依次为（ ）。", "options": ["顶级域名 . 二级域名 . 三级域名 . 主机名", "主机名 . 二级 . 三级 . 顶级", "主机名 . 顶级 . 二级 . 三级", "三级 . 二级 . 顶级 . 主机名"], "answer": 0, "analysis": "本题考查。域名结构：主机名.三级.二级.顶级（左低右高）。"}, {"type": "single", "section": 7, "stem": "一个完整的域名总长度不超过（ ）个字符。", "options": ["255", "64", "128", "1024"], "answer": 0, "analysis": "本题考查。域名不超过 255 字符。"}, {"type": "single", "section": 7, "stem": "要访问一台服务器，必须先将域名由（ ）解析为 IP 地址。", "options": ["DNS", "ARP", "TCP", "MAC"], "answer": 0, "analysis": "本题考查。域名须由 DNS 解析为 IP。"}, {"type": "single", "section": 7, "stem": "在域名解析中，主机向本地域名服务器发起的查询通常是（ ）。", "options": ["递归查询", "迭代查询", "广播查询", "组播查询"], "answer": 0, "analysis": "本题考查。递归查询：主机→本地域名服务器。"}, {"type": "single", "section": 7, "stem": "本地域名服务器向根域名服务器发起的查询通常是（ ）。", "options": ["迭代查询", "递归查询", "单播查询", "直连查询"], "answer": 0, "analysis": "本题考查。迭代查询：本地→根。"}, {"type": "single", "section": 7, "stem": "顶级域名 “cn” 表示（ ）。", "options": ["中国", "商业", "教育", "政府"], "answer": 0, "analysis": "本题考查。cn=中国。"}, {"type": "single", "section": 7, "stem": "顶级域名 “com” 表示（ ）。", "options": ["商业机构", "教育机构", "政府机构", "军事机构"], "answer": 0, "analysis": "本题考查。com=商业。"}, {"type": "single", "section": 7, "stem": "顶级域名 “edu” 表示（ ）。", "options": ["教育机构", "商业机构", "政府机构", "非营利组织"], "answer": 0, "analysis": "本题考查。edu=教育。"}, {"type": "single", "section": 7, "stem": "顶级域名 “gov” 表示（ ）。", "options": ["政府机构", "商业机构", "教育机构", "国际组织"], "answer": 0, "analysis": "本题考查。gov=政府。"}, {"type": "single", "section": 7, "stem": "顶级域名 “org” 表示（ ）。", "options": ["非营利组织", "商业", "教育", "政府"], "answer": 0, "analysis": "本题考查。org=非营利。"}, {"type": "single", "section": 7, "stem": "顶级域名 “mil” 表示（ ）。", "options": ["军事机构", "商业", "教育", "政府"], "answer": 0, "analysis": "本题考查。mil=军事。"}, {"type": "single", "section": 7, "stem": "顶级域名 “int” 表示（ ）。", "options": ["国际组织", "商业", "教育", "政府"], "answer": 0, "analysis": "本题考查。int=国际组织。"}, {"type": "multi", "section": 7, "stem": "关于常见顶级域名，正确的有（ ）。", "options": ["cn 表示中国", "com 表示商业", "edu 表示教育", "gov 表示商业"], "answer": [0, 1, 2], "analysis": "本题考查。gov 表示政府，非商业。"}, {"type": "single", "section": 7, "stem": "关于域名注册，正确的说法是（ ）。", "options": ["注册过的域名不可再被他人注册", "域名可随意重复注册", "域名无需唯一", "一个域名可被多人注册"], "answer": 0, "analysis": "本题考查。域名全球唯一，注册后他人不可再注册。"}, {"type": "single", "section": 7, "stem": "域名系统的全球管理由（ ）负责，中国由（ ）负责。", "options": ["ICANN；CNNIC", "IANA；ISO", "ISO；CNNIC", "CNNIC；ICANN"], "answer": 0, "analysis": "本题考查。全球 ICANN 管理，中国 CNNIC 管理。"}, {"type": "single", "section": 8, "stem": "拨号接入因特网使用（ ）。", "options": ["Modem + 电话线", "光纤 + 双绞线", "同轴电缆", "Wi-Fi"], "answer": 0, "analysis": "本题考查。拨号用 Modem 加电话线。"}, {"type": "single", "section": 8, "stem": "ADSL 属于（ ）接入技术，上下行速率不对称。", "options": ["xDSL", "ISDN", "DDN", "拨号"], "answer": 0, "analysis": "本题考查。ADSL 是非对称 xDSL。"}, {"type": "single", "section": 8, "stem": "WWW（万维网）服务采用的是（ ）模式。", "options": ["B/S（浏览器 / 服务器）", "C/S", "P2P", "单机"], "answer": 0, "analysis": "本题考查。WWW 采用 B/S 模式。"}, {"type": "single", "section": 8, "stem": "网页一般使用（ ）语言编写。", "options": ["HTML", "C++", "Python", "机器语言"], "answer": 0, "analysis": "本题考查。网页由 HTML 编写。"}, {"type": "single", "section": 8, "stem": "URL 的一般格式是（ ）。", "options": ["协议 :// 主机名 / 目录 / 文件名", "主机名 :// 协议 / 文件", "文件名 :// 主机 / 协议", "协议 / 文件 / 主机"], "answer": 0, "analysis": "本题考查。URL=协议://主机名/目录/文件名。"}, {"type": "single", "section": 8, "stem": "HTTP 协议基于（ ）传输。", "options": ["TCP", "UDP", "IP", "ICMP"], "answer": 0, "analysis": "本题考查。HTTP 基于 TCP。"}, {"type": "single", "section": 8, "stem": "FTP 文件传输服务采用（ ）模式。", "options": ["C/S（客户机 / 服务器）", "B/S", "P2P", "单机"], "answer": 0, "analysis": "本题考查。FTP 采用 C/S 模式。"}, {"type": "single", "section": 8, "stem": "FTP 匿名登录时使用的用户名通常是（ ）。", "options": ["anonymous", "admin", "root", "guest"], "answer": 0, "analysis": "本题考查。匿名登录用 anonymous。"}, {"type": "single", "section": 8, "stem": "Telnet 的主要作用是（ ）。", "options": ["远程登录", "文件传输", "电子邮件", "域名解析"], "answer": 0, "analysis": "本题考查。Telnet 用于远程登录。"}, {"type": "single", "section": 8, "stem": "HTTP 服务默认使用的端口号是（ ）。", "options": ["80", "21", "23", "25"], "answer": 0, "analysis": "本题考查。HTTP 用 80 端口。"}, {"type": "single", "section": 8, "stem": "FTP 服务默认使用的端口号是（ ）。", "options": ["21", "80", "23", "110"], "answer": 0, "analysis": "本题考查。FTP 用 21 端口。"}, {"type": "single", "section": 8, "stem": "Telnet 服务默认使用的端口号是（ ）。", "options": ["23", "21", "80", "25"], "answer": 0, "analysis": "本题考查。Telnet 用 23 端口。"}, {"type": "single", "section": 8, "stem": "电子邮件地址的标准格式是（ ）。", "options": ["用户名 @ 域名", "域名 @ 用户名", "用户名 # 域名", "IP @ 用户名"], "answer": 0, "analysis": "本题考查。电子邮件格式：用户名@域名。"}, {"type": "single", "section": 8, "stem": "接收电子邮件通常使用（ ）协议，发送使用（ ）协议。", "options": ["POP3；SMTP", "SMTP；POP3", "HTTP；FTP", "FTP；HTTP"], "answer": 0, "analysis": "本题考查。收信 POP3，发信 SMTP。"}, {"type": "multi", "section": 8, "stem": "关于 Internet 服务默认端口，正确的有（ ）。", "options": ["HTTP—80", "FTP—21", "Telnet—23", "SMTP—21"], "answer": [0, 1, 2], "analysis": "本题考查。SMTP 用 25 端口，非 21。"}, {"type": "single", "section": 9, "stem": "局域网的国际标准由（ ）制定。", "options": ["IEEE 802 系列", "ISO 9000", "RFC", "W3C"], "answer": 0, "analysis": "本题考查。局域网标准为 IEEE 802 系列。"}, {"type": "single", "section": 9, "stem": "以太网对应的 IEEE 标准是（ ）。", "options": ["802.3", "802.11", "802.5", "802.1"], "answer": 0, "analysis": "本题考查。以太网为 802.3。"}, {"type": "single", "section": 9, "stem": "无线局域网对应的 IEEE 标准是（ ）。", "options": ["802.11", "802.3", "802.5", "802.16"], "answer": 0, "analysis": "本题考查。无线局域网为 802.11。"}, {"type": "single", "section": 9, "stem": "直通双绞线主要用于连接（ ）的设备。", "options": ["不同种（如计算机—交换机）", "同种（如计算机—计算机）", "仅路由器", "仅服务器"], "answer": 0, "analysis": "本题考查。直通线用于异种设备，两头同标准（568B）。"}, {"type": "single", "section": 9, "stem": "交叉双绞线一头用 568A、一头用 568B，用于连接（ ）的设备。", "options": ["同种（如交换机—交换机）", "异种", "计算机—路由器", "计算机—交换机"], "answer": 0, "analysis": "本题考查。交叉线用于同种设备。"}, {"type": "single", "section": 9, "stem": "采用固定 IP 地址的配置方式称为（ ）。", "options": ["静态 IP", "动态 IP", "DHCP", "自动私有地址"], "answer": 0, "analysis": "本题考查。静态 IP 固定，易管理但浪费。"}, {"type": "single", "section": 9, "stem": "由服务器自动分配、节约地址但安全性较差的 IP 配置方式是（ ）。", "options": ["动态 IP（DHCP）", "静态 IP", "手动配置", "固定地址"], "answer": 0, "analysis": "本题考查。动态 IP 由 DHCP 分配，节约但安全性差。"}, {"type": "single", "section": 9, "stem": "用于测试网络连通性的命令是（ ）。", "options": ["ping", "ipconfig", "tracert", "netstat"], "answer": 0, "analysis": "本题考查。ping 测试连通性。"}, {"type": "single", "section": 9, "stem": "使用 ping 127.0.0.1 可以测试（ ）。", "options": ["本机 TCP/IP 协议栈是否正常", "远程服务器", "DNS 解析", "网卡速率"], "answer": 0, "analysis": "本题考查。127.0.0.1 测试本机 TCP/IP。"}, {"type": "single", "section": 9, "stem": "用于查看本机 IP 配置信息的命令是（ ）。", "options": ["ipconfig", "ping", "tracert", "netstat"], "answer": 0, "analysis": "本题考查。ipconfig 查看本机 IP 配置。"}, {"type": "single", "section": 9, "stem": "用于追踪数据包从源到目标所经过路径的命令是（ ）。", "options": ["tracert", "ping", "ipconfig", "netstat"], "answer": 0, "analysis": "本题考查。tracert 追踪路径。"}, {"type": "single", "section": 9, "stem": "用于监视本机网络连接状态的命令是（ ）。", "options": ["netstat", "ping", "ipconfig", "tracert"], "answer": 0, "analysis": "本题考查。netstat 监视连接。"}, {"type": "multi", "section": 9, "stem": "下列（ ）是常见的 DOS / 命令行网络诊断命令。", "options": ["ping", "ipconfig", "tracert", "format"], "answer": [0, 1, 2], "analysis": "本题考查。format 是格式化命令，非网络诊断。"}, {"type": "single", "section": 9, "stem": "直通线的两头采用（ ）。", "options": ["相同标准（如都 568B）", "一头 568A 一头 568B", "任意接法", "只需一端接线"], "answer": 0, "analysis": "本题考查。直通线两头同标准。"}, {"type": "single", "section": 9, "stem": "因网线断裂、插头松动引起的故障属于（ ）。", "options": ["物理故障", "逻辑故障", "配置故障", "协议故障"], "answer": 0, "analysis": "本题考查。线路/插头损坏属物理故障。"}, {"type": "single", "section": 10, "stem": "网站是由多个（ ）通过超链接组成的集合。", "options": ["网页", "图片", "文件", "目录"], "answer": 0, "analysis": "本题考查。网站由多个网页通过超链接组成。"}, {"type": "single", "section": 10, "stem": "纯 HTML、不含数据库的网站称为（ ）。", "options": ["静态网站", "动态网站", "交互网站", "数据库网站"], "answer": 0, "analysis": "本题考查。静态网站纯 HTML、无数据库。"}, {"type": "single", "section": 10, "stem": "静态网站的优点是（ ）。", "options": ["易被搜索引擎收录、安全性好", "交互性最强", "功能最复杂", "需要数据库"], "answer": 0, "analysis": "本题考查。静态网站易收录、安全，但维护繁琐。"}, {"type": "single", "section": 10, "stem": "动态网站通常以（ ）为基础，交互性强。", "options": ["数据库", "纯文本", "图片", "动画"], "answer": 0, "analysis": "本题考查。动态网站以数据库为基础。"}, {"type": "single", "section": 10, "stem": "所谓“动态网页”的“动态”是指（ ）。", "options": ["交互能力强（与用户动态交互）", "页面上有动画", "页面会闪烁", "颜色会变"], "answer": 0, "analysis": "本题考查。动态指交互/数据库驱动，并非指动画。"}, {"type": "single", "section": 10, "stem": "网站的主页一般文件名为（ ）。", "options": ["index.htm", "home.txt", "main.doc", "start.exe"], "answer": 0, "analysis": "本题考查。主页一般 index.htm。"}, {"type": "single", "section": 10, "stem": "当鼠标移到超链接上时，指针通常变为（ ）。", "options": ["小手形状", "箭头", "十字", "竖线"], "answer": 0, "analysis": "本题考查。超链接鼠标变“小手”。"}, {"type": "single", "section": 10, "stem": "网页设计原则要求页面打开速度一般不超过（ ）。", "options": ["30 秒", "3 秒", "60 秒", "120 秒"], "answer": 0, "analysis": "本题考查。打开速度 ≤30 秒。"}, {"type": "single", "section": 10, "stem": "网页导航链接数量一般建议在（ ）个左右。", "options": ["5 ~ 9", "1 ~ 2", "20 ~ 30", "50 以上"], "answer": 0, "analysis": "本题考查。导航明朗，5~9 个链接。"}, {"type": "multi", "section": 10, "stem": "网页设计的基本原则包括（ ）。", "options": ["明确内容", "色彩和谐统一", "定期更新", "平台兼容"], "answer": [0, 1, 2, 3], "analysis": "本题考查。设计六原则含以上各项。"}, {"type": "single", "section": 10, "stem": "适合初学者的所见即所得网页制作工具是（ ）。", "options": ["FrontPage", "Photoshop", "Excel", "Word"], "answer": 0, "analysis": "本题考查。FrontPage 入门、所见即所得。"}, {"type": "single", "section": 10, "stem": "被称为“网页三剑客”之一的网页工具是（ ）。", "options": ["Dreamweaver", "Word", "Excel", "PowerPoint"], "answer": 0, "analysis": "本题考查。Dreamweaver 是网页三剑客之一。"}, {"type": "single", "section": 10, "stem": "HTML 文档的基本结构包含（ ）。", "options": ["<html><head><title><body>", "<program><function>", "<xml><data>", "<file><text>"], "answer": 0, "analysis": "本题考查。HTML 基本结构含 html/head/title/body。"}, {"type": "single", "section": 10, "stem": "用于定义超链接的 HTML 标签是（ ）。", "options": ["<a>", "<img>", "<br>", "<table>"], "answer": 0, "analysis": "本题考查。<a> 为超链接标签。"}, {"type": "single", "section": 10, "stem": "用于在网页中插入图像的 HTML 标签是（ ）。", "options": ["<img src=\"路径\">", "<a>", "<br>", "<font>"], "answer": 0, "analysis": "本题考查。<img> 插入图像。"}, {"type": "single", "section": 10, "stem": "用于表示换行的 HTML 标签是（ ）。", "options": ["<br>", "<hr>", "<p>", "<tr>"], "answer": 0, "analysis": "本题考查。<br> 换行。"}, {"type": "single", "section": 10, "stem": "用于创建表格的 HTML 标签是（ ）。", "options": ["<table>", "<a>", "<img>", "<div>"], "answer": 0, "analysis": "本题考查。<table> 创建表格。"}, {"type": "single", "section": 10, "stem": "CSS 的主要作用是（ ）。", "options": ["实现网页表现与内容分离", "定义数据库", "编写服务器端程序", "加密网页"], "answer": 0, "analysis": "本题考查。CSS 实现表现与内容分离。"}, {"type": "multi", "section": 10, "stem": "关于 HTML 标签，正确的有（ ）。", "options": ["<a> 用于超链接", "<img> 用于图像", "<table> 用于表格", "<exe> 用于程序"], "answer": [0, 1, 2], "analysis": "本题考查。无 <exe> 标签。"}, {"type": "single", "section": 10, "stem": "下列（ ）不是静态网站的特点。", "options": ["交互性最强、功能复杂", "纯 HTML", "无数据库", "易被搜索引擎收录"], "answer": 0, "analysis": "本题考查。交互性强是动态网站特点。"}, {"type": "single", "section": 10, "stem": "关于“动态网页”，正确的说法是（ ）。", "options": ["动态指与数据库交互，而非指有动画", "动态就是有动画效果", "动态网页不能用 HTML", "动态网页一定是视频"], "answer": 0, "analysis": "本题考查。动态指交互/数据库，不是动画。"}, {"type": "single", "section": 10, "stem": "超链接的目标可以是（ ）。", "options": ["网页、文件、本页锚点等", "只能是另一个网页", "只能是图片", "只能是文本"], "answer": 0, "analysis": "本题考查。超链接目标可以是网页、文件、锚点等。"}, {"type": "single", "section": 10, "stem": "网页本质上是（ ）。", "options": ["超文本文件", "可执行程序", "压缩包", "数据库文件"], "answer": 0, "analysis": "本题考查。网页是超文本文件。"}, {"type": "single", "section": 10, "stem": "下列关于静态与动态网站，正确的是（ ）。", "options": ["静态网站安全性通常高于动态网站", "动态网站安全性高于静态", "两者安全性相同", "静态网站一定有数据库"], "answer": 0, "analysis": "本题考查。静态网站无数据库，安全性通常更高。"}, {"type": "single", "section": 10, "stem": "下列（ ）属于动态网站常用技术。", "options": ["ASP / JSP / PHP", "纯 HTML", "CSS", "静态图片"], "answer": 0, "analysis": "本题考查。ASP/JSP/PHP 为动态网站技术。"}, {"type": "single", "section": 10, "stem": "网页设计中色彩搭配应（ ）。", "options": ["和谐统一，避免杂乱", "越多越好", "只用红绿对比", "随机变化"], "answer": 0, "analysis": "本题考查。色彩应和谐统一。"}, {"type": "single", "section": 11, "stem": "数据（Data）是指（ ）。", "options": ["描述事物的符号记录", "计算机硬件", "操作系统", "网络协议"], "answer": 0, "analysis": "本题考查。数据是描述事物的符号记录，是数据库中存储的基本对象。"}, {"type": "single", "section": 11, "stem": "数据库（DB）是指（ ）。", "options": ["长期存储在计算机内、有组织可共享的数据集合", "一个数据文件", "一张 Excel 表", "一段程序"], "answer": 0, "analysis": "本题考查。DB 是长期存储、有组织可共享的数据集合。"}, {"type": "single", "section": 11, "stem": "数据库管理系统（DBMS）位于（ ）之间。", "options": ["用户与操作系统", "硬件与软件", "网络与主机", "CPU 与内存"], "answer": 0, "analysis": "本题考查。DBMS 位于用户与 OS 之间。"}, {"type": "single", "section": 11, "stem": "在数据库系统中，处于核心地位的是（ ）。", "options": ["DBMS", "DB", "硬件", "应用程序"], "answer": 0, "analysis": "本题考查。DBMS 是数据库系统的核心。"}, {"type": "single", "section": 11, "stem": "下列（ ）属于数据库管理系统。", "options": ["MySQL", "Windows", "Word", "Photoshop"], "answer": 0, "analysis": "本题考查。MySQL 是 DBMS；Windows 是 OS。"}, {"type": "multi", "section": 11, "stem": "下列（ ）属于数据库管理系统（DBMS）。", "options": ["MySQL", "Access", "SQL Server", "Excel"], "answer": [0, 1, 2], "analysis": "本题考查。MySQL、Access、SQL Server 是 DBMS；Excel 是电子表格软件。"}, {"type": "single", "section": 11, "stem": "数据库系统（DBS）的组成不包括以下哪一项？（ ）", "options": ["以上都属于 DBS", "数据库 DB", "硬件", "DBMS 与人员"], "answer": 3, "analysis": "本题考查。DBS = 数据库 + 硬件 + 软件（DBMS/OS/应用）+ 人员，四项都包含。"}, {"type": "single", "section": 11, "stem": "关于 DBS、DB、DBMS 的关系，正确的是（ ）。", "options": ["DBS 包含 DB 与 DBMS，DBMS 是核心", "DB 包含 DBS", "DBMS 包含 DBS", "三者相互独立无关"], "answer": 0, "analysis": "本题考查。DBS 包含 DB 与 DBMS，DBMS 是核心。"}, {"type": "single", "section": 11, "stem": "数据管理的最初阶段“人工管理”的特点是（ ）。", "options": ["数据与程序不独立、冗余大", "数据共享性好", "冗余小", "由 DBMS 管理"], "answer": 0, "analysis": "本题考查。人工管理阶段数据与程序不独立、无共享、冗余大。"}, {"type": "single", "section": 11, "stem": "与人工管理相比，文件系统阶段的进步主要在于（ ）。", "options": ["数据可以长期保存", "数据共享性强", "冗余小", "由 DBMS 统一控制"], "answer": 0, "analysis": "本题考查。文件系统可长期保存数据，但仍共享差、冗余大。"}, {"type": "single", "section": 11, "stem": "数据库系统阶段最突出的核心特征是（ ）。", "options": ["数据结构化与数据共享", "无冗余", "不需要软件", "速度最快"], "answer": 0, "analysis": "本题考查。数据库系统核心特征是数据结构化与共享。"}, {"type": "multi", "section": 11, "stem": "数据管理经历了以下阶段（ ）。", "options": ["人工管理", "文件系统", "数据库系统", "网格管理"], "answer": [0, 1, 2], "analysis": "本题考查。三阶段为人工管理、文件系统、数据库系统。"}, {"type": "single", "section": 11, "stem": "下列说法中正确的是（ ）。", "options": ["文件系统阶段共享性差、冗余大", "文件系统阶段共享性好、冗余小", "人工管理阶段由 DBMS 管理", "数据库系统无结构化"], "answer": 0, "analysis": "本题考查。文件系统共享性差、冗余大。"}, {"type": "single", "section": 11, "stem": "三级模式结构中，用户看到的局部逻辑结构是（ ）。", "options": ["外模式（子模式）", "模式（概念模式）", "内模式", "物理模式"], "answer": 0, "analysis": "本题考查。外模式是用户级局部视图。"}, {"type": "single", "section": 11, "stem": "全体数据的全局逻辑结构、三级模式的核心称为（ ）。", "options": ["模式（概念模式）", "外模式", "内模式", "存储模式"], "answer": 0, "analysis": "本题考查。模式描述全局逻辑结构，是核心。"}, {"type": "single", "section": 11, "stem": "描述数据物理存储与存取方式的是（ ）。", "options": ["内模式", "外模式", "模式", "概念模式"], "answer": 0, "analysis": "本题考查。内模式描述物理存储。"}, {"type": "single", "section": 11, "stem": "外模式 / 模式映像的作用是保证数据的（ ）。", "options": ["逻辑独立性", "物理独立性", "安全性", "完整性"], "answer": 0, "analysis": "本题考查。外模式/模式映像保证逻辑独立性。"}, {"type": "single", "section": 11, "stem": "模式 / 内模式映像的作用是保证数据的（ ）。", "options": ["物理独立性", "逻辑独立性", "并发性", "一致性"], "answer": 0, "analysis": "本题考查。模式/内模式映像保证物理独立性。"}, {"type": "multi", "section": 11, "stem": "数据库三级模式包括（ ）。", "options": ["外模式", "模式（概念模式）", "内模式", "子网模式"], "answer": [0, 1, 2], "analysis": "本题考查。三级模式为外模式、模式、内模式。"}, {"type": "single", "section": 11, "stem": "一个数据库有（ ）个概念模式（模式）。", "options": ["1 个", "多个", "0 个", "2 个"], "answer": 0, "analysis": "本题考查。模式唯一，一个库只有一个模式。"}, {"type": "single", "section": 11, "stem": "一个数据库可以拥有（ ）个外模式。", "options": ["多个", "1 个", "0 个", "2 个"], "answer": 0, "analysis": "本题考查。可有多个外模式对应不同用户视图。"}, {"type": "single", "section": 11, "stem": "当内模式改变时，只需修改模式 / 内模式映像即可保持应用程序不变，这称为（ ）。", "options": ["物理独立性", "逻辑独立性", "并发控制", "完整性约束"], "answer": 0, "analysis": "本题考查。这是物理独立性。"}, {"type": "single", "section": 11, "stem": "当模式改变时，只需修改外模式 / 模式映像即可保持外模式不变，这称为（ ）。", "options": ["逻辑独立性", "物理独立性", "安全性", "隔离性"], "answer": 0, "analysis": "本题考查。这是逻辑独立性。"}, {"type": "multi", "section": 11, "stem": "关于二级映射，正确的有（ ）。", "options": ["外模式 / 模式映像保证逻辑独立性", "模式 / 内模式映像保证物理独立性", "二级映射提供数据独立性", "外模式 / 模式映像保证物理独立性"], "answer": [0, 1, 2], "analysis": "本题考查。外模式/模式对应逻辑独立，模式/内模式对应物理独立。"}, {"type": "single", "section": 11, "stem": "在 DBS 各类人员中，负责数据库设计与管理的是（ ）。", "options": ["数据库管理员 DBA", "程序员", "操作员", "普通用户"], "answer": 0, "analysis": "本题考查。DBA 负责数据库设计与管理的人员。"}, {"type": "single", "section": 11, "stem": "下列关于 DBMS 的说法正确的是（ ）。", "options": ["DBMS 是位于用户与操作系统之间的一层数据管理软件", "DBMS 就是操作系统", "DBMS 是硬件设备", "DBMS 不需要用户"], "answer": 0, "analysis": "本题考查。DBMS 位于用户与 OS 之间。"}, {"type": "single", "section": 11, "stem": "与文件系统相比，数据库系统最显著的优点是（ ）。", "options": ["数据共享性高、冗余小", "存取速度最快", "占用空间最小", "不需要任何软件"], "answer": 0, "analysis": "本题考查。数据库系统共享性高、冗余小。"}, {"type": "single", "section": 12, "stem": "数据模型是（ ）。", "options": ["现实世界数据特征的抽象", "一种编程语言", "硬件设备", "网络拓扑"], "answer": 0, "analysis": "本题考查。数据模型是现实世界数据特征的抽象，是数据库系统的核心。"}, {"type": "single", "section": 12, "stem": "数据模型的三要素是（ ）。", "options": ["数据结构、数据操作、完整性约束", "实体、属性、联系", "层次、网状、关系", "外模式、模式、内模式"], "answer": 0, "analysis": "本题考查。三要素：数据结构、数据操作、完整性约束。"}, {"type": "multi", "section": 12, "stem": "数据模型的三要素包括（ ）。", "options": ["数据结构（静态特性）", "数据操作（查询与更新）", "完整性约束", "网络拓扑"], "answer": [0, 1, 2], "analysis": "本题考查。三要素不含网络拓扑。"}, {"type": "single", "section": 12, "stem": "用于建立概念模型、描述信息世界的数据模型是（ ）。", "options": ["概念模型（E-R 图）", "逻辑模型", "物理模型", "层次模型"], "answer": 0, "analysis": "本题考查。概念模型（E-R 图）用于信息世界。"}, {"type": "single", "section": 12, "stem": "关系模型、层次模型、网状模型属于（ ）。", "options": ["逻辑模型（机器世界）", "概念模型", "物理模型", "外模式"], "answer": 0, "analysis": "本题考查。它们属逻辑模型。"}, {"type": "single", "section": 12, "stem": "层次模型采用（ ）结构。", "options": ["树形", "图", "二维表", "线性"], "answer": 0, "analysis": "本题考查。层次模型是树形结构。"}, {"type": "single", "section": 12, "stem": "网状模型采用（ ）结构。", "options": ["图", "树形", "二维表", "线性"], "answer": 0, "analysis": "本题考查。网状模型是图结构。"}, {"type": "single", "section": 12, "stem": "关系模型采用（ ）表示数据。", "options": ["二维表", "树", "图", "文件"], "answer": 0, "analysis": "本题考查。关系模型用二维表。"}, {"type": "single", "section": 12, "stem": "当今主流、应用最广的数据模型是（ ）。", "options": ["关系模型", "层次模型", "网状模型", "面向对象模型"], "answer": 0, "analysis": "本题考查。关系模型是当今主流。"}, {"type": "multi", "section": 12, "stem": "常见的逻辑数据模型包括（ ）。", "options": ["层次模型", "网状模型", "关系模型", "面向对象模型"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四种逻辑模型都正确。"}, {"type": "single", "section": 12, "stem": "层次模型中结点之间的联系主要是（ ）。", "options": ["1 : N（一对多）", "M : N（多对多）", "1 : 1", "无联系"], "answer": 0, "analysis": "本题考查。层次模型结点间多为 1:N 联系。"}, {"type": "single", "section": 12, "stem": "IMS 是（ ）模型的典型代表。", "options": ["层次", "网状", "关系", "面向对象"], "answer": 0, "analysis": "本题考查。IMS 是层次模型代表。"}, {"type": "single", "section": 12, "stem": "能够较好地支持 M : N（多对多）联系的是（ ）。", "options": ["网状模型", "层次模型", "线性模型", "树模型"], "answer": 0, "analysis": "本题考查。网状模型支持 M:N 联系。"}, {"type": "single", "section": 12, "stem": "MySQL、Access、SQL Server 均采用（ ）数据模型。", "options": ["关系模型", "层次模型", "网状模型", "面向对象模型"], "answer": 0, "analysis": "本题考查。它们都是关系型。"}, {"type": "single", "section": 12, "stem": "E-R 图主要用于建立（ ）。", "options": ["概念模型", "逻辑模型", "物理模型", "内模式"], "answer": 0, "analysis": "本题考查。E-R 图建立概念模型。"}, {"type": "single", "section": 12, "stem": "在 E-R 图中，实体用（ ）表示。", "options": ["矩形框", "椭圆框", "菱形框", "六边形"], "answer": 0, "analysis": "本题考查。实体=矩形框。"}, {"type": "single", "section": 12, "stem": "在 E-R 图中，属性用（ ）表示。", "options": ["椭圆框", "矩形框", "菱形框", "三角形"], "answer": 0, "analysis": "本题考查。属性=椭圆框。"}, {"type": "single", "section": 12, "stem": "在 E-R 图中，联系用（ ）表示。", "options": ["菱形框", "矩形框", "椭圆框", "箭头"], "answer": 0, "analysis": "本题考查。联系=菱形框。"}, {"type": "single", "section": 12, "stem": "下列（ ）不是 E-R 模型中的联系类型。", "options": ["1 : M : N（三元联系）不属于基本类型", "1 : 1", "1 : N", "M : N"], "answer": 0, "analysis": "本题考查。基本联系类型为 1:1、1:N、M:N。"}, {"type": "multi", "section": 12, "stem": "E-R 模型中的联系类型包括（ ）。", "options": ["1 : 1", "1 : N", "M : N", "N : 0"], "answer": [0, 1, 2], "analysis": "本题考查。基本联系为 1:1、1:N、M:N。"}, {"type": "single", "section": 12, "stem": "关系模型中，二维表中的一行称为（ ）。", "options": ["元组（记录）", "属性（字段）", "域", "码"], "answer": 0, "analysis": "本题考查。一行=元组=记录。"}, {"type": "single", "section": 12, "stem": "关系模型中，二维表中的一列称为（ ）。", "options": ["属性（字段）", "元组（记录）", "域", "关系"], "answer": 0, "analysis": "本题考查。一列=属性=字段。"}, {"type": "single", "section": 12, "stem": "关系中属性的取值范围称为（ ）。", "options": ["域", "元组", "码", "关系"], "answer": 0, "analysis": "本题考查。域是属性取值范围。"}, {"type": "single", "section": 12, "stem": "能唯一标识元组的最小属性组称为（ ）。", "options": ["候选码", "主码", "外码", "属性"], "answer": 0, "analysis": "本题考查。候选码是能唯一标识元组的最小属性组。"}, {"type": "single", "section": 12, "stem": "从候选码中被选用作主标识的称为（ ）。", "options": ["主码", "外码", "候选码", "域"], "answer": 0, "analysis": "本题考查。主码是选定的候选码。"}, {"type": "single", "section": 12, "stem": "引用其他关系主码的属性称为（ ）。", "options": ["外码", "主码", "候选码", "域"], "answer": 0, "analysis": "本题考查。外码引用其他表主码。"}, {"type": "single", "section": 12, "stem": "实体完整性约束要求（ ）。", "options": ["主码值不能为空", "外码不能为空", "所有属性不能为空", "属性值唯一"], "answer": 0, "analysis": "本题考查。实体完整性要求主码不为空。"}, {"type": "single", "section": 12, "stem": "参照完整性约束要求外码（ ）。", "options": ["要么为空，要么等于被参照表的主码值", "必须非空", "必须等于主码", "可以任意取值"], "answer": 0, "analysis": "本题考查。外码为空或等于被参照主码。"}, {"type": "multi", "section": 12, "stem": "关系模型的三类完整性包括（ ）。", "options": ["实体完整性", "参照完整性", "用户定义完整性", "网络完整性"], "answer": [0, 1, 2], "analysis": "本题考查。三类完整性不含网络完整性。"}, {"type": "single", "section": 12, "stem": "针对具体应用由用户设定的约束属于（ ）。", "options": ["用户定义完整性", "实体完整性", "参照完整性", "物理完整性"], "answer": 0, "analysis": "本题考查。用户定义完整性是用户设定的约束。"}, {"type": "single", "section": 13, "stem": "SQL 是（ ）。", "options": ["关系数据库的标准查询语言", "一种操作系统", "网络协议", "硬件接口"], "answer": 0, "analysis": "本题考查。SQL 是关系数据库标准语言。"}, {"type": "single", "section": 13, "stem": "SQL 的主要特点之一是（ ）。", "options": ["高度非过程化", "需要描述每一步执行", "只能单机使用", "不支持集合操作"], "answer": 0, "analysis": "本题考查。SQL 高度非过程化。"}, {"type": "single", "section": 13, "stem": "SQL 的核心是（ ）。", "options": ["数据查询（SELECT）", "数据定义", "数据控制", "数据删除"], "answer": 0, "analysis": "本题考查。数据查询 SELECT 是核心。"}, {"type": "single", "section": 13, "stem": "数据定义语言 DDL 对应的关键字是（ ）。", "options": ["CREATE / ALTER / DROP", "SELECT / INSERT", "GRANT / REVOKE", "UPDATE / DELETE"], "answer": 0, "analysis": "本题考查。DDL 含 CREATE/ALTER/DROP。"}, {"type": "single", "section": 13, "stem": "创建表使用（ ）。", "options": ["CREATE TABLE", "DROP TABLE", "ALTER TABLE", "SELECT TABLE"], "answer": 0, "analysis": "本题考查。创建表用 CREATE TABLE。"}, {"type": "single", "section": 13, "stem": "删除表使用（ ）。", "options": ["DROP TABLE", "DELETE TABLE", "REMOVE TABLE", "CLEAR TABLE"], "answer": 0, "analysis": "本题考查。删除表用 DROP TABLE。"}, {"type": "single", "section": 13, "stem": "修改表结构使用（ ）。", "options": ["ALTER TABLE", "UPDATE TABLE", "MODIFY TABLE", "CHANGE TABLE"], "answer": 0, "analysis": "本题考查。修改表用 ALTER TABLE。"}, {"type": "single", "section": 13, "stem": "创建视图（虚表）使用（ ）。", "options": ["CREATE VIEW", "CREATE TABLE", "NEW VIEW", "MAKE VIEW"], "answer": 0, "analysis": "本题考查。创建视图用 CREATE VIEW。"}, {"type": "multi", "section": 13, "stem": "属于 DDL（数据定义）的关键字有（ ）。", "options": ["CREATE", "ALTER", "DROP", "SELECT"], "answer": [0, 1, 2], "analysis": "本题考查。SELECT 属 DML，非 DDL。"}, {"type": "single", "section": 13, "stem": "查询语句中使用（ ）关键字指定要查询的列。", "options": ["SELECT", "FROM", "WHERE", "GROUP"], "answer": 0, "analysis": "本题考查。SELECT 指定列。"}, {"type": "single", "section": 13, "stem": "在查询结果中去除重复行使用（ ）。", "options": ["DISTINCT", "UNIQUE", "ALL", "REMOVE"], "answer": 0, "analysis": "本题考查。DISTINCT 去重。"}, {"type": "single", "section": 13, "stem": "将查询结果按某列分组使用（ ）。", "options": ["GROUP BY", "ORDER BY", "HAVING", "WHERE"], "answer": 0, "analysis": "本题考查。分组用 GROUP BY。"}, {"type": "single", "section": 13, "stem": "对分组后的结果再进行筛选使用（ ）。", "options": ["HAVING", "WHERE", "ORDER BY", "GROUP BY"], "answer": 0, "analysis": "本题考查。分组后筛选用 HAVING。"}, {"type": "single", "section": 13, "stem": "对查询结果排序使用（ ），可指定 ASC / DESC。", "options": ["ORDER BY", "GROUP BY", "SORT BY", "RANK BY"], "answer": 0, "analysis": "本题考查。排序用 ORDER BY。"}, {"type": "single", "section": 13, "stem": "模糊查询使用 LIKE，其中 “%” 表示（ ）。", "options": ["任意长度的字符串", "单个字符", "数字", "空格"], "answer": 0, "analysis": "本题考查。% 匹配任意长度串。"}, {"type": "single", "section": 13, "stem": "在 LIKE 中，下划线 “_” 表示（ ）。", "options": ["单个字符", "任意长度字符串", "数字", "字母"], "answer": 0, "analysis": "本题考查。_ 匹配单个字符。"}, {"type": "single", "section": 13, "stem": "查询某列取值在某个区间使用（ ）。", "options": ["BETWEEN … AND …", "LIKE", "IN", "EXISTS"], "answer": 0, "analysis": "本题考查。区间用 BETWEEN…AND。"}, {"type": "single", "section": 13, "stem": "判断某列值是否属于某个集合使用（ ）。", "options": ["IN", "BETWEEN", "LIKE", "IS NULL"], "answer": 0, "analysis": "本题考查。集合成员用 IN。"}, {"type": "single", "section": 13, "stem": "聚合函数 COUNT 的作用是（ ）。", "options": ["计数", "求和", "求平均", "求最大值"], "answer": 0, "analysis": "本题考查。COUNT 计数。"}, {"type": "multi", "section": 13, "stem": "下列（ ）属于 SQL 聚合函数。", "options": ["COUNT", "SUM", "AVG", "MAX"], "answer": [0, 1, 2, 3], "analysis": "本题考查。COUNT/SUM/AVG/MAX/MIN 都是聚合函数。"}, {"type": "single", "section": 13, "stem": "向表中插入数据使用（ ）。", "options": ["INSERT INTO", "UPDATE", "DELETE", "ADD"], "answer": 0, "analysis": "本题考查。插入用 INSERT INTO。"}, {"type": "single", "section": 13, "stem": "修改表中数据使用（ ）。", "options": ["UPDATE … SET", "INSERT", "DELETE", "ALTER"], "answer": 0, "analysis": "本题考查。修改用 UPDATE…SET。"}, {"type": "single", "section": 13, "stem": "删除表中数据（保留表结构）使用（ ）。", "options": ["DELETE FROM", "DROP TABLE", "REMOVE", "TRUNCATE TABLE（也删数据）"], "answer": 0, "analysis": "本题考查。删除数据用 DELETE FROM。"}, {"type": "single", "section": 13, "stem": "把某种权限授予用户使用（ ）。", "options": ["GRANT", "REVOKE", "GIVE", "ALLOW"], "answer": 0, "analysis": "本题考查。授权用 GRANT。"}, {"type": "single", "section": 13, "stem": "收回已授予用户的权限使用（ ）。", "options": ["REVOKE", "GRANT", "DENY", "TAKE"], "answer": 0, "analysis": "本题考查。收权用 REVOKE。"}, {"type": "multi", "section": 13, "stem": "属于 DCL（数据控制）的关键字有（ ）。", "options": ["GRANT", "REVOKE", "SELECT", "CREATE"], "answer": [0, 1], "analysis": "本题考查。DCL 含 GRANT/REVOKE。"}, {"type": "single", "section": 13, "stem": "在 SELECT 语句中，WHERE 子句的作用是（ ）。", "options": ["对行进行筛选", "对列进行投影", "排序", "分组"], "answer": 0, "analysis": "本题考查。WHERE 筛选行。"}, {"type": "single", "section": 13, "stem": "关系代数中的“投影”运算对应 SQL 的（ ）。", "options": ["SELECT 指定列", "WHERE 条件", "GROUP BY", "ORDER BY"], "answer": 0, "analysis": "本题考查。投影=选列，对应 SELECT 列。"}, {"type": "single", "section": 13, "stem": "GROUP BY 通常配合（ ）一起使用。", "options": ["聚合函数", "DISTINCT", "ORDER BY", "JOIN"], "answer": 0, "analysis": "本题考查。GROUP BY 常与聚合函数配合。"}, {"type": "single", "section": 13, "stem": "视图是（ ）。", "options": ["虚表，不实际存储数据", "实际存储数据的表", "索引", "数据库"], "answer": 0, "analysis": "本题考查。视图是虚表，不存数据。"}, {"type": "single", "section": 14, "stem": "数据库设计普遍采用的方法是（ ）。", "options": ["新奥尔良（New Orleans）方法", "瀑布方法", "敏捷方法", "原型方法"], "answer": 0, "analysis": "本题考查。数据库设计采用新奥尔良方法。"}, {"type": "single", "section": 14, "stem": "数据库设计的第一个阶段是（ ），其产物含数据流图与数据字典。", "options": ["需求分析", "概念设计", "逻辑设计", "物理设计"], "answer": 0, "analysis": "本题考查。需求分析是第一步。"}, {"type": "single", "section": 14, "stem": "建立概念模型（E-R 图）是在（ ）阶段。", "options": ["概念设计", "需求分析", "逻辑设计", "物理设计"], "answer": 0, "analysis": "本题考查。概念设计建立 E-R 图。"}, {"type": "single", "section": 14, "stem": "E-R 图主要用于（ ）阶段。", "options": ["概念设计", "运行维护", "物理设计", "数据库实施"], "answer": 0, "analysis": "本题考查。E-R 图用于概念设计。"}, {"type": "single", "section": 14, "stem": "将概念模型转换为某 DBMS 支持的关系模型是在（ ）阶段。", "options": ["逻辑设计", "概念设计", "需求分析", "物理设计"], "answer": 0, "analysis": "本题考查。逻辑设计转换模型。"}, {"type": "single", "section": 14, "stem": "E-R 模型向关系模型的转换属于（ ）阶段的工作。", "options": ["逻辑设计", "概念设计", "需求分析", "运行维护"], "answer": 0, "analysis": "本题考查。E-R→关系模型在逻辑设计。"}, {"type": "single", "section": 14, "stem": "决定数据存储结构、存取方法的是（ ）阶段。", "options": ["物理设计", "逻辑设计", "概念设计", "需求分析"], "answer": 0, "analysis": "本题考查。物理设计关注存储与存取。"}, {"type": "single", "section": 14, "stem": "建库、编写应用程序、装入数据、试运行属于（ ）阶段。", "options": ["数据库实施", "物理设计", "逻辑设计", "需求分析"], "answer": 0, "analysis": "本题考查。这些是实施阶段。"}, {"type": "single", "section": 14, "stem": "数据库设计的最后一个阶段是（ ）。", "options": ["运行与维护", "逻辑设计", "物理设计", "概念设计"], "answer": 0, "analysis": "本题考查。运行与维护是最后阶段。"}, {"type": "multi", "section": 14, "stem": "数据库设计六阶段包括（ ）。", "options": ["需求分析", "概念设计", "逻辑设计", "运行与维护"], "answer": [0, 1, 2, 3], "analysis": "本题考查。六阶段含这些。"}, {"type": "single", "section": 14, "stem": "下列说法中正确的是（ ）。", "options": ["需求分析阶段要收集用户需求并产出数据流图和数据字典", "概念设计产出关系模型", "物理设计编写应用程序", "需求分析最后进行"], "answer": 0, "analysis": "本题考查。需求分析产出数据流图与数据字典。"}, {"type": "single", "section": 14, "stem": "函数依赖 X→Y 表示（ ）。", "options": ["X 决定 Y（X 的值决定 Y 的值）", "Y 决定 X", "X 与 Y 无关", "X 等于 Y"], "answer": 0, "analysis": "本题考查。X→Y 表示 X 决定 Y。"}, {"type": "single", "section": 14, "stem": "若 X→Y，且 Y 不函数依赖于 X 的任一真子集，则称（ ）。", "options": ["完全函数依赖", "部分函数依赖", "传递函数依赖", "平凡函数依赖"], "answer": 0, "analysis": "本题考查。这是完全函数依赖。"}, {"type": "single", "section": 14, "stem": "若存在 X→Y、Y→Z，且 Y 不函数依赖于 X，则称（ ）。", "options": ["X→Z 为传递函数依赖", "X→Z 为完全依赖", "无依赖关系", "X→Y 为传递"], "answer": 0, "analysis": "本题考查。X→Z 通过 Y 传递。"}, {"type": "single", "section": 14, "stem": "第一范式（1NF）要求（ ）。", "options": ["每个属性不可再分（原子性）", "消除部分函数依赖", "消除传递函数依赖", "每个决定因素含候选码"], "answer": 0, "analysis": "本题考查。1NF 要求属性原子性。"}, {"type": "single", "section": 14, "stem": "满足 1NF，且消除非主属性对主码的“部分函数依赖”，达到（ ）。", "options": ["2NF", "1NF", "3NF", "BCNF"], "answer": 0, "analysis": "本题考查。消部分依赖→2NF。"}, {"type": "single", "section": 14, "stem": "满足 2NF，且消除“传递函数依赖”，达到（ ）。", "options": ["3NF", "2NF", "1NF", "BCNF"], "answer": 0, "analysis": "本题考查。消传递依赖→3NF。"}, {"type": "single", "section": 14, "stem": "每个决定因素都包含候选码，达到（ ）。", "options": ["BCNF", "3NF", "2NF", "1NF"], "answer": 0, "analysis": "本题考查。BCNF 要求每个决定因素含候选码。"}, {"type": "multi", "section": 14, "stem": "关于范式，正确的有（ ）。", "options": ["1NF 要求属性不可再分", "2NF 消除非主属性对主码的部分函数依赖", "3NF 消除传递函数依赖", "3NF 允许存在传递函数依赖"], "answer": [0, 1, 2], "analysis": "本题考查。3NF 已消除传递依赖，故 D 错。"}, {"type": "single", "section": 14, "stem": "1NF 是关系模式（ ）的要求。", "options": ["最基本", "最高级", "可选", "无关紧要"], "answer": 0, "analysis": "本题考查。1NF 是最基本要求。"}, {"type": "single", "section": 14, "stem": "若关系中还存在“部分函数依赖”，说明它至少未达到（ ）。", "options": ["2NF", "3NF", "BCNF", "4NF"], "answer": 0, "analysis": "本题考查。部分依赖未消除→未达 2NF。"}, {"type": "single", "section": 14, "stem": "若关系中还存在“传递函数依赖”，说明它至少未达到（ ）。", "options": ["3NF", "2NF", "BCNF", "1NF"], "answer": 0, "analysis": "本题考查。传递依赖未消除→未达 3NF。"}, {"type": "multi", "section": 14, "stem": "范式级别由低到高依次为（ ）。", "options": ["1NF", "2NF", "3NF", "BCNF"], "answer": [0, 1, 2, 3], "analysis": "本题考查。级别递增顺序。"}, {"type": "single", "section": 14, "stem": "对关系模式进行规范化（提高范式级别）的主要目的是（ ）。", "options": ["减少数据冗余、消除插入/删除异常", "提高查询速度", "增加字段", "简化界面"], "answer": 0, "analysis": "本题考查。规范化减少冗余与异常。"}, {"type": "single", "section": 14, "stem": "候选码是指（ ）。", "options": ["能唯一标识元组的最小属性组", "任意属性", "主码的一部分", "外码"], "answer": 0, "analysis": "本题考查。候选码定义。"}, {"type": "single", "section": 14, "stem": "逻辑设计阶段通常把 E-R 图转换为（ ）。", "options": ["关系模式（关系模型）", "概念模型", "物理存储", "数据流图"], "answer": 0, "analysis": "本题考查。逻辑设计输出关系模型。"}, {"type": "single", "section": 14, "stem": "下列说法正确的是（ ）。", "options": ["物理设计阶段决定数据在存储器上的物理组织方式", "需求分析编写程序", "逻辑设计建立 E-R 图", "概念设计转换关系模型"], "answer": 0, "analysis": "本题考查。物理设计决定物理组织。"}, {"type": "single", "section": 14, "stem": "将 E-R 图转换为关系模式发生在（ ）阶段。", "options": ["逻辑设计", "需求分析", "概念设计", "运行维护"], "answer": 0, "analysis": "本题考查。转换在逻辑设计。"}, {"type": "multi", "section": 14, "stem": "关于数据库设计阶段，正确的有（ ）。", "options": ["概念设计使用 E-R 图", "逻辑设计将概念模型转关系模型", "需求分析产出数据字典", "物理设计负责编写应用程序"], "answer": [0, 1, 2], "analysis": "本题考查。编写应用程序属实施阶段。"}, {"type": "single", "section": 15, "stem": "Access 是（ ）公司出品的小型关系型数据库管理系统。", "options": ["微软（Microsoft）", "Oracle", "IBM", "Sybase"], "answer": 0, "analysis": "本题考查。Access 是微软出品。"}, {"type": "single", "section": 15, "stem": "Access 数据库由（ ）个基本对象组成。", "options": ["7", "3", "5", "10"], "answer": 0, "analysis": "本题考查。Access 由七个对象组成。"}, {"type": "single", "section": 15, "stem": "下列（ ）不属于 Access 七个对象。", "options": ["操作系统", "表", "查询", "窗体"], "answer": 0, "analysis": "本题考查。操作系统不是 Access 对象。"}, {"type": "single", "section": 15, "stem": "Access 中真正存储数据的核心对象是（ ）。", "options": ["表", "查询", "窗体", "报表"], "answer": 0, "analysis": "本题考查。表存储数据，是核心。"}, {"type": "single", "section": 15, "stem": "Access 中一个表最多可以包含（ ）个字段。", "options": ["255", "20", "100", "1024"], "answer": 0, "analysis": "本题考查。表最多 255 个字段。"}, {"type": "single", "section": 15, "stem": "从一个或多个表按条件映射出的虚拟视图是（ ）。", "options": ["查询", "表", "窗体", "报表"], "answer": 0, "analysis": "本题考查。查询是虚拟视图。"}, {"type": "single", "section": 15, "stem": "提供友好人机交互界面的对象是（ ）。", "options": ["窗体", "表", "查询", "报表"], "answer": 0, "analysis": "本题考查。窗体是交互界面。"}, {"type": "single", "section": 15, "stem": "主要用于打印输出的对象是（ ）。", "options": ["报表", "窗体", "表", "宏"], "answer": 0, "analysis": "本题考查。报表用于打印。"}, {"type": "single", "section": 15, "stem": "七个对象中，唯一独立于数据库文件之外的是（ ）。", "options": ["页（数据访问页）", "表", "查询", "窗体"], "answer": 0, "analysis": "本题考查。页独立于库文件。"}, {"type": "single", "section": 15, "stem": "用于自动执行一系列操作的对象是（ ）。", "options": ["宏", "模块", "表", "查询"], "answer": 0, "analysis": "本题考查。宏是自动化操作集合。"}, {"type": "single", "section": 15, "stem": "使用 VBA 编写功能模块的对象是（ ）。", "options": ["模块", "宏", "表", "窗体"], "answer": 0, "analysis": "本题考查。模块用 VBA 编写。"}, {"type": "multi", "section": 15, "stem": "Access 七个对象包括（ ）。", "options": ["表", "查询", "窗体", "报表"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四者均属七个对象。"}, {"type": "single", "section": 15, "stem": "在 Access 中，（ ）是数据库的核心。", "options": ["表", "查询", "窗体", "报表"], "answer": 0, "analysis": "本题考查。表是核心。"}, {"type": "single", "section": 15, "stem": "下列（ ）属于操作查询（结果是转换后的新表）。", "options": ["生成表查询", "选择查询", "参数查询", "交叉表查询"], "answer": 0, "analysis": "本题考查。生成表查询是操作查询。"}, {"type": "single", "section": 15, "stem": "下列（ ）不属于操作查询。", "options": ["选择查询", "生成表查询", "追加查询", "删除查询"], "answer": 0, "analysis": "本题考查。选择查询是基础查询，非操作查询。"}, {"type": "multi", "section": 15, "stem": "Access 的查询类型包括（ ）。", "options": ["选择查询", "参数查询", "交叉表查询", "操作查询"], "answer": [0, 1, 2, 3], "analysis": "本题考查。五种查询含这些类别。"}, {"type": "single", "section": 15, "stem": "查询与筛选的区别之一：查询的查找范围为（ ），而筛选仅作用于（ ）。", "options": ["整个数据库；当前表", "当前表；整个数据库", "一个字段；一个表", "一个表；一个查询"], "answer": 0, "analysis": "本题考查。查询查全库，筛选仅当前表。"}, {"type": "single", "section": 15, "stem": "查询与筛选的区别之二：筛选显示（ ），查询可（ ）。", "options": ["全部字段；指定显示的字段", "指定字段；显示全部", "主键；外键", "记录；字段"], "answer": 0, "analysis": "本题考查。筛选显示全部字段，查询可指定字段。"}, {"type": "single", "section": 15, "stem": "要检索某学生的学籍信息，一般应使用（ ）。", "options": ["查询", "筛选仅当前表不够、且查询可跨表", "删除", "报表"], "answer": 0, "analysis": "本题考查。学籍检索一般用查询。"}, {"type": "multi", "section": 15, "stem": "关于 Access 对象，正确的有（ ）。", "options": ["表用于存储数据", "查询是虚拟视图", "页独立于库文件", "窗体用于打印输出"], "answer": [0, 1, 2], "analysis": "本题考查。窗体是人机界面，打印用报表。"}, {"type": "single", "section": 15, "stem": "Access 属于（ ）类型的数据库。", "options": ["关系型", "层次型", "网状型", "对象型"], "answer": 0, "analysis": "本题考查。Access 是关系型。"}, {"type": "single", "section": 15, "stem": "关于 Access，正确的说法是（ ）。", "options": ["它是小型数据库管理系统", "它是大型数据库如 Oracle 级别", "它不能建表", "它不使用关系模型"], "answer": 0, "analysis": "本题考查。Access 是小型关系型 DBMS。"}, {"type": "single", "section": 15, "stem": "宏的作用是（ ）。", "options": ["自动执行一系列操作", "存储数据", "打印报表", "建表"], "answer": 0, "analysis": "本题考查。宏自动化操作。"}, {"type": "single", "section": 15, "stem": "Access 中的模块使用（ ）语言编写。", "options": ["VBA", "C++", "Java", "HTML"], "answer": 0, "analysis": "本题考查。模块用 VBA。"}, {"type": "multi", "section": 15, "stem": "操作查询包括（ ）。", "options": ["生成表查询", "追加查询", "更新查询", "删除查询"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四类操作查询。"}, {"type": "single", "section": 15, "stem": "在 Access 中，用于创建用户与数据库交互界面的是（ ）。", "options": ["窗体", "报表", "表", "页"], "answer": 0, "analysis": "本题考查。窗体是人机界面。"}, {"type": "single", "section": 15, "stem": "报表对象主要用于（ ）。", "options": ["将数据打印输出", "录入数据", "建表", "编写宏"], "answer": 0, "analysis": "本题考查。报表用于打印。"}, {"type": "single", "section": 15, "stem": "Access 数据库中真正存放数据的是（ ）对象。", "options": ["表", "查询", "窗体", "报表"], "answer": 0, "analysis": "本题考查。表存储数据。"}, {"type": "single", "section": 16, "stem": "操作系统（OS）是（ ）。", "options": ["控制和管理软硬件资源、方便用户使用的程序集合", "一种应用软件", "一个硬件芯片", "一种编程语言"], "answer": 0, "analysis": "本题考查。OS 是控制管理软硬件、方便用户的程序集合。"}, {"type": "single", "section": 16, "stem": "操作系统是配置在计算机硬件上的（ ）。", "options": ["第一层软件", "最高层软件", "最上层硬件", "中间层网络"], "answer": 0, "analysis": "本题考查。OS 是硬件之上的第一层软件。"}, {"type": "single", "section": 16, "stem": "操作系统是（ ）。", "options": ["最基本、最重要的系统软件", "普通应用软件", "一种数据库", "网络协议"], "answer": 0, "analysis": "本题考查。OS 是最基本最重要的系统软件。"}, {"type": "single", "section": 16, "stem": "操作系统为用户提供两类接口：命令接口和（ ）。", "options": ["程序接口（系统调用）", "硬件接口", "网络接口", "打印接口"], "answer": 0, "analysis": "本题考查。OS 提供命令接口与程序接口（系统调用）。"}, {"type": "multi", "section": 16, "stem": "关于操作系统的地位，正确的有（ ）。", "options": ["是硬件上的第一层软件", "是最基本的系统软件", "介于硬件与用户程序之间", "不需要硬件支持"], "answer": [0, 1, 2], "analysis": "本题考查。OS 依赖硬件，故 D 错。"}, {"type": "single", "section": 16, "stem": "操作系统三种基本类型是（ ）。", "options": ["批处理、分时、实时", "单用户、多用户、网络", "汇编、编译、解释", "输入、处理、输出"], "answer": 0, "analysis": "本题考查。三种基本类型为批处理、分时、实时。"}, {"type": "single", "section": 16, "stem": "多道批处理系统的主要缺点是（ ）。", "options": ["无交互能力、周转时间长", "资源利用率低", "吞吐量小", "响应最快"], "answer": 0, "analysis": "本题考查。多道批处理无交互、周转长。"}, {"type": "single", "section": 16, "stem": "分时系统的核心是（ ）。", "options": ["时间片轮转", "优先级抢占", "批处理", "实时响应"], "answer": 0, "analysis": "本题考查。分时系统采用时间片轮转。"}, {"type": "single", "section": 16, "stem": "实时系统最突出的要求是（ ）。", "options": ["响应时间极短、可靠性高", "吞吐量大", "交互性强", "支持多用户"], "answer": 0, "analysis": "本题考查。实时系统要求响应快、可靠性高。"}, {"type": "multi", "section": 16, "stem": "操作系统的基本类型包括（ ）。", "options": ["批处理系统", "分时系统", "实时系统", "编译系统"], "answer": [0, 1, 2], "analysis": "本题考查。编译系统不是 OS 类型。"}, {"type": "single", "section": 16, "stem": "分时系统的特点不包括（ ）。", "options": ["批处理能力最强", "多路性", "独立性", "交互性"], "answer": 0, "analysis": "本题考查。多路性、独立性、及时性、交互性是分时特点。"}, {"type": "single", "section": 16, "stem": "多道批处理系统的主要优点是（ ）。", "options": ["资源利用率高、吞吐量大", "交互性强", "响应最快", "无调度"], "answer": 0, "analysis": "本题考查。多道批处理资源利用率高、吞吐量大。"}, {"type": "single", "section": 16, "stem": "操作系统的四大基本特征是（ ）。", "options": ["并发、共享、虚拟、异步", "运算、存储、控制、输出", "输入、处理、输出、存储", "进程、线程、作业、文件"], "answer": 0, "analysis": "本题考查。四大特征：并发、共享、虚拟、异步。"}, {"type": "single", "section": 16, "stem": "并发是指（ ）。", "options": ["同一时间间隔内多个事件同时发生（宏观同时、微观交替）", "同一时刻多个事件同时发生", "顺序执行", "单道运行"], "answer": 0, "analysis": "本题考查。并发是同一时间间隔内，宏观同时微观交替。"}, {"type": "single", "section": 16, "stem": "并行与并发的区别是（ ）。", "options": ["并行是同一时刻，并发是同一时间间隔", "并行是微观交替，并发是同时刻", "二者完全相同", "并行只用于单核"], "answer": 0, "analysis": "本题考查。并行=同一时刻；并发=同一时间间隔。"}, {"type": "single", "section": 16, "stem": "操作系统两个最基本的特征是并发与（ ），二者互为存在条件。", "options": ["共享", "虚拟", "异步", "吞吐"], "answer": 0, "analysis": "本题考查。并发与共享最基本且互为条件。"}, {"type": "single", "section": 16, "stem": "“虚拟”是指（ ）。", "options": ["一个物理实体变为多个逻辑实体", "物理设备加倍", "删除资源", "复制内存"], "answer": 0, "analysis": "本题考查。虚拟是一个物理变多个逻辑。"}, {"type": "single", "section": 16, "stem": "“异步”是指（ ）。", "options": ["程序走走停停、运行时间不确定", "程序顺序执行", "程序永不停止", "程序一次完成"], "answer": 0, "analysis": "本题考查。异步即程序走走停停、时间不确定。"}, {"type": "multi", "section": 16, "stem": "操作系统四大特征包括（ ）。", "options": ["并发性", "共享性", "虚拟性", "异步性"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四大特征齐全。"}, {"type": "single", "section": 16, "stem": "从资源管理角度，操作系统具有五大功能，不包括（ ）。", "options": ["编辑功能", "处理器管理", "存储器管理", "文件管理"], "answer": 0, "analysis": "本题考查。五大功能含处理、存储、设备、文件管理及作业/用户接口。"}, {"type": "single", "section": 16, "stem": "处理器管理的主要内容是（ ）。", "options": ["进程控制、同步、通信、调度", "内存分配", "磁盘调度", "目录管理"], "answer": 0, "analysis": "本题考查。处理器管理围绕进程展开。"}, {"type": "single", "section": 16, "stem": "设备管理包括缓冲、分配、处理和（ ）。", "options": ["虚拟设备", "编译", "加密", "排版"], "answer": 0, "analysis": "本题考查。设备管理含虚拟设备。"}, {"type": "single", "section": 16, "stem": "文件管理包括空间管理、目录管理、操作管理和（ ）。", "options": ["保护", "编译", "调度", "加密"], "answer": 0, "analysis": "本题考查。文件管理含保护。"}, {"type": "multi", "section": 16, "stem": "资源管理角度下，操作系统的功能包括（ ）。", "options": ["处理器管理", "存储器管理", "设备管理", "文件管理"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四大资源管理功能。"}, {"type": "single", "section": 16, "stem": "操作系统属于（ ）。", "options": ["系统软件", "应用软件", "硬件", "固件"], "answer": 0, "analysis": "本题考查。OS 是系统软件。"}, {"type": "single", "section": 16, "stem": "操作系统在用户与计算机硬件之间起到（ ）作用。", "options": ["接口 / 桥梁", "阻碍", "替代", "隔离无关"], "answer": 0, "analysis": "本题考查。OS 是用户与硬件的接口。"}, {"type": "single", "section": 16, "stem": "实时系统常用于（ ）。", "options": ["工业控制、航天等对响应时间要求极高的场合", "文字处理", "科学计算的批量处理", "网页浏览"], "answer": 0, "analysis": "本题考查。实时系统用于高响应场合。"}, {"type": "multi", "section": 16, "stem": "其他操作系统类型包括（ ）。", "options": ["微机 OS", "网络 OS", "嵌入式 OS", "分布式 OS"], "answer": [0, 1, 2, 3], "analysis": "本题考查。这些都是 OS 类型。"}, {"type": "single", "section": 17, "stem": "进程是（ ）。", "options": ["程序在一个数据集合上的一次运行过程", "静止的程序代码", "一个文件", "一种硬件"], "answer": 0, "analysis": "本题考查。进程是程序的一次运行过程。"}, {"type": "single", "section": 17, "stem": "进程是系统进行（ ）的基本单位。", "options": ["资源分配和调度", "编译", "存储", "打印"], "answer": 0, "analysis": "本题考查。进程是资源分配和调度的基本单位。"}, {"type": "single", "section": 17, "stem": "进程的动态性是指（ ）。", "options": ["进程是程序的一次执行，有生命周期", "进程永久存在", "进程是静态的", "进程不可变"], "answer": 0, "analysis": "本题考查。动态性是进程有生灭。"}, {"type": "single", "section": 17, "stem": "关于进程与程序，正确的是（ ）。", "options": ["程序静态永存，进程动态暂时", "程序动态，进程静态", "二者完全相同", "进程是永久的"], "answer": 0, "analysis": "本题考查。程序静态永存，进程动态暂时。"}, {"type": "single", "section": 17, "stem": "一个程序可以对应（ ）。", "options": ["多个进程", "仅一个进程", "零个进程", "不能对应进程"], "answer": 0, "analysis": "本题考查。一个程序可对应多个进程。"}, {"type": "multi", "section": 17, "stem": "进程的特征包括（ ）。", "options": ["动态性", "并发性", "独立性", "异步性"], "answer": [0, 1, 2, 3], "analysis": "本题考查。进程有五大特征。"}, {"type": "single", "section": 17, "stem": "进程的基本状态不包括（ ）。", "options": ["终止态是独立三态之一（三态为就绪/执行/阻塞）", "就绪", "执行", "阻塞"], "answer": 0, "analysis": "本题考查。基本三态为就绪、执行、阻塞。"}, {"type": "single", "section": 17, "stem": "已获得除 CPU 外所有资源、等待被调度运行的状态是（ ）。", "options": ["就绪", "执行", "阻塞", "挂起"], "answer": 0, "analysis": "本题考查。就绪态等待 CPU。"}, {"type": "single", "section": 17, "stem": "正在占用 CPU 运行的状态是（ ）。", "options": ["执行（运行）", "就绪", "阻塞", "挂起"], "answer": 0, "analysis": "本题考查。执行态占用 CPU。"}, {"type": "single", "section": 17, "stem": "因等待 I/O 等事件而暂停的状态是（ ）。", "options": ["阻塞", "就绪", "执行", "新建"], "answer": 0, "analysis": "本题考查。阻塞态等待事件。"}, {"type": "single", "section": 17, "stem": "就绪态转变为执行态是因为（ ）。", "options": ["被调度程序分配了 CPU", "I/O 完成", "时间片到", "被阻塞"], "answer": 0, "analysis": "本题考查。调度使就绪→运行。"}, {"type": "single", "section": 17, "stem": "执行态转变为阻塞态通常是因为（ ）。", "options": ["等待某事件（如 I/O）发生", "CPU 被剥夺", "运行结束", "被新建"], "answer": 0, "analysis": "本题考查。运行→阻塞因等待事件。"}, {"type": "single", "section": 17, "stem": "阻塞态转变为就绪态是因为（ ）。", "options": ["等待的事件已发生", "获得 CPU", "时间片到", "被撤销"], "answer": 0, "analysis": "本题考查。事件发生后阻塞→就绪。"}, {"type": "multi", "section": 17, "stem": "进程的基本状态有（ ）。", "options": ["就绪", "执行", "阻塞", "编译"], "answer": [0, 1, 2], "analysis": "本题考查。三态为就绪、执行、阻塞。"}, {"type": "single", "section": 17, "stem": "PCB（进程控制块）是（ ）。", "options": ["系统感知进程存在的唯一标志", "一个程序", "一块内存芯片", "一种 CPU"], "answer": 0, "analysis": "本题考查。PCB 是进程存在的唯一标志。"}, {"type": "single", "section": 17, "stem": "PCB 中记录的信息包括（ ）。", "options": ["程序计数器、状态、寄存器等", "仅文件名", "仅 IP 地址", "仅用户名"], "answer": 0, "analysis": "本题考查。PCB 含寄存器、状态等。"}, {"type": "single", "section": 17, "stem": "线程是（ ）。", "options": ["进程内可调度执行的基本单位", "资源拥有的基本单位", "一种文件", "一种设备"], "answer": 0, "analysis": "本题考查。线程是调度分派的基本单位。"}, {"type": "single", "section": 17, "stem": "引入线程的主要目的是（ ）。", "options": ["减少并发开销、提高并发性", "增加内存", "加快磁盘", "简化编译"], "answer": 0, "analysis": "本题考查。线程减少并发开销。"}, {"type": "single", "section": 17, "stem": "进程是（ ）的基本单位，线程共享进程的资源。", "options": ["资源拥有", "调度分派", "编译", "存储"], "answer": 0, "analysis": "本题考查。进程是资源拥有单位。"}, {"type": "multi", "section": 17, "stem": "线程按实现方式可分为（ ）。", "options": ["内核级线程", "用户级线程", "硬件级线程", "网络级线程"], "answer": [0, 1], "analysis": "本题考查。线程分内核级与用户级。"}, {"type": "single", "section": 17, "stem": "临界资源是指（ ）。", "options": ["一次仅允许一个进程使用的资源", "可被多个进程同时使用的资源", "一种 CPU", "一种文件"], "answer": 0, "analysis": "本题考查。临界资源一次仅一个进程用。"}, {"type": "single", "section": 17, "stem": "临界区是指（ ）。", "options": ["进程中访问临界资源的那段代码", "整个程序", "一种内存区", "一种设备"], "answer": 0, "analysis": "本题考查。临界区是访问临界资源的代码段。"}, {"type": "single", "section": 17, "stem": "信号量 S 的值只能由（ ）改变。", "options": ["P 操作和 V 操作", "编译器", "用户直接", "时钟"], "answer": 0, "analysis": "本题考查。信号量仅由 P/V 操作改变。"}, {"type": "single", "section": 17, "stem": "执行 P(S) 操作时，若 S 减 1 后小于 0，则进程（ ）。", "options": ["阻塞等待", "继续执行", "被撤销", "获得资源"], "answer": 0, "analysis": "本题考查。P 操作 S<0 则阻塞。"}, {"type": "single", "section": 17, "stem": "执行 V(S) 操作时，若 S 加 1 后仍 ≤0，则（ ）。", "options": ["唤醒一个等待进程", "进程继续阻塞", "系统崩溃", "无动作"], "answer": 0, "analysis": "本题考查。V 操作唤醒等待进程。"}, {"type": "single", "section": 17, "stem": "信号量 S>0 时表示（ ）；S<0 时其绝对值表示（ ）。", "options": ["可用资源数；等待进程数", "等待进程数；可用资源数", "CPU 数；内存数", "内存数；CPU 数"], "answer": 0, "analysis": "本题考查。S>0 为可用资源数，S<0 绝对值为等待进程数。"}, {"type": "multi", "section": 17, "stem": "临界区互斥准则包括（ ）。", "options": ["一次只允许一个进程进入", "有限时间内退出临界区", "进不去时让出 CPU 避免忙等", "允许多个进程同时进入"], "answer": [0, 1, 2], "analysis": "本题考查。互斥准则要求一次一个、有限退出、不忙等。"}, {"type": "single", "section": 17, "stem": "按就绪队列先后顺序调度、非抢占式的算法是（ ）。", "options": ["FCFS（先来先服务）", "HPF（优先数）", "RR（时间片轮转）", "银行家算法"], "answer": 0, "analysis": "本题考查。FCFS 按先后、非抢占。"}, {"type": "single", "section": 17, "stem": "优先数调度（HPF）中，高优先数的进程（ ）。", "options": ["优先执行", "最后执行", "不能执行", "随机执行"], "answer": 0, "analysis": "本题考查。HPF 高优先数先执行。"}, {"type": "single", "section": 17, "stem": "时间片轮转（RR）调度常用于（ ），属于抢占式。", "options": ["分时系统", "批处理系统", "实时系统", "单道系统"], "answer": 0, "analysis": "本题考查。RR 用于分时系统，抢占式。"}, {"type": "single", "section": 18, "stem": "处理机调度分为（ ）级。", "options": ["三", "一", "二", "四"], "answer": 0, "analysis": "本题考查。处理机有三级调度。"}, {"type": "single", "section": 18, "stem": "高级调度又称（ ），从后备队列选作业进入内存。", "options": ["作业调度", "进程调度", "交换调度", "中级调度"], "answer": 0, "analysis": "本题考查。高级调度=作业调度。"}, {"type": "single", "section": 18, "stem": "中级调度又称（ ），负责内外存间换入换出。", "options": ["交换调度", "作业调度", "进程调度", "低级调度"], "answer": 0, "analysis": "本题考查。中级调度=交换调度。"}, {"type": "single", "section": 18, "stem": "低级调度又称（ ），把 CPU 分配给就绪进程，必须配置且常驻内存。", "options": ["进程调度", "作业调度", "交换调度", "高级调度"], "answer": 0, "analysis": "本题考查。低级调度=进程调度，必须配置。"}, {"type": "multi", "section": 18, "stem": "处理机三级调度包括（ ）。", "options": ["高级调度（作业调度）", "中级调度（交换调度）", "低级调度（进程调度）", "超级调度"], "answer": [0, 1, 2], "analysis": "本题考查。三级即此三项。"}, {"type": "single", "section": 18, "stem": "在三级调度中，必须配置、常驻内存的是（ ）。", "options": ["低级调度（进程调度）", "高级调度", "中级调度", "作业调度"], "answer": 0, "analysis": "本题考查。进程调度必须常驻内存。"}, {"type": "single", "section": 18, "stem": "死锁是指（ ）。", "options": ["多个进程因竞争资源相互阻塞，无外力则永远不能前进", "进程正常运行", "程序顺序执行", "系统关机"], "answer": 0, "analysis": "本题考查。死锁是相互阻塞且无法自行前进。"}, {"type": "single", "section": 18, "stem": "死锁产生的四个必要条件中，“互斥”是指（ ）。", "options": ["资源一次仅允许一个进程使用", "可同时被多个进程使用", "资源可剥夺", "无循环"], "answer": 0, "analysis": "本题考查。互斥指资源独占。"}, {"type": "single", "section": 18, "stem": "破坏死锁四个必要条件中的任意一个，可以（ ）。", "options": ["预防死锁", "避免死锁", "检测死锁", "解除死锁"], "answer": 0, "analysis": "本题考查。破坏条件之一即预防死锁。"}, {"type": "single", "section": 18, "stem": "银行家算法用于（ ）。", "options": ["避免死锁（分配前判断安全性）", "预防死锁", "检测死锁", "解除死锁"], "answer": 0, "analysis": "本题考查。银行家算法是避免死锁。"}, {"type": "single", "section": 18, "stem": "死锁检测依据（ ）。", "options": ["死锁定理：资源分配图能否完全简化", "银行家算法", "优先级", "时间片"], "answer": 0, "analysis": "本题考查。死锁定理用资源分配图化简判断。"}, {"type": "single", "section": 18, "stem": "解除死锁通常采用（ ）。", "options": ["剥夺资源或撤销进程", "增加内存", "重启系统", "忽略"], "answer": 0, "analysis": "本题考查。解除靠剥夺资源或撤销进程。"}, {"type": "multi", "section": 18, "stem": "死锁的四个必要条件包括（ ）。", "options": ["互斥", "请求和保持", "不剥夺", "环路等待"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四条件齐全。"}, {"type": "single", "section": 18, "stem": "下列说法中正确的是（ ）。", "options": ["死锁四条件必须同时成立才会发生死锁", "任一条件成立即死锁", "死锁与并发无关", "单进程也会死锁"], "answer": 0, "analysis": "本题考查。四条件须同时成立。"}, {"type": "single", "section": 18, "stem": "“请求和保持”条件是指（ ）。", "options": ["进程持有资源的同时又申请新资源", "进程不持有资源", "资源可剥夺", "无循环"], "answer": 0, "analysis": "本题考查。请求和保持指持资申请新资。"}, {"type": "single", "section": 18, "stem": "“环路等待”条件是指（ ）。", "options": ["进程—资源之间形成循环等待链", "进程顺序执行", "无等待", "单链"], "answer": 0, "analysis": "本题考查。环路等待是循环等待链。"}, {"type": "multi", "section": 18, "stem": "解决死锁的途径包括（ ）。", "options": ["预防", "避免", "检测", "解除"], "answer": [0, 1, 2, 3], "analysis": "本题考查。预防、避免、检测、解除四途径。"}, {"type": "single", "section": 18, "stem": "银行家算法在分配资源前先判断系统是否处于（ ）。", "options": ["安全状态", "死锁状态", "阻塞状态", "就绪状态"], "answer": 0, "analysis": "本题考查。银行家算法判断安全性。"}, {"type": "single", "section": 18, "stem": "高级调度发生的频率（ ）。", "options": ["较低（宏观、作业级）", "最高", "与进程调度相同", "不调度"], "answer": 0, "analysis": "本题考查。作业调度频率低。"}, {"type": "single", "section": 18, "stem": "低级调度（进程调度）发生的频率（ ）。", "options": ["很高（频繁）", "很低", "与作业调度相同", "不发生"], "answer": 0, "analysis": "本题考查。进程调度频率高。"}, {"type": "single", "section": 18, "stem": "将作业从外存后备队列选入内存的是（ ）。", "options": ["作业调度（高级调度）", "进程调度", "交换调度", "设备管理"], "answer": 0, "analysis": "本题考查。作业调度选作业进内存。"}, {"type": "single", "section": 18, "stem": "死锁通常与（ ）有关，单道顺序执行一般不会死锁。", "options": ["并发（多进程竞争资源）", "编译", "单进程", "单 CPU"], "answer": 0, "analysis": "本题考查。死锁源于并发竞争。"}, {"type": "single", "section": 18, "stem": "“不剥夺”条件是指（ ）。", "options": ["已分配给进程的资源不能被强行夺走", "资源可随时剥夺", "资源共享", "无等待"], "answer": 0, "analysis": "本题考查。不剥夺指资源不可强夺。"}, {"type": "single", "section": 18, "stem": "解除死锁最常用的方法是（ ）。", "options": ["撤销部分进程或剥夺资源", "增加进程", "加快 CPU", "关闭电源"], "answer": 0, "analysis": "本题考查。解除靠撤销进程/剥夺资源。"}, {"type": "single", "section": 18, "stem": "关于预防死锁，正确的说法是（ ）。", "options": ["破坏四条件之一即可预防", "需同时破坏四条件", "无法预防", "只能检测"], "answer": 0, "analysis": "本题考查。破坏其一即可预防。"}, {"type": "single", "section": 19, "stem": "作业是指（ ）。", "options": ["用户交给计算机完成的、具有独立功能的任务", "一个进程", "一个文件", "一条指令"], "answer": 0, "analysis": "本题考查。作业是用户提交的独立任务。"}, {"type": "single", "section": 19, "stem": "作业存在的唯一标志是（ ）。", "options": ["JCB（作业控制块）", "PCB", "FCB", "TCB"], "answer": 0, "analysis": "本题考查。JCB 是作业存在的标志。"}, {"type": "single", "section": 19, "stem": "作业中的每一个加工步骤称为（ ）。", "options": ["作业步", "作业流", "进程", "线程"], "answer": 0, "analysis": "本题考查。作业步是作业中的步骤。"}, {"type": "single", "section": 19, "stem": "作业依次经历的状态是（ ）。", "options": ["提交 → 后备 → 运行 → 完成", "运行 → 提交 → 完成", "后备 → 提交 → 运行", "完成 → 运行 → 提交"], "answer": 0, "analysis": "本题考查。作业状态顺序。"}, {"type": "multi", "section": 19, "stem": "作业经历的阶段包括（ ）。", "options": ["提交", "后备", "运行", "完成"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四阶段齐全。"}, {"type": "single", "section": 19, "stem": "先来先服务（FCFS）作业调度按（ ）选择作业。", "options": ["进入输入井的先后次序", "作业长短", "优先级", "内存大小"], "answer": 0, "analysis": "本题考查。FCFS 按进入先后。"}, {"type": "single", "section": 19, "stem": "短作业优先（SJF）算法的特点是（ ）。", "options": ["优先短作业，平均周转短，但利于短不利长", "优先长作业", "公平", "不区分长短"], "answer": 0, "analysis": "本题考查。SJF 平均周转短但长作业不利。"}, {"type": "single", "section": 19, "stem": "高响应比优先调度中，响应比 =（ ）。", "options": ["(等待时间 + 执行时间) / 执行时间", "等待时间 / 执行时间", "执行时间 / 等待时间", "等待时间 - 执行时间"], "answer": 0, "analysis": "本题考查。响应比 = (等待+执行)/执行。"}, {"type": "single", "section": 19, "stem": "在下列算法中，最兼顾长短作业、最均衡的是（ ）。", "options": ["高响应比优先", "FCFS", "SJF", "随机"], "answer": 0, "analysis": "本题考查。高响应比最均衡。"}, {"type": "multi", "section": 19, "stem": "常见的作业调度算法包括（ ）。", "options": ["先来先服务（FCFS）", "短作业优先（SJF）", "高响应比优先", "高主频优先"], "answer": [0, 1, 2], "analysis": "本题考查。高主频不是调度算法。"}, {"type": "single", "section": 19, "stem": "响应比随（ ）增大而增大，因而有利于长作业。", "options": ["等待时间", "执行时间", "内存", "优先级"], "answer": 0, "analysis": "本题考查。等待越久响应比越高。"}, {"type": "single", "section": 19, "stem": "短作业优先可能导致（ ）。", "options": ["长作业饥饿（长期得不到服务）", "短作业饥饿", "死锁", "无影响"], "answer": 0, "analysis": "本题考查。SJF 可能使长作业饥饿。"}, {"type": "single", "section": 19, "stem": "先来先服务对（ ）可能不够公平。", "options": ["短作业（可能排长作业后等待久）", "长作业", "所有作业", "无影响"], "answer": 0, "analysis": "本题考查。FCFS 对短作业可能不利。"}, {"type": "single", "section": 19, "stem": "优先级调度按（ ）高低选择作业。", "options": ["作业优先级", "作业长度", "提交时间", "内存占用"], "answer": 0, "analysis": "本题考查。优先级调度按优先级。"}, {"type": "single", "section": 19, "stem": "作业与进程的关系是（ ）。", "options": ["作业是用户层任务，进程是系统层执行", "二者相同", "作业包含进程", "进程包含作业"], "answer": 0, "analysis": "本题考查。作业是用户观点，进程是系统观点。"}, {"type": "single", "section": 19, "stem": "一个作业通常包含（ ）。", "options": ["多个作业步", "一个作业步", "零个作业步", "只有一条指令"], "answer": 0, "analysis": "本题考查。作业含多个作业步。"}, {"type": "single", "section": 19, "stem": "JCB 中记录的信息包括（ ）。", "options": ["作业名、状态、资源需求等", "仅文件名", "仅 IP", "仅用户名"], "answer": 0, "analysis": "本题考查。JCB 含作业属性。"}, {"type": "single", "section": 19, "stem": "作业调度（高级调度）决定（ ）。", "options": ["哪些作业从后备队列进入内存", "哪个进程用 CPU", "哪个设备工作", "哪个文件打开"], "answer": 0, "analysis": "本题考查。作业调度选作业进内存。"}, {"type": "single", "section": 19, "stem": "作业完成后进入（ ）状态。", "options": ["完成", "提交", "后备", "运行"], "answer": 0, "analysis": "本题考查。完成后为完成态。"}, {"type": "single", "section": 19, "stem": "与进程调度相比，作业调度的频率（ ）。", "options": ["更低", "更高", "相同", "不调度"], "answer": 0, "analysis": "本题考查。作业调度频率更低。"}, {"type": "single", "section": 19, "stem": "作业控制块 JCB 在（ ）时创建。", "options": ["作业建立（提交）", "作业完成", "进程结束", "系统启动"], "answer": 0, "analysis": "本题考查。JCB 在作业建立时创建。"}, {"type": "multi", "section": 19, "stem": "作业调度算法中，能够兼顾长短作业的是（ ）。", "options": ["高响应比优先", "FCFS（部分情况）", "SJF", "随机"], "answer": [0, 1], "analysis": "本题考查。高响应比最兼顾；FCFS 仅按先后不兼顾长短。"}, {"type": "single", "section": 19, "stem": "执行时间固定时，等待时间越长，响应比（ ）。", "options": ["越高", "越低", "不变", "归零"], "answer": 0, "analysis": "本题考查。响应比随等待增大。"}, {"type": "single", "section": 19, "stem": "高响应比优先相比 SJF 的优势是（ ）。", "options": ["不会让长作业饿死，更均衡", "绝对优先短作业", "速度最快", "无需计算"], "answer": 0, "analysis": "本题考查。高响应比不饿死长作业。"}, {"type": "single", "section": 19, "stem": "作业调度从外存后备队列选择作业装入（ ）。", "options": ["内存", "缓存", "寄存器", "硬盘"], "answer": 0, "analysis": "本题考查。作业调度把作业装入内存。"}, {"type": "single", "section": 20, "stem": "存储层次从快到慢大致为（ ）。", "options": ["寄存器 → 高速缓存 → 主存 → 磁盘缓存 → 辅存", "主存 → 寄存器 → 辅存", "辅存 → 主存 → 寄存器", "磁盘 → 缓存 → 寄存器"], "answer": 0, "analysis": "本题考查。存储层次顺序。"}, {"type": "single", "section": 20, "stem": "用户程序使用的地址（以 0 为基址）称为（ ）。", "options": ["逻辑地址（相对地址）", "物理地址", "绝对地址", "实地址"], "answer": 0, "analysis": "本题考查。逻辑地址以 0 为基址。"}, {"type": "single", "section": 20, "stem": "内存中的实际单元地址称为（ ）。", "options": ["物理地址", "逻辑地址", "相对地址", "虚拟地址"], "answer": 0, "analysis": "本题考查。物理地址是实际地址。"}, {"type": "single", "section": 20, "stem": "将逻辑地址转换为物理地址的过程称为（ ）。", "options": ["重定位", "编译", "链接", "装入"], "answer": 0, "analysis": "本题考查。重定位即地址转换。"}, {"type": "single", "section": 20, "stem": "静态重定位在（ ）时一次完成。", "options": ["程序装入", "程序执行", "编译", "链接"], "answer": 0, "analysis": "本题考查。静态重定位装入时完成。"}, {"type": "single", "section": 20, "stem": "动态重定位在程序执行时由（ ）完成。", "options": ["硬件地址变换机构", "编译器", "用户", "磁盘"], "answer": 0, "analysis": "本题考查。动态重定位靠硬件。"}, {"type": "single", "section": 20, "stem": "存储管理中“碎片”是指（ ）。", "options": ["容量太小而无法利用的小空闲区", "大块空闲区", "已用内存", "寄存器"], "answer": 0, "analysis": "本题考查。碎片是难以利用的小空间。"}, {"type": "multi", "section": 20, "stem": "存储层次由快到慢包括（ ）。", "options": ["寄存器", "高速缓存", "主存", "辅存"], "answer": [0, 1, 2, 3], "analysis": "本题考查。层次顺序正确。"}, {"type": "single", "section": 20, "stem": "分页存储管理中，逻辑地址分为页号和页内地址，靠（ ）映射。", "options": ["页表", "段表", "目录", "索引"], "answer": 0, "analysis": "本题考查。分页靠页表。"}, {"type": "single", "section": 20, "stem": "分页存储中，页面大小通常为（ ）。", "options": ["1KB ~ 8KB，是 2 的幂", "任意大小", "必须等于 1B", "必须等于 1MB"], "answer": 0, "analysis": "本题考查。页大小是 2 的幂的 1KB~8KB。"}, {"type": "single", "section": 20, "stem": "分段存储管理中，逻辑地址分为段号和段内地址，靠（ ）映射。", "options": ["段表", "页表", "索引", "目录"], "answer": 0, "analysis": "本题考查。分段靠段表。"}, {"type": "single", "section": 20, "stem": "在段页式存储中，地址结构为（ ）。", "options": ["段号 + 段内页号 + 页内地址", "页号 + 段号 + 偏移", "段号 + 页内地址", "页号 + 段内地址"], "answer": 0, "analysis": "本题考查。段页式地址三段。"}, {"type": "multi", "section": 20, "stem": "常见的存储管理方式包括（ ）。", "options": ["分区存储", "分页存储", "分段存储", "段页式"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四种方式。"}, {"type": "single", "section": 20, "stem": "分页与分段的主要区别是（ ）。", "options": ["分页是系统行为、用户不可见；分段按用户逻辑、用户可见", "二者完全相同", "分段是系统行为", "分页按用户逻辑"], "answer": 0, "analysis": "本题考查。分页系统级、分段用户级。"}, {"type": "single", "section": 20, "stem": "段页式存储管理（ ）。", "options": ["先分段、再分页，兼具二者优点", "只分段不分页", "只分页不分段的改进", "无段无页"], "answer": 0, "analysis": "本题考查。段页式先分段再分页。"}, {"type": "single", "section": 20, "stem": "虚拟存储器是（ ）。", "options": ["由 OS 提供的、逻辑上扩充内存的存储系统", "物理上更大的内存芯片", "一种 CPU", "一种硬盘"], "answer": 0, "analysis": "本题考查。虚拟存储逻辑扩充内存。"}, {"type": "single", "section": 20, "stem": "虚拟存储器的主要特征不包括（ ）。", "options": ["全部装入（一次性全装入内存）", "部分装入", "离散分配", "多次对换"], "answer": 0, "analysis": "本题考查。虚拟存储是部分装入，非全部。"}, {"type": "single", "section": 20, "stem": "页面置换算法 FIFO 是指（ ）。", "options": ["先进先出", "最佳置换", "最近最少使用", "最近未用"], "answer": 0, "analysis": "本题考查。FIFO 先进先出。"}, {"type": "single", "section": 20, "stem": "最佳置换算法 OPT 选择（ ）的页换出。", "options": ["最远将来才会被访问", "刚装入的", "最大的", "最小的"], "answer": 0, "analysis": "本题考查。OPT 换最远将来用。"}, {"type": "single", "section": 20, "stem": "LRU 算法是指（ ）。", "options": ["最近最少使用", "先进先出", "最佳", "随机"], "answer": 0, "analysis": "本题考查。LRU 最近最少使用。"}, {"type": "single", "section": 20, "stem": "NUR 是（ ）的近似算法。", "options": ["LRU（最近未用）", "FIFO", "OPT", "随机"], "answer": 0, "analysis": "本题考查。NUR 是 LRU 近似。"}, {"type": "single", "section": 20, "stem": "“抖动”（颠簸）是指（ ）。", "options": ["刚换出的页很快又要访问，频繁换入换出", "内存充足", "CPU 空闲", "磁盘空闲"], "answer": 0, "analysis": "本题考查。抖动是频繁换页。"}, {"type": "single", "section": 20, "stem": "产生抖动的主要原因是（ ）。", "options": ["页面置换算法选择不当", "内存太大", "CPU 太快", "程序太小"], "answer": 0, "analysis": "本题考查。抖动主因是置换算法不当。"}, {"type": "multi", "section": 20, "stem": "常见的页面置换算法包括（ ）。", "options": ["FIFO", "OPT", "LRU", "NUR"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四种算法。"}, {"type": "single", "section": 20, "stem": "虚拟存储器使程序可用的内存空间在逻辑上（ ）物理内存。", "options": ["大于", "等于", "小于", "无关"], "answer": 0, "analysis": "本题考查。虚拟存储逻辑上大于物理内存。"}, {"type": "single", "section": 20, "stem": "抖动会导致系统（ ）。", "options": ["吞吐量下降、忙于换页", "速度大幅提升", "内存翻倍", "无影响"], "answer": 0, "analysis": "本题考查。抖动使系统效率下降。"}, {"type": "single", "section": 20, "stem": "动态重定位必须得到（ ）支持。", "options": ["硬件地址变换机构", "编译器", "用户程序", "磁盘"], "answer": 0, "analysis": "本题考查。动态重定位需硬件。"}, {"type": "multi", "section": 20, "stem": "虚拟存储器的特征包括（ ）。", "options": ["部分装入", "离散分配", "多次对换", "全部装入内存"], "answer": [0, 1, 2], "analysis": "本题考查。虚拟存储部分装入、离散分配、多次对换。"}, {"type": "single", "section": 21, "stem": "文件是（ ）。", "options": ["命名存储在外存上的一组相关信息集合", "内存中的程序", "CPU 寄存器", "网络包"], "answer": 0, "analysis": "本题考查。文件是外存上的信息集合。"}, {"type": "single", "section": 21, "stem": "文件是操作系统管理计算机的（ ）。", "options": ["最小单位", "最大单位", "中间单位", "无关单位"], "answer": 0, "analysis": "本题考查。文件是 OS 管理计算机的最小单位。"}, {"type": "single", "section": 21, "stem": "文件系统的主要功能是（ ）。", "options": ["实现按名存取", "编译程序", "分配 CPU", "管理内存"], "answer": 0, "analysis": "本题考查。文件系统实现按名存取。"}, {"type": "single", "section": 21, "stem": "按逻辑结构，文件可分为（ ）。", "options": ["流式无结构文件、记录式有结构文件", "顺序文件、链接文件", "索引文件、散列文件", "文本文件、二进制文件"], "answer": 0, "analysis": "本题考查。逻辑结构分流式与记录式。"}, {"type": "single", "section": 21, "stem": "按物理结构，文件可分为（ ）。", "options": ["顺序、链接、索引", "流式、记录式", "系统、用户", "文本、二进制"], "answer": 0, "analysis": "本题考查。物理结构分顺序、链接、索引。"}, {"type": "multi", "section": 21, "stem": "按逻辑结构，文件分为（ ）。", "options": ["流式无结构文件", "记录式有结构文件", "顺序文件", "索引文件"], "answer": [0, 1], "analysis": "本题考查。逻辑结构为流式与记录式。"}, {"type": "single", "section": 21, "stem": "文件的存取方式不包括（ ）。", "options": ["编译存取", "顺序存取", "直接（随机）存取", "索引存取"], "answer": 0, "analysis": "本题考查。三种存取：顺序、直接、索引。"}, {"type": "single", "section": 21, "stem": "磁盘调度算法中，先来先服务（FCFS）的特点是（ ）。", "options": ["简单公平，但效率低", "最短寻道", "按方向扫描", "单向循环"], "answer": 0, "analysis": "本题考查。FCFS 简单公平但效率低。"}, {"type": "single", "section": 21, "stem": "最短寻道优先（SSTF）可能产生（ ）。", "options": ["饥饿（某些请求长期得不到服务）", "绝对公平", "无缺点", "最快"], "answer": 0, "analysis": "本题考查。SSTF 可能饥饿。"}, {"type": "single", "section": 21, "stem": "扫描（SCAN，电梯）算法（ ）。", "options": ["按当前方向移动，到端点后反向", "单向循环", "随机", "不移动"], "answer": 0, "analysis": "本题考查。SCAN 如电梯按方向扫描。"}, {"type": "single", "section": 21, "stem": "循环扫描（CSCAN）算法（ ）。", "options": ["单向移动，回程不服务", "双向移动", "随机", "固定不动"], "answer": 0, "analysis": "本题考查。CSCAN 单向、回程不服务。"}, {"type": "multi", "section": 21, "stem": "常见的磁盘调度算法包括（ ）。", "options": ["FCFS", "SSTF", "SCAN", "CSCAN"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四种磁盘调度算法。"}, {"type": "single", "section": 21, "stem": "FCB（文件控制块）与文件（ ）。", "options": ["一一对应", "一对多", "多对一", "无关"], "answer": 0, "analysis": "本题考查。FCB 与文件一一对应。"}, {"type": "single", "section": 21, "stem": "文件目录是（ ），目录项是（ ）。", "options": ["FCB 的有序集合；一个 FCB", "文件集合；一个文件", "磁盘集合；一个扇区", "内存集合；一个字节"], "answer": 0, "analysis": "本题考查。目录=FCB集合，目录项=一个FCB。"}, {"type": "single", "section": 21, "stem": "单级目录的缺点是（ ）。", "options": ["容易产生重名", "不能重名", "查找慢但安全", "无目录"], "answer": 0, "analysis": "本题考查。单级目录易重名。"}, {"type": "single", "section": 21, "stem": "二级目录可以（ ）。", "options": ["按用户组织、允许不同用户重名", "完全避免重名", "只有一个目录", "不支持重名"], "answer": 0, "analysis": "本题考查。二级目录按用户允许重名。"}, {"type": "single", "section": 21, "stem": "当前最常用、UNIX 采用的目录结构是（ ）。", "options": ["树形目录", "单级目录", "二级目录", "线性目录"], "answer": 0, "analysis": "本题考查。树形目录最常用，UNIX 采用。"}, {"type": "single", "section": 21, "stem": "绝对路径是从（ ）开始的路径。", "options": ["根目录", "当前目录", "父目录", "子目录"], "answer": 0, "analysis": "本题考查。绝对路径从根开始。"}, {"type": "single", "section": 21, "stem": "相对路径是从（ ）开始的路径。", "options": ["当前目录", "根目录", "根节点", "磁盘"], "answer": 0, "analysis": "本题考查。相对路径从当前目录开始。"}, {"type": "single", "section": 21, "stem": "在 UNIX 中，绝对路径以（ ）开头。", "options": ["/（斜杠）", "C:", "～", "@"], "answer": 0, "analysis": "本题考查。UNIX 绝对路径以 / 开头。"}, {"type": "multi", "section": 21, "stem": "常见的目录结构包括（ ）。", "options": ["单级目录", "二级目录", "树形目录", "非循环图目录"], "answer": [0, 1, 2, 3], "analysis": "本题考查。四种目录结构。"}, {"type": "single", "section": 21, "stem": "在树形目录中，不同用户的目录下（ ）。", "options": ["可以有同名文件", "绝不能有同名文件", "共享同一文件名", "文件名全局唯一"], "answer": 0, "analysis": "本题考查。树形目录允许不同路径下重名。"}, {"type": "single", "section": 21, "stem": "“按名存取”是指（ ）。", "options": ["用户按文件名访问文件，无需记住物理地址", "按物理地址访问", "按内容访问", "按大小访问"], "answer": 0, "analysis": "本题考查。按名存取即用文件名访问。"}, {"type": "single", "section": 21, "stem": "FCB 中记录的主要是文件的（ ）。", "options": ["属性（名、大小、位置等）", "程序代码", "CPU 状态", "网络地址"], "answer": 0, "analysis": "本题考查。FCB 记录文件属性。"}, {"type": "single", "section": 21, "stem": "索引存取方式通过（ ）快速定位记录。", "options": ["索引表", "顺序扫描", "随机猜测", "文件名"], "answer": 0, "analysis": "本题考查。索引存取靠索引表。"}, {"type": "single", "section": 21, "stem": "关于 SCAN（电梯）算法，正确的是（ ）。", "options": ["按当前方向移动，到端点后反向", "单向循环不反向", "随机移动", "只服务最近的"], "answer": 0, "analysis": "本题考查。SCAN 如电梯。"}, {"type": "single", "section": 21, "stem": "SSTF 的主要问题是（ ）。", "options": ["可能造成某些请求长期饥饿", "绝对公平", "效率低", "不支持磁盘"], "answer": 0, "analysis": "本题考查。SSTF 可能饥饿。"}, {"type": "multi", "section": 21, "stem": "关于文件管理，正确的有（ ）。", "options": ["文件系统实现按名存取", "FCB 与文件一一对应", "树形目录最常用", "文件无需标识名"], "answer": [0, 1, 2], "analysis": "本题考查。文件必须有名，故 D 错。"}, {"type": "single", "section": 10, "stem": "下列关于静态网站与动态网站的叙述，正确的是（ ）。", "options": ["静态网站以数据库为基础、交互性强", "动态网页是指页面含有动画效果", "纯 HTML 静态网站易收录、较安全，但维护繁琐", "动态网站无法实现与用户交互"], "answer": 2, "analysis": "本题考查静/动态网站。静态网站由纯 HTML 构成、无数据库，易被搜索引擎收录且较安全，但更新维护繁琐；动态网站以数据库为基础、交互性强，动态网页并非指含动画。故 C 正确。"}, {"type": "single", "section": 18, "stem": "下列调度中，负责在内、外存之间换入换出进程、短期调整系统负荷的是（ ）。", "options": ["高级调度（作业调度）", "中级调度（交换调度）", "低级调度（进程调度）", "用户级调度"], "answer": 1, "analysis": "本题考查三级调度。中级调度又称交换调度，负责在内、外存之间换入换出进程，短期调整系统负荷；高级调度频率低、宏观，低级调度必须常驻内存。故 B 正确。"}, {"type": "single", "section": 18, "stem": "死锁的四个必要条件必须同时成立，因此预防死锁只需破坏其中的（ ）。", "options": ["任意一个条件", "全部四个条件", "至少三个条件", "前两个条件"], "answer": 0, "analysis": "本题考查死锁预防。死锁四条件（互斥、请求和保持、不剥夺、环路等待）须同时成立才会死锁，破坏其中任意一个即可预防死锁。故 A 正确。"}, {"type": "single", "section": 19, "stem": "作业从提交给系统到最终完成，一般经历的阶段顺序是（ ）。", "options": ["提交 → 后备 → 运行 → 完成", "创建 → 就绪 → 运行 → 终止", "输入 → 计算 → 输出 → 结束", "编译 → 链接 → 运行 → 退出"], "answer": 0, "analysis": "本题考查作业生命周期。作业经历 提交 → 后备 → 运行 → 完成 四个阶段，其中后备态作业在输入井中等待调度。故 A 正确。"}, {"type": "single", "section": 19, "stem": "在高响应比优先作业调度算法中，响应比的计算公式是（ ）。", "options": ["（等待时间 + 执行时间）/ 执行时间", "等待时间 / 执行时间", "执行时间 / 等待时间", "（等待时间 - 执行时间）/ 执行时间"], "answer": 0, "analysis": "本题考查响应比公式。响应比 =（等待时间 + 执行时间）/ 执行时间，随等待时间增大而升高，兼顾长短作业。故 A 正确。"}]};
+
+// ============ 应用状态 ============
+const STATE = {
+  currentSection: 0,
+  currentTab: 'read',
+  currentQuizIndex: 0,
+  quizAnswers: {},       // {qIndex: selectedOptionIndex}
+  quizSubmitted: {},     // {qIndex: true}
+  doneSections: new Set(),
+  bookmarks: new Set(),
+  errorQuestions: new Set(),
+  openChapters: new Set(['第一章 计算机的组成']),
+  theme: 'light',
+  searchQuery: ''
+};
+
+// ============ 初始化 ============
+function init() {
+  loadState();
+  renderSidebar();
+  renderContent();
+  updateProgress();
+  updateErrorCount();
+}
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('infotech_pro_kb_state') || '{}');
+    if (saved.doneSections) STATE.doneSections = new Set(saved.doneSections);
+    if (saved.bookmarks) STATE.bookmarks = new Set(saved.bookmarks);
+    if (saved.errorQuestions) STATE.errorQuestions = new Set(saved.errorQuestions);
+    if (saved.openChapters) STATE.openChapters = new Set(saved.openChapters);
+    if (saved.theme) STATE.theme = saved.theme;
+    if (saved.quizAnswers) STATE.quizAnswers = saved.quizAnswers;
+    if (saved.quizSubmitted) STATE.quizSubmitted = saved.quizSubmitted;
+  } catch(e) {}
+  applyTheme();
+}
+
+function saveState() {
+  localStorage.setItem('infotech_pro_kb_state', JSON.stringify({
+    doneSections: [...STATE.doneSections],
+    bookmarks: [...STATE.bookmarks],
+    errorQuestions: [...STATE.errorQuestions],
+    openChapters: [...STATE.openChapters],
+    theme: STATE.theme,
+    quizAnswers: STATE.quizAnswers,
+    quizSubmitted: STATE.quizSubmitted
+  }));
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', STATE.theme);
+  document.getElementById('themeIcon').textContent = STATE.theme === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = STATE.theme === 'dark' ? '亮色模式' : '暗色模式';
+}
+
+// ============ 侧边栏 ============
+function getChapterGroups() {
+  // Group sections by chapter
+  const groups = {};
+  KB_DATA.sections.forEach((s, si) => {
+    const ch = s.chapter || '其他';
+    if (!groups[ch]) groups[ch] = [];
+    groups[ch].push({section: s, si: si});
+  });
+  return groups;
+}
+
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  let html = '';
+  const groups = getChapterGroups();
+  Object.keys(groups).forEach((chName) => {
+    const items = groups[chName];
+    const isOpen = STATE.openChapters.has(chName);
+    const chDone = items.filter(it => STATE.doneSections.has(it.si)).length;
+    html += '<div class="chapter-group">';
+    html += `<button class="chapter-title ${isOpen ? 'open' : ''}" onclick="toggleChapter('${chName.replace(/'/g, "\\'")}')">`;
+    html += `<span class="arrow">▶</span>${chName}`;
+    html += `<span class="count">${chDone}/${items.length}节</span>`;
+    html += '</button>';
+    html += `<div class="section-list ${isOpen ? 'open' : ''}" id="sectionList-${chName}">`;
+    items.forEach(({section, si}) => {
+      const isActive = si === STATE.currentSection;
+      const isDone = STATE.doneSections.has(si);
+      const quizCount = KB_DATA.quizzes.filter(q => q.section === si).length;
+      html += `<div class="section-row ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}" onclick="selectSection(${si})">`;
+      html += `<span class="check">${isDone ? '✓' : ''}</span>`;
+      html += `<span class="section-title">${section.title}</span>`;
+      html += `<button class="mini-quiz-btn" onclick="event.stopPropagation();selectSectionAndQuiz(${si})" title="本节练习(${quizCount}题)">📝${quizCount}</button>`;
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  nav.innerHTML = html;
+}
+
+function toggleChapter(chName) {
+  if (STATE.openChapters.has(chName)) {
+    STATE.openChapters.delete(chName);
+  } else {
+    STATE.openChapters.add(chName);
+  }
+  renderSidebar();
+}
+
+function selectSection(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'read';
+  // Auto-expand the chapter containing this section
+  const sec = KB_DATA.sections[si];
+  if (sec && sec.chapter) STATE.openChapters.add(sec.chapter);
+  switchTab('read');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function selectSectionAndQuiz(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'quiz';
+  const sec = KB_DATA.sections[si];
+  if (sec && sec.chapter) STATE.openChapters.add(sec.chapter);
+  // Find first quiz question index for this section
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === si);
+  if (firstQ >= 0) STATE.currentQuizIndex = firstQ;
+  switchTab('quiz');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ============ 标签页切换 ============
+function switchTab(tab) {
+  STATE.currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+  document.getElementById('readContent').style.display = tab === 'read' ? 'block' : 'none';
+  document.getElementById('quizContent').style.display = tab === 'quiz' ? 'block' : 'none';
+  document.getElementById('bookmarksContent').style.display = tab === 'bookmarks' ? 'block' : 'none';
+  document.getElementById('errorsContent').style.display = tab === 'errors' ? 'block' : 'none';
+  renderContent();
+  if (tab === 'read') document.getElementById('searchInput').value = STATE.searchQuery;
+}
+
+// ============ 内容渲染 ============
+function renderContent() {
+  if (STATE.currentTab === 'read' || STATE.currentTab === 'bookmarks' || STATE.currentTab === 'errors') {
+    renderReadContent();
+  }
+  if (STATE.currentTab === 'quiz') {
+    renderQuizContent();
+  }
+  document.getElementById('breadcrumbCurrent').textContent = (KB_DATA.sections[STATE.currentSection]?.chapter || '') +
+    (KB_DATA.sections[STATE.currentSection] ? ' › ' : '') + (KB_DATA.sections[STATE.currentSection]?.title || '第一章');
+}
+
+function renderReadContent() {
+  const container = document.getElementById('readContent');
+  const section = KB_DATA.sections[STATE.currentSection];
+  let cards = section.cards;
+
+  // Handle bookmarks tab
+  if (STATE.currentTab === 'bookmarks') {
+    const allCards = KB_DATA.sections.flatMap((s, si) => s.cards.map(c => ({...c, sectionIdx: si, sectionTitle: s.title})));
+    cards = allCards.filter(c => STATE.bookmarks.has(c.id));
+    if (cards.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+      container.style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'block';
+      document.getElementById('errorsContent').style.display = 'none';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'block';
+    document.getElementById('errorsContent').style.display = 'none';
+
+    let html = `<div class="section-header"><h2>⭐ 我的收藏</h2><div class="meta">共 ${cards.length} 个收藏</div></div>`;
+    cards.forEach(c => {
+      html += renderCard(c, true);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Handle errors tab
+  if (STATE.currentTab === 'errors') {
+    const errorQuizList = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+    if (errorQuizList.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">📝</div><h3>暂无错题</h3><p>做错的题目会自动收入错题本</p></div>';
+      document.getElementById('readContent').style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'none';
+      document.getElementById('errorsContent').style.display = 'block';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'none';
+    document.getElementById('errorsContent').style.display = 'block';
+
+    let html = `<div class="section-header"><h2>📝 错题本</h2><div class="meta">共 ${errorQuizList.length} 道错题</div></div>`;
+    errorQuizList.forEach((q, idx) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderErrorQuiz(q, qi, idx + 1);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Normal read mode
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'none';
+
+  let html = `<div class="section-header">`;
+  html += `<h2>${section.title}</h2>`;
+  html += `<div class="meta">`;
+  html += `<span>📄 ${section.cards.length} 个知识点</span>`;
+  html += `<span>📝 ${KB_DATA.quizzes.filter(q => q.section === STATE.currentSection).length} 道练习题</span>`;
+  html += `</div></div>`;
+
+  let filteredCards = cards;
+  if (STATE.searchQuery) {
+    const q = STATE.searchQuery.toLowerCase();
+    filteredCards = cards.filter(c => {
+      const text = c.title + c.html.replace(/<[^>]*>/g, '');
+      return text.toLowerCase().includes(q);
+    });
+    if (filteredCards.length === 0) {
+      html += '<div class="empty-state"><div class="icon">🔍</div><h3>未找到匹配的知识点</h3><p>试试其他关键词</p></div>';
+    }
+  }
+
+  filteredCards.forEach(c => {
+    html += renderCard(c);
+  });
+
+  html += `<div style="text-align:center;margin-top:24px">`;
+  html += `<button class="btn btn-primary" onclick="markSectionDone(${STATE.currentSection})" ${STATE.doneSections.has(STATE.currentSection) ? 'disabled' : ''}>`;
+  html += STATE.doneSections.has(STATE.currentSection) ? '✅ 已学完本节' : '✓ 标记本节为已学';
+  html += '</button>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderCard(card, showSection = false) {
+  let html = `<div class="knowledge-card" id="card-${card.id}">`;
+  html += `<h3><span class="icon">${card.icon}</span>${card.title}</h3>`;
+  if (showSection && card.sectionTitle) {
+    html += `<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">📂 ${card.sectionTitle}</div>`;
+  }
+  html += card.html;
+  if (card.tags) {
+    html += '<div class="tag-row">';
+    card.tags.forEach(t => {
+      html += `<span class="tag">${t}</span>`;
+    });
+    html += '</div>';
+  }
+  html += `<div class="card-actions">`;
+  html += `<button class="card-action-btn ${STATE.bookmarks.has(card.id) ? 'bookmarked':''}" onclick="toggleBookmark('${card.id}')">`;
+  html += STATE.bookmarks.has(card.id) ? '⭐ 已收藏' : '☆ 收藏';
+  html += '</button>';
+  html += '</div></div>';
+  return html;
+}
+
+function renderErrorQuiz(q, qi, num) {
+  const sectionTitle = KB_DATA.sections[q.section]?.title || '';
+  const labels = ['A','B','C','D'];
+  const isMulti = q.type === 'multi';
+  let html = `<div class="quiz-container">`;
+  html += `<div class="quiz-header"><span class="quiz-section-label">${sectionTitle}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += `<div class="quiz-options">`;
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if ((isMulti && q.answer.includes(oi)) || (!isMulti && oi === q.answer)) cls = 'correct';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += `<div class="quiz-actions">`;
+  html += `<button class="btn btn-outline" onclick="removeError(${qi})">✓ 已掌握，移除</button>`;
+  html += '</div></div>';
+  return html;
+}
+
+// ============ 练习模式 ============
+function renderQuizContent() {
+  const container = document.getElementById('quizContent');
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  const sectionTotal = sectionQuizzes.length;
+
+  // Show score summary if all questions in current section are answered
+  const allAnswered = sectionQuizzes.every((_, i) => {
+    const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+    return STATE.quizSubmitted[qi];
+  });
+
+  if (allAnswered) {
+    const correct = sectionQuizzes.filter((_, i) => {
+      const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+      return isCorrect(sectionQuizzes[i], STATE.quizAnswers[qi]);
+    }).length;
+    const pct = Math.round((correct / sectionTotal) * 100);
+
+    let html = '<div class="score-display">';
+    html += `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">${KB_DATA.sections[STATE.currentSection].title} · 练习成绩</div>`;
+    html += `<div class="score-number">${pct}%</div>`;
+    html += '<div class="stats-row">';
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--success)">${correct}</div><div class="stat-label">正确</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--danger)">${sectionTotal - correct}</div><div class="stat-label">错误</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value">${sectionTotal}</div><div class="stat-label">总计</div></div>`;
+    html += '</div>';
+    html += '<div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">';
+    html += '<button class="btn btn-primary" onclick="resetSectionQuiz()">🔄 重新练习</button>';
+    if (sectionQuizzes.some((_, i) => !isCorrect(sectionQuizzes[i], STATE.quizAnswers[KB_DATA.quizzes.indexOf(sectionQuizzes[i])]))) {
+      html += '<button class="btn btn-outline" onclick="reviewSectionErrors()">📝 回看本节错题</button>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // Show all questions with results
+    sectionQuizzes.forEach((q, si) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderQuizResult(q, qi, si + 1);
+    });
+
+    container.innerHTML = html;
+    return;
+  }
+
+  const q = sectionQuizzes[STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0])] || sectionQuizzes[0];
+  const qi = KB_DATA.quizzes.indexOf(q);
+  const localIdx = STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0]);
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const isMulti = q.type === 'multi';
+  const labels = ['A','B','C','D'];
+  const isSel = (oi) => isMulti ? (Array.isArray(selected) && selected.includes(oi)) : (oi === selected);
+
+  let html = '<div class="section-header">';
+  html += `<h2>${KB_DATA.sections[STATE.currentSection].title} · 章节练习</h2>`;
+  html += `<div class="meta"><span>第 ${localIdx + 1}/${sectionTotal} 题${isMulti ? '（多选）' : ''}</span></div>`;
+  html += '</div>';
+
+  html += '<div class="quiz-container">';
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if (submitted) {
+      if ((isMulti && q.answer.includes(oi)) || (!isMulti && oi === q.answer)) cls = 'correct';
+      else if (isSel(oi)) cls = 'wrong';
+    } else if (isSel(oi)) {
+      cls = 'selected';
+    }
+    html += `<div class="quiz-option ${cls}" onclick="selectOption(${qi}, ${oi})">`;
+    html += `<span class="option-letter">${labels[oi]}</span>${opt}`;
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Analysis
+  html += `<div class="analysis-box ${submitted ? 'show' : ''}" id="analysis${qi}">${q.analysis}</div>`;
+
+  // Actions
+  html += '<div class="quiz-actions">';
+  if (!submitted) {
+    const hasAns = isMulti ? (Array.isArray(selected) && selected.length > 0) : (selected !== undefined);
+    html += `<button class="btn btn-primary" onclick="submitAnswer(${qi})" ${hasAns ? '' : 'disabled'}>确认提交</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="prevQuiz()">上一题</button>`;
+  html += `<button class="btn btn-outline" onclick="nextQuiz()">下一题</button>`;
+  if (STATE.errorQuestions.has(qi)) {
+    html += `<button class="btn btn-outline" style="color:var(--danger)" onclick="removeError(${qi})">从错题本移除</button>`;
+  }
+  html += '</div>';
+  html += '</div>';
+
+  // Dots navigation
+  html += '<div class="quiz-nav">';
+  sectionQuizzes.forEach((sq, idx) => {
+    const qi2 = KB_DATA.quizzes.indexOf(sq);
+    let dotCls = '';
+    if (idx === localIdx) dotCls += ' current';
+    if (STATE.quizSubmitted[qi2]) {
+      dotCls += isCorrect(sq, STATE.quizAnswers[qi2]) ? ' correct-dot' : ' wrong-dot';
+    }
+    html += `<button class="quiz-nav-dot ${dotCls}" onclick="goToQuestion(${qi2})">${idx + 1}</button>`;
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderQuizResult(q, qi, num) {
+  const labels = ['A','B','C','D'];
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const correct = submitted && isCorrect(q, selected);
+  const isMulti = q.type === 'multi';
+
+  let html = '<div class="quiz-container">';
+  html += `<div class="quiz-header"><span class="quiz-section-label" style="background:${correct ? 'var(--success-light)' : 'var(--danger-light)'};color:${correct ? 'var(--success)' : 'var(--danger)'}">${correct ? '✓ 正确' : '✗ 错误'}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if ((isMulti && q.answer.includes(oi)) || (!isMulti && oi === q.answer)) cls = 'correct';
+    else if (Array.isArray(selected) ? selected.includes(oi) : (oi === selected)) cls = 'wrong';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += '</div>';
+  return html;
+}
+
+// ============ 练习操作 ============
+function isCorrect(q, ans) {
+  if (q.type === 'multi') {
+    if (!Array.isArray(ans)) return false;
+    const a = [...ans].sort((x, y) => x - y);
+    const b = [...(q.answer || [])].sort((x, y) => x - y);
+    return a.length === b.length && a.every((v, i) => v === b[i]);
+  }
+  return ans === q.answer;
+}
+
+function selectOption(qi, oi) {
+  if (STATE.quizSubmitted[qi]) return;
+  const q = KB_DATA.quizzes[qi];
+  if (q.type === 'multi') {
+    if (!Array.isArray(STATE.quizAnswers[qi])) STATE.quizAnswers[qi] = [];
+    const arr = STATE.quizAnswers[qi];
+    const pos = arr.indexOf(oi);
+    if (pos >= 0) arr.splice(pos, 1); else arr.push(oi);
+    arr.sort((a, b) => a - b);
+  } else {
+    STATE.quizAnswers[qi] = oi;
+  }
+  saveState();
+  renderQuizContent();
+}
+
+function submitAnswer(qi) {
+  const q = KB_DATA.quizzes[qi];
+  const ans = STATE.quizAnswers[qi];
+  if (q.type === 'multi') {
+    if (!Array.isArray(ans) || ans.length === 0) return;
+  } else {
+    if (ans === undefined) return;
+  }
+  STATE.quizSubmitted[qi] = true;
+  if (!isCorrect(q, ans)) {
+    STATE.errorQuestions.add(qi);
+  }
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function findLastSectionQuizIdx(sectionIdx) {
+  let last = -1;
+  for (let i = 0; i < KB_DATA.quizzes.length; i++) {
+    if (KB_DATA.quizzes[i].section === sectionIdx) last = i;
+  }
+  return last;
+}
+
+function prevQuiz() {
+  const sectionStart = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex > sectionStart) {
+    STATE.currentQuizIndex--;
+  }
+  renderQuizContent();
+}
+
+function nextQuiz() {
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex < sectionEnd) {
+    STATE.currentQuizIndex++;
+  }
+  renderQuizContent();
+}
+
+function goToQuestion(qi) {
+  STATE.currentQuizIndex = qi;
+  renderQuizContent();
+}
+
+function resetSectionQuiz() {
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  sectionQuizzes.forEach(q => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    delete STATE.quizAnswers[qi];
+    delete STATE.quizSubmitted[qi];
+     STATE.errorQuestions.delete(qi);
+  });
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  STATE.currentQuizIndex = firstQ >= 0 ? firstQ : 0;
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function reviewSectionErrors() {
+  // Switch to errors tab
+  STATE.currentTab = 'errors';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('errorsTab').classList.add('active');
+  document.getElementById('errorsTab').style.display = '';
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'block';
+  renderContent();
+}
+
+function removeError(qi) {
+  STATE.errorQuestions.delete(qi);
+  saveState();
+  updateErrorCount();
+  if (STATE.currentTab === 'errors') renderContent();
+  if (STATE.currentTab === 'quiz') renderQuizContent();
+}
+
+// ============ 收藏 ============
+function toggleBookmark(cardId) {
+  if (STATE.bookmarks.has(cardId)) {
+    STATE.bookmarks.delete(cardId);
+    showToast('已取消收藏');
+  } else {
+    STATE.bookmarks.add(cardId);
+    showToast('已加入收藏夹');
+  }
+  saveState();
+  renderContent();
+}
+
+function toggleBookmarks() {
+  const tabBtn = document.getElementById('bookmarksTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'bookmarks';
+  switchTab('bookmarks');
+  const allBookmarks = KB_DATA.sections.flatMap(s => s.cards).filter(c => STATE.bookmarks.has(c.id));
+  if (allBookmarks.length === 0) {
+    document.getElementById('bookmarksContent').innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+  }
+}
+
+function toggleErrors() {
+  const tabBtn = document.getElementById('errorsTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'errors';
+  switchTab('errors');
+}
+
+// ============ 节完成标记 ============
+function markSectionDone(si) {
+  STATE.doneSections.add(si);
+  saveState();
+  updateProgress();
+  renderSidebar();
+  renderContent();
+  setTimeout(() => showToast('✅ 已标记本节为已学'), 300);
+}
+
+function updateProgress() {
+  const total = KB_DATA.sections.length;
+  const done = STATE.doneSections.size;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function updateErrorCount() {
+  document.getElementById('errorCount').textContent = STATE.errorQuestions.size > 0 ? `(${STATE.errorQuestions.size})` : '';
+}
+
+// ============ 搜索 ============
+function onSearch() {
+  STATE.searchQuery = document.getElementById('searchInput').value.trim();
+  if (STATE.currentTab !== 'read') {
+    switchTab('read');
+  }
+  renderContent();
+}
+
+// ============ 主题 ============
+function toggleTheme() {
+  STATE.theme = STATE.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  saveState();
+}
+
+// ============ 错题导出 ============
+function exportErrorsCSV() {
+  const errors = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+  if (errors.length === 0) {
+    showToast('暂无错题可导出');
+    return;
+  }
+  const labels = ['A','B','C','D'];
+  let csv = '\uFEFF序号,题目,选项A,选项B,选项C,选项D,正确答案,你的答案,解析\n';
+  errors.forEach((q, idx) => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    const ans = STATE.quizAnswers[qi];
+    let correctAnswer, yourAnswer;
+    if (q.type === 'multi') {
+      correctAnswer = (q.answer || []).map(i => labels[i]).join('');
+      yourAnswer = Array.isArray(ans) ? ans.map(i => labels[i]).join('') : '未答';
+    } else {
+      correctAnswer = labels[q.answer];
+      yourAnswer = ans !== undefined ? labels[ans] : '未答';
+    }
+    const stem = q.stem.replace(/"/g, '""');
+    const opts = q.options.map(o => o.replace(/"/g, '""'));
+    const analysis = q.analysis.replace(/<[^>]*>/g, '').replace(/"/g, '""');
+    csv += `${idx + 1},"${stem}","${opts[0] || ''}","${opts[1] || ''}","${opts[2] || ''}","${opts[3] || ''}","${correctAnswer}","${yourAnswer}","${analysis}"\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '信息技术_错题导出.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============ 移动端 ============
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ============ Toast ============
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.getElementById('toastContainer').appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+// ============ 启动 ============
+document.addEventListener('DOMContentLoaded', function() {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+});
+// 兜底：如果DOMContentLoaded已触发
+if (document.readyState !== 'loading') {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+}
+</script>
+</body>
+</html>

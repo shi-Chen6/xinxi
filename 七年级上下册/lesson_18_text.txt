@@ -1,0 +1,131 @@
+# 第18课: 第18课 美化网页方法多
+
+--- Slide 1 ---
+第18课　美化网页方法多
+第四单元　校园活动线上展
+义务教育信息科技课程资源　七年级
+
+--- Slide 2 ---
+1
+2
+3
+知道用HTML代码简单美化网页的操作方法。
+学习目标
+知道串联样式表的作用，初步学会用它美化网页。
+能根据需求，分析不同方法的特点并合理选择，提高解决问题的效率。
+第18课　学习目标
+
+--- Slide 3 ---
+前面编写了介绍科技节某个项目的简单网页，这好似用HTML搭建好了“新房屋”的结构，接下来该怎样将“新房屋”“装修”得漂亮时尚？
+问题情境
+第18课　课堂导入
+
+--- Slide 4 ---
+第18课　学习内容
+
+--- Slide 5 ---
+请打开之前完成的科技节网页，使用HTML标签及属性对网页进行美化，如设置字体、设置背景等，然后交流讨论这种方式是否便捷，美化效果好不好。
+第18课　学习内容
+
+--- Slide 6 ---
+标　　签 | 属　　性 | 值 | 作　　用
+<font> | color | #RRGGBB | 规定文本颜色，采用十六进制表示颜色值，如<font color="#FF0000">
+ | face | font_family | 规定文本的字体，如<font face="楷体">
+ | size | number | 规定文本的大小，如<font size="6">
+<body> | bgcolor | #RRGGBB | 规定背景的颜色，采用十六进制表示颜色值，如<body bgcolor="#0000FF">
+<p> | align | left | 左对齐文本，如<p align="left">
+ |  | right | 右对齐文本，如<p align="right">
+ |  | center | 居中对齐文本，如<p align="center">
+左表是常用的控制网页显示效果的代码。
+第18课　学习内容
+
+--- Slide 7 ---
+用HTML代码进行美化，美化效果往往很有限，但操作却非常烦琐。在实际应用中，人们经常用CSS来美化网页。
+CSS（cascading style sheets，串联样式表），生活中也经常被称为级联样式表或层叠样式表。
+第18课　学习内容
+
+--- Slide 8 ---
+如果将HTML代码比作建造房屋的“建筑师”，那么CSS就是装饰这间房屋的“装潢设计师”。CSS可以描述网页等文档的外观和格式，控制某类HTML标签内容的颜色、字体、宽度、高度等。
+第18课　学习内容
+
+--- Slide 9 ---
+写CSS代码时，需要先指定网页中的元素，然后对元素的颜色、字体等进行描述。浏览时，浏览器会按照CSS的描述显示相应的元素。
+第18课　学习内容
+
+--- Slide 10 ---
+CSS的基本语法结构（选择器、声明）
+选择器
+（需要改变样式的HTML元素）
+声明开始大括号
+声明结束大括号
+p {
+}
+font-size: 14px;
+color  :  #606266;
+第18课　学习内容
+
+--- Slide 11 ---
+内部样式
+<head>
+<style>
+body{
+background-color: #191970;
+}
+h1{
+text-align: center;
+}
+……
+</style>
+</head>
+第18课　学习内容
+
+--- Slide 12 ---
+1．请参考右侧代码，尝试用CSS对科技节网页文本、标题、背景等进行美化。
+2．观察修改后网页显示效果的变化。
+3．交流讨论使用 CSS美化网页的心得。
+第18课　学习内容
+<head>
+<title>校园科技节</title>
+<style>
+body{
+background-color:#87CEFA;
+}
+h2{
+font-family:黑体;
+font-size:50px;
+color:#DB7093;
+}
+h1{
+font-family:黑体;
+font-size:40px;
+color:#DB7093;
+}
+p{
+font-family:隶书;
+font-size:24px;
+text-indent:2em;
+}
+</style>
+</head>
+
+--- Slide 13 ---
+属　　性 | 值 | 作　　用
+color | #RRGGBB | 设置文本颜色，采用十六进制表示颜色值，
+如{color:#FF0000;}
+font-family | 字体系列名称 | 设置文本的字体，如{font-family:楷体;}
+font-size | 长度值px/em | 设置文本的大小，如{font-size:6px;}
+background-color | #RRGGBB | 设置背景颜色，采用十六进制表示颜色值，
+如{background-color:#0000FF;}
+text-align | left | 左对齐文本，如{text-align:left;}
+ | right | 右对齐文本，如{text-align:right;}
+ | center | 居中对齐文本，如{text-align:center;}
+text-indent | 长度值px/em | 设置段落中首行文本的缩进，如{text-indent:2em;}
+第18课　学习内容
+
+--- Slide 14 ---
+第18课　课堂总结
+
+--- Slide 15 ---
+尝试用在线人工智能模型，美化已有的HTML代码。
+第18课　拓展与提升
+只要把已有的HTML代码提交给模型，然后要求它使用CSS美化就可以了。

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>信息科技 · 知识导览</title>
+<script src="search_index.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(135deg, #F0F4FF 0%, #FEF6FF 50%, #F0FFF4 100%);
+  background-attachment: fixed;
+  color: #2D3436;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== Decorative Background ===== */
+.bg-decoration {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+}
+.bg-circle:nth-child(1) {
+  width: 400px; height: 400px;
+  background: linear-gradient(135deg, #6C63FF, #FF6584);
+  top: -120px; right: -80px;
+  animation: float 8s ease-in-out infinite;
+}
+.bg-circle:nth-child(2) {
+  width: 300px; height: 300px;
+  background: linear-gradient(135deg, #4ECDC4, #6C63FF);
+  bottom: -60px; left: -100px;
+  animation: float 10s ease-in-out infinite reverse;
+}
+.bg-circle:nth-child(3) {
+  width: 200px; height: 200px;
+  background: linear-gradient(135deg, #FF6584, #FFD93D);
+  top: 50%; right: -40px;
+  animation: float 12s ease-in-out infinite 2s;
+}
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -20px) scale(1.05); }
+  66% { transform: translate(-10px, 15px) scale(0.95); }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+/* ===== Header ===== */
+.header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+.header-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, #6C63FF, #FF6584);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  box-shadow: 0 8px 32px rgba(108, 99, 255, 0.3);
+  animation: pulse-shadow 3s ease-in-out infinite;
+}
+@keyframes pulse-shadow {
+  0%, 100% { box-shadow: 0 8px 32px rgba(108, 99, 255, 0.3); }
+  50% { box-shadow: 0 8px 48px rgba(108, 99, 255, 0.5); }
+}
+.header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #6C63FF, #FF6584);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+.header p {
+  font-size: 15px;
+  color: #8E99A4;
+  margin-top: 8px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+/* ===== Search Bar ===== */
+.search-wrapper {
+  margin-bottom: 24px;
+}
+.search-box {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 4px 4px 4px 20px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+.search-box:focus-within {
+  box-shadow: 0 4px 24px rgba(108, 99, 255, 0.15);
+  border-color: rgba(108, 99, 255, 0.3);
+}
+.search-box .search-icon {
+  color: #8E99A4;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 14px 12px;
+  font-family: inherit;
+  background: transparent;
+  color: #2D3436;
+}
+.search-box input::placeholder { color: #B0B8C1; }
+.search-box button {
+  background: linear-gradient(135deg, #6C63FF, #5A52E0);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+  white-space: nowrap;
+}
+.search-box button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+}
+.search-box button:active { transform: scale(0.96); }
+.search-stats {
+  font-size: 13px;
+  color: #8E99A4;
+  margin-top: 10px;
+  text-align: right;
+  font-weight: 500;
+}
+
+/* ===== Filter ===== */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.filter-btn {
+  padding: 8px 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(142, 153, 164, 0.25);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 13px;
+  font-weight: 500;
+  color: #636E7A;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.25s;
+}
+.filter-btn:hover {
+  border-color: #6C63FF;
+  color: #6C63FF;
+  background: rgba(108, 99, 255, 0.06);
+}
+.filter-btn.active {
+  background: linear-gradient(135deg, #6C63FF, #5A52E0);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(108, 99, 255, 0.25);
+}
+
+/* ===== Section Title ===== */
+.section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #636E7A;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+  padding-left: 4px;
+}
+
+/* ===== Navigation Cards ===== */
+.nav-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.nav-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.nav-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+.nav-card-header {
+  padding: 16px 20px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  user-select: none;
+}
+.nav-card-header .nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.nav-card-header .toggle-arrow {
+  margin-left: auto;
+  font-size: 12px;
+  color: #8E99A4;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+.nav-card.collapsed .toggle-arrow {
+  transform: rotate(-90deg);
+}
+.nav-card-body {
+  padding: 0 14px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease, padding 0.3s ease;
+  max-height: 600px;
+  opacity: 1;
+}
+.nav-card.collapsed .nav-card-body {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.nav-link .link-icon { font-size: 16px; }
+.nav-link.source {
+  background: rgba(108, 99, 255, 0.08);
+  color: #5A52E0;
+  border-color: rgba(108, 99, 255, 0.12);
+}
+.nav-link.source:hover {
+  background: rgba(108, 99, 255, 0.15);
+  transform: translateY(-1px);
+}
+.nav-link.guide {
+  background: rgba(255, 101, 132, 0.08);
+  color: #D94A6A;
+  border-color: rgba(255, 101, 132, 0.12);
+}
+.nav-link.guide:hover {
+  background: rgba(255, 101, 132, 0.15);
+  transform: translateY(-1px);
+}
+.nav-link.html-link {
+  background: rgba(78, 205, 196, 0.08);
+  color: #2D9B94;
+  border-color: rgba(78, 205, 196, 0.12);
+}
+.nav-link.html-link:hover {
+  background: rgba(78, 205, 196, 0.15);
+  transform: translateY(-1px);
+}
+
+/* ===== Search Results ===== */
+.results { margin-bottom: 24px; }
+.result-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s;
+  animation: slideUp 0.3s ease-out;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+}
+.result-file {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.result-file .file-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.result-location {
+  font-size: 13px;
+  color: #8E99A4;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.result-location .loc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(108, 99, 255, 0.08);
+  padding: 3px 10px;
+  border-radius: 6px;
+  color: #6C63FF;
+  font-weight: 500;
+  font-size: 12px;
+}
+.result-text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #3D4A5A;
+}
+.result-text .highlight {
+  background: linear-gradient(180deg, transparent 50%, rgba(108, 99, 255, 0.2) 50%);
+  padding: 0 2px;
+  font-weight: 600;
+  color: #4A42D4;
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+  text-align: center;
+  padding: 56px 28px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+.empty-state .empty-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, #6C63FF, #FF6584);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+.empty-state h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2D3436;
+  margin-bottom: 8px;
+}
+.empty-state p {
+  font-size: 14px;
+  color: #8E99A4;
+  line-height: 1.6;
+}
+
+/* ===== Welcome Section ===== */
+.welcome {
+  text-align: center;
+  padding: 32px 16px;
+  margin-bottom: 8px;
+}
+.welcome h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2D3436;
+  margin-bottom: 8px;
+}
+.welcome p {
+  font-size: 13px;
+  color: #8E99A4;
+  line-height: 1.6;
+}
+.welcome .quick-tips {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.welcome .tip {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  color: #636E7A;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+/* ===== Responsive - Desktop ===== */
+@media (min-width: 640px) {
+  .container { max-width: 620px; padding: 0 24px 80px; }
+  .header { padding: 56px 0 36px; }
+  .header-icon { width: 88px; height: 88px; font-size: 40px; border-radius: 24px; }
+  .header h1 { font-size: 32px; }
+  .header p { font-size: 16px; }
+  .search-box input { font-size: 17px; padding: 16px 14px; }
+  .search-box button { padding: 14px 28px; font-size: 16px; border-radius: 14px; }
+  .search-stats { font-size: 14px; }
+  .filter-btn { padding: 9px 20px; font-size: 14px; }
+  .section-title { font-size: 15px; }
+  .nav-card-header { padding: 18px 24px 14px; font-size: 16px; }
+  .nav-card-body { padding: 0 18px 18px; gap: 8px; }
+  .nav-link { padding: 10px 18px; font-size: 15px; }
+  .nav-link .link-icon { font-size: 17px; }
+  .result-card { padding: 20px 24px; margin-bottom: 14px; }
+  .result-file { font-size: 14px; }
+  .result-location { font-size: 14px; }
+  .result-location .loc-badge { font-size: 13px; padding: 4px 12px; }
+  .result-text { font-size: 16px; line-height: 1.8; }
+  .empty-state { padding: 64px 32px; }
+  .empty-state h3 { font-size: 20px; }
+  .empty-state p { font-size: 15px; }
+}
+
+@media (min-width: 1024px) {
+  .container { max-width: 720px; padding: 0 32px 80px; }
+  .header { padding: 64px 0 40px; }
+  .header h1 { font-size: 36px; }
+  .header p { font-size: 17px; }
+  .search-box input { font-size: 18px; }
+  .search-box button { padding: 16px 32px; font-size: 17px; }
+  .nav-card-body { gap: 10px; }
+  .nav-link { padding: 11px 20px; font-size: 15px; }
+  .result-text { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-decoration">
+  <div class="bg-circle"></div>
+  <div class="bg-circle"></div>
+  <div class="bg-circle"></div>
+</div>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-icon">📖</div>
+    <h1>信息科技知识导览</h1>
+    <p>导航 · 搜索 · 发现</p>
+  </div>
+
+  <!-- 搜索 -->
+  <div class="search-wrapper">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="搜索知识关键词..." oninput="doSearch()">
+      <button onclick="doSearch()">搜索</button>
+    </div>
+    <div class="search-stats" id="searchStats"></div>
+  </div>
+
+  <!-- 筛选 -->
+  <div class="filter-bar" id="filterBar"></div>
+
+  <!-- 结果 -->
+  <div id="resultsContainer" class="results"></div>
+
+  <!-- 导航 -->
+  <div id="navSection">
+    <div class="section-title">📂 知识资源</div>
+    <div class="nav-grid" id="navGrid"></div>
+  </div>
+
+</div>
+
+<script>
+const DATA = window.__SEARCH_DATA;
+const files = DATA.files;
+const chunks = DATA.chunks;
+const existingHtml = DATA.existingHtml;
+
+// 颜色配置
+const COLORS = {
+  ocr: { bg: 'rgba(108,99,255,0.08)', text: '#5A52E0', dot: '#6C63FF', header: '#6C63FF' },
+  guide: { bg: 'rgba(255,101,132,0.08)', text: '#D94A6A', dot: '#FF6584', header: '#FF6584' },
+  html: { bg: 'rgba(78,205,196,0.08)', text: '#2D9B94', dot: '#4ECDC4', header: '#4ECDC4' }
+};
+
+function renderNav() {
+  const nav = document.getElementById('navGrid');
+  let html = '';
+ // 知识库 & 刷题
+  html += `<div class="nav-card">
+    <div class="nav-card-header" style="color:${COLORS.html.header}">
+      <span class="nav-dot" style="background:${COLORS.html.dot}"></span>
+      知识库 & 刷题
+    </div>
+    <div class="nav-card-body">`;
+  existingHtml.filter(e => !e.label.includes('刷题练习')).forEach(e => {
+    html += `<a class="nav-link html-link" href="${e.dir}/${e.file}" target="_blank"><span class="link-icon">🌐</span> ${e.label}</a>`;
+  });
+  html += `</div></div>`;
+
+  
+
+  // 教学指南
+  html += `<div class="nav-card">
+    <div class="nav-card-header" style="color:${COLORS.guide.header}">
+      <span class="nav-dot" style="background:${COLORS.guide.dot}"></span>
+      教学指南
+    </div>
+    <div class="nav-card-body">`;
+  files.filter(f => f.type === 'guide').forEach(f => {
+    html += `<a class="nav-link guide" href="${f.dir}/${f.fileName}" target="_blank"><span class="link-icon">📘</span> ${f.name}</a>`;
+  });
+  html += `</div></div>`;
+
+ // OCR源文件（默认折叠）
+  html += `<div class="nav-card collapsed" id="ocrCard">
+    <div class="nav-card-header" style="color:${COLORS.ocr.header}" onclick="toggleOcrCard()">
+      <span class="nav-dot" style="background:${COLORS.ocr.dot}"></span>
+      超格教育 · 学科知识
+      <span class="toggle-arrow">▼</span>
+    </div>
+    <div class="nav-card-body">`;
+  files.filter(f => f.type === 'ocr').forEach(f => {
+    html += `<a class="nav-link source" href="${f.dir}/${f.fileName}" target="_blank"><span class="link-icon">📄</span> ${f.name}</a>`;
+  });
+  html += `</div></div>`;
+  nav.innerHTML = html;
+}
+
+function renderFilters() {
+  const bar = document.getElementById('filterBar');
+  let html = '<button class="filter-btn active" data-fid="all" onclick="setFilter(\'all\')">全部</button>';
+  files.forEach(f => {
+    html += `<button class="filter-btn" data-fid="${f.id}" onclick="setFilter(${f.id})">${f.shortName}</button>`;
+  });
+  bar.innerHTML = html;
+}
+
+let currentFilter = 'all';
+
+function setFilter(fid) {
+  currentFilter = fid;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.fid === String(fid));
+  });
+  doSearch();
+}
+
+function doSearch() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const container = document.getElementById('resultsContainer');
+  const stats = document.getElementById('searchStats');
+  const navSection = document.getElementById('navSection');
+
+  if (!q) {
+    container.innerHTML = '';
+    stats.textContent = '';
+    navSection.style.display = 'block';
+    return;
+  }
+
+  navSection.style.display = 'none';
+
+  let results = [];
+  chunks.forEach(chunk => {
+    if (currentFilter !== 'all' && chunk.fileId !== currentFilter) return;
+    if (chunk.text.toLowerCase().includes(q)) {
+      results.push(chunk);
+    }
+  });
+
+  results.sort((a, b) => {
+    const ca = (a.text.toLowerCase().match(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length;
+    const cb = (b.text.toLowerCase().match(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length;
+    return cb - ca;
+  });
+
+  const maxResults = 50;
+  const shown = results.slice(0, maxResults);
+  stats.textContent = `共找到 ${results.length} 条结果${results.length > maxResults ? `，显示前 ${maxResults} 条` : ''}`;
+
+  if (shown.length === 0) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <h3>未找到结果</h3>
+      <p>试试其他关键词，或调整筛选范围</p>
+    </div>`;
+    return;
+  }
+
+  let html = '';
+  shown.forEach((chunk, idx) => {
+    const file = files[chunk.fileId];
+    const text = chunk.text;
+    const kw = q;
+    const i = text.toLowerCase().indexOf(kw);
+    const start = Math.max(0, i - 60);
+    const end = Math.min(text.length, i + kw.length + 120);
+    let preview = (start > 0 ? '…' : '') + text.substring(start, end) + (end < text.length ? '…' : '');
+
+    const regex = new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    preview = preview.replace(regex, m => `<span class="highlight">${m}</span>`);
+
+    const loc = [];
+    if (chunk.chapter) loc.push(chunk.chapter);
+    if (chunk.section) loc.push(chunk.section);
+
+    const color = file.type === 'ocr' ? COLORS.ocr : COLORS.guide;
+    const locHtml = loc.length > 0
+      ? `<div class="result-location"><span class="loc-badge">📍 ${loc.join(' · ')}</span></div>`
+      : '';
+
+    html += `<div class="result-card" style="animation-delay:${idx * 0.03}s">
+      <div class="result-file">
+        <span class="file-dot" style="background:${color.dot}"></span>
+        ${file.name}
+      </div>
+      ${locHtml}
+      <div class="result-text">${preview}</div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function toggleOcrCard() {
+  document.getElementById('ocrCard').classList.toggle('collapsed');
+}
+
+renderNav();
+renderFilters();
+</script>
+</body>
+</html>

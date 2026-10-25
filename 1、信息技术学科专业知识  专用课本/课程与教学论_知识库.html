@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信息科技课程与教学论 · 知识库</title>
+<style>
+:root {
+  --bg: #f8f9fb;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #5a5d6e;
+  --text-muted: #9498a8;
+  --border: #e8eaef;
+  --accent: #4f46e5;
+  --accent-light: #eef0ff;
+  --success: #059669;
+  --success-light: #ecfdf5;
+  --warning: #d97706;
+  --warning-light: #fffbeb;
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --info: #2563eb;
+  --info-light: #eff6ff;
+  --tag-bg: #f1f5f9;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-sidebar: #1e293b;
+  --text: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #334155;
+  --accent: #818cf8;
+  --accent-light: #1e1b4b;
+  --tag-bg: #334155;
+  --shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.4;
+}
+
+.sidebar-header .subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+}
+
+.chapter-group {
+  margin-bottom: 4px;
+}
+
+.chapter-title {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: background var(--transition);
+}
+
+.chapter-title:hover { background: var(--accent-light); }
+.chapter-title .arrow {
+  font-size: 10px;
+  transition: transform var(--transition);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.chapter-title.open .arrow { transform: rotate(90deg); }
+.chapter-title .count {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.section-list {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+}
+
+.section-list.open { max-height: 500px; }
+
+.section-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.section-item:hover { background: var(--accent-light); color: var(--accent); }
+.section-item.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+
+.section-item .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.section-item.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.section-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all var(--transition);
+  border-radius: var(--radius-xs);
+  margin: 1px 8px;
+  width: calc(100% - 16px);
+}
+
+.section-row:hover { background: var(--accent-light); color: var(--accent); }
+.section-row.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+.section-row .section-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.section-row .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.section-row.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.mini-quiz-btn {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.mini-quiz-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-bar-wrap { margin-bottom: 4px; }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text-muted); margin-bottom: 6px;
+}
+.progress-bar {
+  height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease;
+}
+
+.sidebar-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: var(--radius-xs);
+  font-size: 12px; color: var(--text-secondary); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg-card);
+  transition: all var(--transition);
+  width: 100%;
+}
+
+.sidebar-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sidebar-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+
+.top-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 50;
+}
+
+.breadcrumb {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.breadcrumb span { color: var(--text); font-weight: 500; }
+
+.search-box {
+  margin-left: auto;
+  position: relative;
+}
+
+.search-box input {
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-size: 13px; width: 240px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.search-box input:focus { border-color: var(--accent); }
+.search-box .search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); font-size: 14px;
+}
+
+.content-area {
+  padding: 24px;
+  max-width: 900px;
+}
+
+.tab-bar {
+  display: flex; gap: 4px; margin-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  font-size: 14px; font-weight: 500; color: var(--text-muted);
+  border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn .badge {
+  font-size: 11px; background: var(--tag-bg); color: var(--text-secondary);
+  padding: 1px 8px; border-radius: 10px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 20px; font-weight: 700; color: var(--text);
+  margin-bottom: 4px;
+}
+
+.section-header .meta {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; gap: 16px;
+}
+
+.knowledge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--transition);
+}
+
+.knowledge-card:hover { box-shadow: var(--shadow-md); }
+
+.knowledge-card h3 {
+  font-size: 16px; font-weight: 600; color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.knowledge-card h3 .icon {
+  font-size: 18px;
+}
+
+.knowledge-card p {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.knowledge-card ul, .knowledge-card ol {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.knowledge-card li {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.knowledge-card .highlight {
+  background: var(--warning-light);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.knowledge-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.knowledge-table th, .knowledge-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.knowledge-table th {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.knowledge-table td { color: var(--text-secondary); }
+
+.tag-row {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 12px; background: var(--tag-bg);
+  color: var(--text-secondary);
+}
+
+.tag.accent { background: var(--accent-light); color: var(--accent); }
+.tag.success { background: var(--success-light); color: var(--success); }
+.tag.warning { background: var(--warning-light); color: var(--warning); }
+
+.card-actions {
+  display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.card-action-btn {
+  font-size: 12px; padding: 5px 12px;
+  border-radius: var(--radius-xs); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 4px;
+}
+
+.card-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.card-action-btn.bookmarked { border-color: #f59e0b; color: #f59e0b; background: #fffbeb; }
+
+.quiz-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+
+.quiz-section-label {
+  font-size: 12px; color: var(--text-muted);
+  background: var(--tag-bg);
+  padding: 3px 10px; border-radius: 12px;
+}
+
+.quiz-question {
+  font-size: 15px; font-weight: 500; color: var(--text);
+  margin-bottom: 16px; line-height: 1.6;
+}
+
+.quiz-options {
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.quiz-option {
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 14px; color: var(--text-secondary);
+  background: var(--bg);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.quiz-option:hover { border-color: var(--accent); }
+.quiz-option.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.quiz-option.correct { border-color: var(--success); background: var(--success-light); color: var(--success); font-weight: 600; }
+.quiz-option.wrong { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.quiz-option .option-letter {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-weight: 600; font-size: 13px;
+  background: var(--tag-bg); color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.quiz-option.selected .option-letter { background: var(--accent); color: #fff; }
+.quiz-option.correct .option-letter { background: var(--success); color: #fff; }
+.quiz-option.wrong .option-letter { background: var(--danger); color: #fff; }
+
+.analysis-box {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--info-light);
+  border: 1px solid #93c5fd;
+  font-size: 13px; color: #1e40af;
+  line-height: 1.7;
+  display: none;
+}
+
+.analysis-box.show { display: block; }
+
+.analysis-box strong { color: #1e3a5f; }
+
+.quiz-actions {
+  display: flex; gap: 8px; margin-top: 12px;
+}
+
+.btn {
+  padding: 8px 16px; border-radius: var(--radius-xs);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: none; transition: all var(--transition);
+}
+
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
+
+.quiz-nav {
+  display: flex; justify-content: center; gap: 8px; margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.quiz-nav-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg);
+  font-size: 12px; cursor: pointer; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+
+.quiz-nav-dot:hover { border-color: var(--accent); }
+.quiz-nav-dot.current { border-color: var(--accent); background: var(--accent); color: #fff; font-weight: 600; }
+.quiz-nav-dot.correct-dot { border-color: var(--success); background: var(--success-light); }
+.quiz-nav-dot.wrong-dot { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state h3 { font-size: 16px; margin-bottom: 8px; color: var(--text); }
+.empty-state p { font-size: 13px; }
+
+.score-display {
+  text-align: center; padding: 40px 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.score-number {
+  font-size: 48px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stats-row {
+  display: flex; justify-content: center; gap: 32px;
+  margin: 16px 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value { font-size: 20px; font-weight: 600; color: var(--text); }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.bookmark-list-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.bookmark-list-item:hover { background: var(--bg); }
+
+.bookmark-list-item .title { font-size: 13px; color: var(--text); font-weight: 500; }
+.bookmark-list-item .meta { font-size: 11px; color: var(--text-muted); }
+
+.mobile-menu-btn {
+  display: none;
+  width: 36px; height: 36px; border: none; background: none;
+  font-size: 20px; cursor: pointer; color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .search-box input { width: 160px; }
+  .content-area { padding: 16px; }
+}
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  padding: 10px 20px; background: var(--text); color: var(--bg);
+  border-radius: 20px; font-size: 13px; z-index: 1000;
+  animation: toastIn 0.3s ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>信息科技课程与教学论</h1>
+      <div class="subtitle">课程与教学论 · 知识库 · 全五章</div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+    <div class="sidebar-footer">
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>学习进度</span><span id="progressPercent">0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+      <button class="sidebar-btn" onclick="toggleBookmarks()" id="bookmarkBtn">
+        <span>⭐</span> 收藏夹
+      </button>
+      <button class="sidebar-btn" onclick="toggleErrors()" id="errorBtn">
+        <span>📝</span> 错题本 <span style="font-size:10px;color:var(--text-muted)" id="errorCount"></span>
+      </button>
+      <button class="sidebar-btn" onclick="exportErrorsCSV()">
+        <span>📥</span> 导出错题CSV
+      </button>
+      <button class="sidebar-btn" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">暗色模式</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="breadcrumb" id="breadcrumb">
+        首页 <span style="margin:0 4px;color:var(--text-muted)">›</span> <span id="breadcrumbCurrent">第一章</span>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜索知识点..." oninput="onSearch()">
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="read" onclick="switchTab('read')">
+          📖 知识阅读
+        </button>
+        <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">
+          📝 章节练习 <span class="badge" id="quizBadge">200题</span>
+        </button>
+        <button class="tab-btn" data-tab="bookmarks" onclick="switchTab('bookmarks')" style="display:none" id="bookmarksTab">
+          ⭐ 收藏夹
+        </button>
+        <button class="tab-btn" data-tab="errors" onclick="switchTab('errors')" style="display:none" id="errorsTab">
+          📝 错题本
+        </button>
+      </div>
+
+      <div id="readContent"></div>
+      <div id="quizContent" style="display:none"></div>
+      <div id="bookmarksContent" style="display:none"></div>
+      <div id="errorsContent" style="display:none"></div>
+    </div>
+  </main>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+// ============ 知识数据 ============
+const KB_DATA = {"title": "信息科技课程与教学论 · 知识库", "sections": [{"chapter": "第一章 信息科技课程知识", "title": "第一节 信息科技课程修订", "cards": [{"id": "c101", "title": "课程修订三原则", "icon": "🎯", "html": "<p>信息科技课程标准修订坚持三大原则：</p><ul><li><strong>目标导向</strong>：落实立德树人，聚焦核心素养。</li><li><strong>问题导向</strong>：针对重操作轻素养、学段衔接不畅等突出问题改进。</li><li><strong>创新导向</strong>：吸纳人工智能、物联网等前沿成果，体现“科”与“技”并重。</li></ul><p><span class='highlight'>地位变化：信息科技从“综合实践活动”中独立，成为义务教育独立设置的必修课程。</span></p>", "tags": ["修订原则", "课程地位"]}, {"id": "c102", "title": "义务教育开设安排", "icon": "📅", "html": "<table class='knowledge-table'><tr><th>项目</th><th>安排</th></tr><tr><td>独立设课</td><td>2022年版义务教育新课标将信息科技设为独立课程</td></tr><tr><td>开设年级</td><td>3~8年级单独开设（1~2年级融入其他学科，9年级可延展）</td></tr><tr><td>课时占比</td><td>约占总课时1%~3%（国家规定下限之上由地方安排）</td></tr></table><p><span class='highlight'>关键区分：2001/2017版属“综合实践活动”，2022版起为独立课程。</span></p>", "tags": ["开设安排", "学段"]}, {"id": "c103", "title": "课程结构演变", "icon": "🧩", "html": "<ul><li><strong>2001版</strong>：信息科技（信息技术）归入“综合实践活动”领域。</li><li><strong>2017版（高中）</strong>：发布高中信息技术课标，确立学科大概念。</li><li><strong>2022版（义务）</strong>：独立设课，以“数据、算法、网络、信息处理、信息安全、人工智能”六条逻辑主线重构内容。</li></ul>", "tags": ["结构演变"]}]}, {"chapter": "第一章 信息科技课程知识", "title": "第二节 课程性质与核心素养", "cards": [{"id": "c111", "title": "义务教育课程性质", "icon": "📌", "html": "<p>义务教育阶段信息科技课程五大性质：</p><ul><li><strong>基础性</strong>：面向全体学生的基本素养。</li><li><strong>工具性</strong>：作为学习与认知的工具。</li><li><strong>综合性</strong>：融合多学科知识与技能。</li><li><strong>实践性</strong>：以操作、探究、创新为特征。</li><li><strong>层次性</strong>：小学到初中螺旋上升、分层次要求。</li></ul>", "tags": ["课程性质", "义务教育"]}, {"id": "c112", "title": "高中课程性质", "icon": "🏫", "html": "<p>高中信息科技是<span class='highlight'>全面提升学生信息素养的基础课程</span>，关注系统性、实践性与迁移性，为全体学生构建信息素养共同基础，并以选择性必修/选修满足个性发展。</p>", "tags": ["课程性质", "高中"]}, {"id": "c113", "title": "课程特点", "icon": "✨", "html": "<p>信息科技课程特点：<strong>发展性、基础性、实践性、应用性、整合性、趣味性</strong>。</p><p><span class='highlight'>整合性</span>强调技术学习与技术应用整合、与其他学科整合；<span class='highlight'>应用性</span>强调在真实情境中解决问题。</p>", "tags": ["课程特点"]}, {"id": "c114", "title": "四大核心素养（核心考点）", "icon": "🌟", "html": "<p>信息科技课程四大<strong>核心素养</strong>是考试高频考点：</p><table class='knowledge-table'><tr><th>素养</th><th>内涵</th></tr><tr><td>信息意识</td><td>对信息的敏感度与价值判断，主动获取、甄别信息</td></tr><tr><td>计算思维</td><td>运用计算机科学思想方法界定、分析、解决问题</td></tr><tr><td>数字化学习与创新</td><td>在数字化环境中自主学习、协作、创作</td></tr><tr><td>信息社会责任</td><td>遵守伦理法规，维护信息安全，负责任地使用技术</td></tr></table>", "tags": ["核心素养", "必考"]}]}, {"chapter": "第一章 信息科技课程知识", "title": "第三节 义务教育信息科技课程标准（2022）", "cards": [{"id": "c121", "title": "课程理念（义务教育5条）", "icon": "💡", "html": "<ol><li><strong>素养导向</strong>：围绕核心素养确立课程目标。</li><li><strong>科技并重</strong>：遴选科学原理与实践应用并重的课程内容。</li><li><strong>真实性学习</strong>：以真实问题/项目驱动，倡导“做中学、用中学、创中学”。</li><li><strong>跨学科主题</strong>：强化课程协同育人，设置跨学科主题学习。</li><li><strong>多元评价</strong>：强化素养导向的多元评价（过程+终结、自评+他评）。</li></ol>", "tags": ["课程理念"]}, {"id": "c122", "title": "课程总目标（四方面）", "icon": "🎯", "html": "<ul><li><strong>树立正确价值观，形成信息意识</strong></li><li><strong>初步具备解决问题的能力，发展计算思维</strong></li><li><strong>提高数字化合作与探究能力，发扬创新精神</strong></li><li><strong>遵守信息社会法律法规，践行信息社会责任</strong></li></ul>", "tags": ["总目标"]}, {"id": "c123", "title": "学段划分", "icon": "📊", "html": "<p>义务教育分为<strong>四个学段</strong>：</p><ul><li><span class='highlight'>“六三”学制</span>按 <strong>2·2·2·3</strong> 划分（1-2 / 3-4 / 5-6 / 7-9年级）</li><li><span class='highlight'>“五四”学制</span>按 <strong>2·3·2·2</strong> 划分（1-2 / 3-5 / 6-7 / 8-9年级）</li></ul>", "tags": ["学段", "学制"]}, {"id": "c124", "title": "六条逻辑主线", "icon": "🧭", "html": "<p>依据核心素养与学段目标，按学生认知特征组织六条逻辑主线，循序渐进：</p><ul><li><strong>数据</strong>：来源可靠性→组织与呈现→对社会的意义</li><li><strong>算法</strong>：问题步骤分解→描述/执行/效率→解决策略</li><li><strong>网络</strong>：搜索与协作→成果分享→万物互联</li><li><strong>信息处理</strong>：文字/图/音/视频处理→编码→物联网</li><li><strong>信息安全</strong>：文明礼仪规范→规避风险→防范措施</li><li><strong>人工智能</strong>：应用体验→人机计算异同→伦理安全</li></ul>", "tags": ["逻辑主线", "内容结构"]}]}, {"chapter": "第一章 信息科技课程知识", "title": "第四节 普通高中信息科技课程标准", "cards": [{"id": "c131", "title": "高中课程理念（5条）", "icon": "💡", "html": "<ol><li>坚持立德树人，培养具备信息素养的中国公民</li><li>设计满足学生多元需求的课程结构，促进个性化发展</li><li>选择体现时代性和基础性的课程内容</li><li>培养以学习为中心的教与学关系，在问题解决中提升素养</li><li>构建基于学科核心素养的评价体系</li></ol>", "tags": ["课程理念", "高中"]}, {"id": "c132", "title": "高中课程结构（学分）", "icon": "📚", "html": "<table class='knowledge-table'><tr><th>类型</th><th>模块</th><th>学分/课时</th></tr><tr><td><strong>必修</strong></td><td>数据与计算、信息系统与社会</td><td>3学分 / 54课时</td></tr><tr><td><strong>选择性必修</strong></td><td>数据与数据结构、网络基础、数据管理与分析、人工智能初步、三维设计与创意、开源硬件项目设计（6模块）</td><td>每模块2学分 / 36课时；前3为等级性考试依据</td></tr><tr><td><strong>选修</strong></td><td>算法初步、移动应用设计</td><td>自主选修</td></tr></table>", "tags": ["课程结构", "学分", "高中"]}, {"id": "c133", "title": "实施与评价建议", "icon": "🛠️", "html": "<p><strong>教学实施</strong>：倡导<strong>项目学习</strong>，落实“学主教从、以学定教”。</p><p><strong>评价建议</strong>：</p><ul><li>弱化选拔甄别功能，强化改进激励</li><li>评价主体<strong>多元化</strong>（师/生/同伴/家长）</li><li>重视<strong>过程性评价</strong>，使用评价量规</li><li>总结性评价采用<strong>纸笔测试 + 上机测试</strong>相结合</li></ul>", "tags": ["实施建议", "评价建议"]}]}, {"chapter": "第一章 信息科技课程知识", "title": "第五节 信息科技课程实施", "cards": [{"id": "c141", "title": "课程实施要点", "icon": "🚀", "html": "<p>课程实施是将课程标准转化为教学实践的过程，要点：</p><ul><li><strong>教学建议</strong>：以核心素养为导向，创设真实情境，采用项目式、任务驱动式教学。</li><li><strong>资源建设</strong>：开发数字化教学资源，建设本地特色课程内容。</li><li><strong>师资</strong>：提升教师信息素养与跨学科教学能力。</li><li><strong>评价落地</strong>：将素养导向的多元评价融入日常教学。</li></ul>", "tags": ["课程实施", "教学建议"]}]}, {"chapter": "第二章 信息科技教育教学知识", "title": "第一节 信息科技教学基础", "cards": [{"id": "c201", "title": "教学与教学过程", "icon": "📖", "html": "<p><strong>教学</strong>：教师教与学生学共同组成的双边活动，以培养人为目的。</p><p><strong>教学过程</strong>本质是一种特殊的认识过程，特点：间接性、引导性、简捷性。</p><p><span class='highlight'>信息科技教学既是知识技能传授，更是核心素养培育过程。</span></p>", "tags": ["教学基础", "概念"]}, {"id": "c202", "title": "信息科技教学的特点", "icon": "🔧", "html": "<ul><li><strong>实践性</strong>：强调上机操作与动手实践。</li><li><strong>自主性</strong>：学生自主探究、自主学习。</li><li><strong>开放性</strong>：问题情境、资源、成果多元开放。</li><li><strong>创新性</strong>：鼓励作品创作与技术创新。</li><li><strong>整合性</strong>：与其他学科、生活实际整合。</li></ul>", "tags": ["教学特点"]}, {"id": "c203", "title": "教学原则", "icon": "⚖️", "html": "<p>信息科技教学应遵循：</p><ul><li><strong>科学性与思想性统一</strong></li><li><strong>理论联系实际</strong></li><li><strong>直观性</strong>（多媒体、演示）</li><li><strong>启发性</strong></li><li><strong>循序渐进</strong></li><li><strong>因材施教</strong></li><li><strong>发展性评价</strong></li></ul>", "tags": ["教学原则"]}]}, {"chapter": "第二章 信息科技教育教学知识", "title": "第二节 教学方法", "cards": [{"id": "c211", "title": "常用教学方法", "icon": "🧰", "html": "<table class='knowledge-table'><tr><th>方法</th><th>特点</th></tr><tr><td>讲授法</td><td>教师系统讲解，效率高，需辅以直观演示</td></tr><tr><td>演示法</td><td>展示操作/作品，化抽象为直观</td></tr><tr><td>任务驱动法</td><td>以任务为主线，学生自主完成</td></tr><tr><td>探究式教学</td><td>学生自主发现问题、设计方案、验证</td></tr><tr><td>合作学习</td><td>小组协作，培养交流表达能力</td></tr><tr><td>练习法</td><td>上机操练，巩固技能</td></tr></table>", "tags": ["教学方法"]}, {"id": "c212", "title": "任务驱动教学法", "icon": "📝", "html": "<p><strong>任务驱动</strong>是以“任务”为中心组织教学的方法，流程：</p><ol><li>创设情境，提出任务</li><li>分析任务，分解步骤</li><li>自主/协作探究，完成任务</li><li>展示交流，评价反思</li></ol><p><span class='highlight'>核心是“以任务为主线、教师为主导、学生为主体”。</span></p>", "tags": ["任务驱动"]}, {"id": "c213", "title": "教学方法选择依据", "icon": "🎚️", "html": "<ul><li><strong>教学目标</strong>：知识型多用讲授，技能型多用任务驱动/练习</li><li><strong>教学内容</strong>：理论vs操作</li><li><strong>学生特征</strong>：年龄、认知水平、基础</li><li><strong>教学条件</strong>：机房、网络、软件</li><li><strong>课型</strong>：新授课/练习课/复习课</li></ul>", "tags": ["方法选择"]}]}, {"chapter": "第三章 教学设计", "title": "第一节 教学设计前期分析", "cards": [{"id": "c301", "title": "前期分析三内容（考点）", "icon": "🔍", "html": "<p>教学设计<strong>前期分析</strong>包括三个方面：</p><table class='knowledge-table'><tr><th>分析内容</th><th>说明</th></tr><tr><td>学习需要分析</td><td>期望状态与现有状态的差距</td></tr><tr><td>学习者分析</td><td>起点能力、认知风格、学习动机等</td></tr><tr><td>学习内容分析</td><td>知识的类型、结构、重难点</td></tr></table><p><span class='highlight'>注意：终结性测验分析属于评价环节，不属于前期分析。</span></p>", "tags": ["前期分析", "必考"]}, {"id": "c302", "title": "学习者分析", "icon": "🧒", "html": "<ul><li><strong>起点能力</strong>：已有知识技能基础（避免零起点或重复）。</li><li><strong>认知风格</strong>：场依存/场独立、视觉/动觉偏好。</li><li><strong>学习动机</strong>：内在动机与外在动机。</li><li><strong>一般特征</strong>：年龄阶段的身心发展特点。</li></ul>", "tags": ["学习者分析"]}, {"id": "c303", "title": "学习需要分析", "icon": "📐", "html": "<p><strong>学习需要</strong>= 期望达到的学习状况 − 当前学习状况。</p><p>目的：确定教学中真正的问题与差距，作为教学设计的起点。常用方法：内部参照法、外部参照法。</p>", "tags": ["学习需要"]}]}, {"chapter": "第三章 教学设计", "title": "第二节 教学目标与重难点", "cards": [{"id": "c311", "title": "三维教学目标（考点）", "icon": "🎯", "html": "<table class='knowledge-table'><tr><th>维度</th><th>内涵</th><th>示例</th></tr><tr><td>知识与技能</td><td>掌握概念、原理、操作技能（重结果）</td><td>理解信息概念；熟练使用工具</td></tr><tr><td>过程与方法</td><td>经历思维过程，学会学习（重经历）</td><td>经历问题解决过程；形成自主学习能力</td></tr><tr><td>情感态度与价值观</td><td>态度、价值观、责任感</td><td>遵守伦理法规，负责任地使用技术</td></tr></table><p><span class='highlight'>“过程与方法”强调的是学生的思维/学习过程，而非教师的教学过程。</span></p>", "tags": ["教学目标", "三维", "必考"]}, {"id": "c312", "title": "教学重点及确定依据（考点）", "icon": "⭐", "html": "<p><strong>教学重点</strong>：教材中最基本、最重要的知识与技能（核心知识），是学生必须掌握的。</p><p><span class='highlight'>确定主要依据：教学内容（教材本身的核心知识与技能）。</span></p><p><strong>教学难点</strong>：学生难以理解或易混淆的内容，依据学生认知水平确定。</p>", "tags": ["重难点", "考点"]}, {"id": "c313", "title": "教学难点", "icon": "🧗", "html": "<p><strong>教学难点</strong>的确定依据主要是<strong>学生的认知水平与学习心理</strong>，常出现在：抽象概念、易混淆知识、操作技能迁移、综合运用等情形。</p>", "tags": ["教学难点"]}]}, {"chapter": "第三章 教学设计", "title": "第三节 教学策略与媒体", "cards": [{"id": "c321", "title": "教学策略类型", "icon": "♟️", "html": "<ul><li><strong>以教为主</strong>：接受式、传递—接受策略</li><li><strong>以学为主</strong>：探究式、发现式、自主学习策略</li><li><strong>混合型</strong>：主导—主体结合（教师主导+学生主体）</li></ul><p><span class='highlight'>新课改倡导“教师主导、学生主体”的混合型策略。</span></p>", "tags": ["教学策略"]}, {"id": "c322", "title": "教学媒体选择依据（考点）", "icon": "🖥️", "html": "<p>媒体选择的基本依据：</p><ul><li><strong>教学目标</strong>：达成什么目标选什么媒体</li><li><strong>教学内容</strong>：抽象→直观媒体；操作→演示媒体</li><li><strong>学生特征</strong>：年龄、认知特点</li><li><strong>教学条件</strong>：设备、环境（多媒体/网络教室）</li><li><strong>媒体特性</strong>：文本、图像、音视频、交互各自优势</li><li><strong>经济实用</strong>：避免滥用，适度即可</li></ul>", "tags": ["媒体选择", "考点"]}, {"id": "c323", "title": "常见教学模式", "icon": "🧩", "html": "<ul><li><strong>传递—接受</strong>：教师讲授为主</li><li><strong>探究式</strong>：提出问题→假设→验证→结论</li><li><strong>WebQuest</strong>：基于网络的探究学习</li><li><strong>任务驱动</strong>：以任务组织</li><li><strong>合作学习</strong>：小组协作完成</li></ul>", "tags": ["教学模式"]}]}, {"chapter": "第三章 教学设计", "title": "第四节 课程教学设计", "cards": [{"id": "c331", "title": "教学设计概念与中心（考点）", "icon": "🎯", "html": "<p><strong>教学设计</strong>是以优化教学效果为目的，运用系统方法分析教学问题、设计解决方案的过程。</p><p><span class='highlight'>中心是“学生的学”——学生是认知主体、知识意义的主动建构者；教师起帮助促进作用。</span></p>", "tags": ["教学设计", "中心", "必考"]}, {"id": "c332", "title": "教学设计基本流程", "icon": "📋", "html": "<ol><li>前期分析（需要/学习者/内容）</li><li>确定教学目标</li><li>确定重难点</li><li>选择教学策略与方法</li><li>选择教学媒体</li><li>设计教学过程（导入、新授、练习、小结、作业）</li><li>设计评价</li><li>编写教案</li></ol>", "tags": ["设计流程"]}, {"id": "c333", "title": "教案编写要素", "icon": "📄", "html": "<p>教案基本要素：课题、教学目标、重难点、教学方法、教学媒体、教学过程（环节设计）、板书设计、作业布置、教学反思。</p>", "tags": ["教案"]}, {"id": "c334", "title": "课堂导入的作用（考点）", "icon": "🚪", "html": "<p>课堂导入的主要作用：</p><ul><li>吸引学生<strong>注意力</strong></li><li><strong>激发兴趣</strong>，引起学习动机</li><li>复习旧知，引向新内容</li><li>明确本课教学目标</li><li>渲染气氛，创设情境</li></ul><p><span class='highlight'>展示动画/作品等直观手段，核心在于“激发兴趣、启发思考”。</span></p>", "tags": ["课堂导入", "作用", "考点"]}]}, {"chapter": "第四章 教学评价", "title": "第一节 教学评价", "cards": [{"id": "c401", "title": "教学评价概念与作用（考点）", "icon": "📊", "html": "<p><strong>教学评价</strong>：依据教学目标对教学过程及结果进行价值判断的过程。</p><p><strong>作用</strong>：</p><ul><li><strong>教学作用</strong>：改进教学工作（核心目的）</li><li><strong>诊断作用</strong>：发现教学问题</li><li><strong>激励作用</strong>：促进师生发展</li><li><strong>调控/反馈作用</strong>：调整教学</li></ul><p><span class='highlight'>评价的根本目的在于“改进教学”，而非证明或选拔。</span></p>", "tags": ["教学评价", "作用", "必考"]}, {"id": "c402", "title": "教学评价的分类（考点）", "icon": "🗂️", "html": "<table class='knowledge-table'><tr><th>分类标准</th><th>类型</th><th>说明</th></tr><tr><td rowspan='3'>按时机</td><td>诊断性评价</td><td>教学前，摸底</td></tr><tr><td>形成性评价</td><td>教学中，及时反馈改进</td></tr><tr><td>总结性评价</td><td>教学后，评定学业成就</td></tr><tr><td rowspan='3'>按基准</td><td>相对评价</td><td>与他人比较（常模参照）</td></tr><tr><td>绝对评价</td><td>与标准比较（标准参照）</td></tr><tr><td>个体内差异评价</td><td>自身前后比较</td></tr><tr><td>按方法</td><td>定性/定量评价</td><td>描述/数值</td></tr></table>", "tags": ["评价分类", "必考"]}, {"id": "c403", "title": "评价理念（考点）", "icon": "🤝", "html": "<ul><li><strong>“立足过程，促进发展”</strong>：关注学习过程与结果，激励学生、改进教学。</li><li><strong>多元评价</strong>：主体多元（师/生/同伴/家长）、方式多元（纸笔+上机+作品）、内容多元。</li><li><strong>民主评价</strong>：师生在民主平等条件下共同参与评价。</li></ul>", "tags": ["评价理念"]}, {"id": "c404", "title": "过程性评价的价值", "icon": "🌱", "html": "<p><strong>过程性评价</strong>在教学中的价值：</p><ul><li>及时反馈，便于调整教学与学习</li><li>关注学生进步与努力，激励学习</li><li>全面考查素养形成过程</li><li>弱化甄别选拔，促进全体学生发展</li></ul>", "tags": ["过程性评价"]}]}, {"chapter": "第五章 多媒体教学", "title": "第一节 多媒体教学", "cards": [{"id": "c501", "title": "多媒体教学环境（考点）", "icon": "🏫", "html": "<table class='knowledge-table'><tr><th>环境</th><th>特点</th></tr><tr><td>多媒体教室</td><td>投影/电子白板+计算机，以教师演示为主</td></tr><tr><td>网络教室</td><td>学生机+教师机+网络，支持资源共享、交流协作</td></tr></table><p><span class='highlight'>网络教室相对多媒体教室的独特优势：提供丰富学习资源与便于交流的平台（共享文件夹、资源库、教学管理软件）。</span></p>", "tags": ["教学环境", "考点"]}, {"id": "c502", "title": "PowerPoint课件（考点）", "icon": "📽️", "html": "<p>课件制作<strong>基本原则</strong>：简明扼要、突出重点，避免无关干扰。</p><p><span class='highlight'>“简洁”指内容精炼，并非要求“无颜色、无背景”——适当色彩与背景有助于理解与记忆。</span></p><p>作用：化抽象为直观、记录操作过程便于复习、提炼书本知识助记忆。</p>", "tags": ["PPT课件", "考点"]}, {"id": "c503", "title": "电子白板（考点）", "icon": "🖊️", "html": "<p>电子白板是交互式教学设备，可与计算机程序联动，兼作屏幕与书写板。</p><p><span class='highlight'>正确认识：电子白板不能完全替代投影仪和PPT；白板、软件、PPT可相互调用；并非适用于所有课型，需结合课程特点。</span></p>", "tags": ["电子白板", "考点"]}, {"id": "c504", "title": "微课（考点）", "icon": "⏱️", "html": "<p><strong>微课</strong>：以短视频为核心的教学资源，含教学设计、素材、练习、反馈等辅助资源。</p><ul><li>主持人可出镜也可话外音</li><li>课前/课中/课后均可使用</li><li>学生可自主选看，支持分层教学</li><li><span class='highlight'>时长以 <strong>5~10分钟</strong> 为宜，最长不宜超过20分钟</span></li></ul>", "tags": ["微课", "考点"]}, {"id": "c505", "title": "翻转课堂", "icon": "🔄", "html": "<p><strong>翻转课堂</strong>：将知识传授（视频/微课）放在课前，课堂时间用于答疑、讨论、练习、创作。</p><p>益处：</p><ul><li>学生按需自定步调学习</li><li>课堂高效用于深度互动</li><li>培养自主学习能力</li></ul><p>注意：微视频应短小精悍、目标明确，避免过度依赖。</p>", "tags": ["翻转课堂"]}, {"id": "c506", "title": "网络教室教学特征（考点）", "icon": "🌐", "html": "<p>网络教室教学应遵循新课改理念：</p><ul><li>内容选择上以<strong>制作作品/项目</strong>为主</li><li>充分发挥网络功能，交流协作</li><li>教师发挥<strong>指导</strong>作用，避免“满堂灌”、避免占用过多时间讲解</li><li>学习活动以<strong>自主—合作—探究</strong>为主</li></ul>", "tags": ["网络教室", "考点"]}]}], "quizzes": [{"type": "single", "section": 2, "stem": "关于信息科技新课程改革的理念，下列说法错误的是（ ）。", "options": ["关照全体学生，把学生的信息知识提高到同一水平", "强调问题解决，倡导创新实践", "把信息科技与学生的日常生活、学习紧密结合起来", "以课程实施为契机，努力创造条件，为学生营造良好的信息环境"], "answer": 0, "analysis": "本题考查信息科技课程基本理念。课程理念强调“关照全体学生、建设有特色的信息科技课程”，但应尊重学生个体差异与课程层次性，不能把学生信息知识提高到同一水平。故A错误，符合题意。"}, {"type": "single", "section": 11, "stem": "倡导“立足过程，促进发展”的信息科技课程评价理念，其目的是（ ）。", "options": ["促进学生、教师、学校和信息科技课程的发展", "形成新的教育评价制度，研究新的教育评价手段与方法", "全面了解学生学习的过程与结果，激励学生学习和改进教师教学", "为教师进行教学改革提供依据"], "answer": 2, "analysis": "本题考查课程评价理念。“立足过程，促进发展”强调关注动态过程，全面了解学生学习的过程与结果，激励学生学习并改进教师教学。故C正确。"}, {"type": "single", "section": 10, "stem": "信息科技教学设计的中心是（ ）。", "options": ["教师的教", "教学目标", "教学内容", "学生的学"], "answer": 3, "analysis": "本题考查教学设计的中心。教学设计应以学生为中心，学生是认知主体、知识意义的主动建构者；教师只起帮助促进作用。故D正确。"}, {"type": "single", "section": 7, "stem": "不属于教学设计前期分析内容的选项是（ ）。", "options": ["终结性测验分析", "学习需要分析", "学习者分析", "学习内容分析"], "answer": 0, "analysis": "本题考查前期分析的内容。前期分析包括学习需要分析、学习者特征分析、学习内容分析三部分。终结性测验分析属于教学评价环节，不属于前期分析。故A正确。"}, {"type": "single", "section": 8, "stem": "信息科技课程目标可归纳为知识与技能、过程与方法、情感态度与价值观三个方面，属于“过程与方法”目标的是（ ）。", "options": ["理解信息及信息科技的概念与特征", "能熟练使用常用的信息科技工具，初步形成自主学习信息科技的能力", "能选择合适的信息科技进行有效的信息采集、存储和管理", "能理解并遵守与信息活动相关的伦理道德与法律法规，负责任地、安全地、健康地使用信息科技"], "answer": 1, "analysis": "本题考查三维目标。“过程与方法”强调学生经历思维与学习的过程、学会学习，B项“初步形成自主学习能力”属此维度；A、C侧重结果属知识与技能，D属情感态度与价值观。故B正确。"}, {"type": "single", "section": 8, "stem": "在信息科技教学中，确定教学重点的主要根据是（ ）。", "options": ["教师教学能力", "教学硬件条件", "教学主要内容", "学生兴趣爱好"], "answer": 2, "analysis": "本题考查教学重点的确定。教学重点是教材中最基本、最重要的核心知识，主要依据教学内容确定。故C正确。"}, {"type": "single", "section": 10, "stem": "在初中“快快乐乐上学去”一课教学中，老师先展示了Flash制作的动画，取得较好的效果，这种课堂导入的作用是（ ）。", "options": ["总结规则，抽象分析", "激发学生的兴趣，启发思考", "培养分析问题的能力", "促进迁移"], "answer": 1, "analysis": "本题考查课堂导入的作用。导入可吸引注意、激发兴趣、复习旧知、明确目标、创设情境。展示Flash动画旨在激发学生兴趣、启发思考。故B正确。"}, {"type": "single", "section": 11, "stem": "课程结束时进行期末考试，考试依据课程标准确定试题范围，采用纸笔测试评卷评分的方式，以下不正确的是（ ）。", "options": ["它是总结性评价", "它是定量评价", "它是绝对评价", "它是形成性评价"], "answer": 3, "analysis": "本题考查教学评价分类。课程结束时的考试属总结性评价；依据课程标准定范围属绝对评价；评卷评分属定量评价；不属于形成性评价。故D不正确，符合题意。"}, {"type": "single", "section": 11, "stem": "在对学生的信息科技学习进行总结性评价时，最适合采用的评价方式是（ ）。", "options": ["学生的作业袋", "学生档案袋", "上机测验", "纸笔测验与上机测验相结合"], "answer": 3, "analysis": "本题考查总结性评价。总结性评价应综合运用纸笔测验、上机测验等多种方法，并结合平时表现与过程性评价结果。故D正确。"}, {"type": "single", "section": 12, "stem": "下列关于PowerPoint课件辅助教学的表述中，错误的是（ ）。", "options": ["通过图像、声音、视频等多媒体手段，将抽象的概念、理论转化为直观的视觉效果，便于学生理解", "将操作过程记录下来，便于重复播放观看，方便学生学习", "简洁的课件是最基本的原则，为避免学生转移注意力，最好在无颜色、无背景的幻灯片上进行课件的编辑", "课件的内容是对书本知识的简化提炼，有助于学生加深对知识的记忆"], "answer": 2, "analysis": "本题考查PPT课件。“简洁”指内容简明扼要，并非要求无颜色、无背景；适当色彩与背景有助于理解与记忆。故C错误，符合题意。"}, {"type": "single", "section": 12, "stem": "信息科技常在网络教室中进行，根据教室环境的基本特征，以下不正确的选项是（ ）。", "options": ["在学习内容的选择上，以制作作品为主", "在教学过程中充分发挥网络的功能", "在教师的作用发挥上突出传授与指导的功能，尽可能多讲", "在学习活动的安排上，以学生的自主—合作—探究活动为主"], "answer": 2, "analysis": "本题考查网络教室教学。新课改倡导“教师主导、学生主体”，应避免教师满堂灌、占用过多时间讲解，应让学生多自学、多探究。故C不正确，符合题意。"}, {"type": "single", "section": 12, "stem": "与多媒体教室环境相比，网络教室环境的优势在于（ ）。", "options": ["能够提供丰富的学习资源和便于交流的平台", "能够以多种媒体形式呈现学习内容", "具有控制各种设备的集成装置", "能够播放视频和音频信息"], "answer": 0, "analysis": "本题考查网络教室优势。B、C、D三项多媒体教室同样可以提供；网络教室可通过共享文件夹、资源库、教学管理软件提供丰富资源与交流平台，这是多媒体教室不具备的。故A正确。"}, {"type": "single", "section": 12, "stem": "随着“三通两平台”建设的推进，电子白板已普遍用于课堂教学，下列关于电子白板说法正确的是（ ）。", "options": ["电子白板完全代替投影仪和PPT", "白板、软件和PPT可以相互调用", "白板可能较容易生成课件", "白板适用于任何一节课，而PPT不行"], "answer": 1, "analysis": "本题考查电子白板。电子白板不能完全替代投影仪和PPT，也不易生成课件，是否适用需结合课程特点。白板、软件、PPT可相互调用。故B正确。"}, {"type": "single", "section": 12, "stem": "微课有助于实施分层教学，在信息科技教学中经常使用，下列关于微课说法错误的是（ ）。", "options": ["教师不一定要出现在微课中", "微课在课前、课中、课后都可以使用", "学生可自主选择观看微课", "一个微课以20分钟为宜"], "answer": 3, "analysis": "本题考查微课。微课以课堂教学视频为核心，时长以5~10分钟为宜，最长不宜超过20分钟，并非“以20分钟为宜”。故D错误，符合题意。"}, {"type": "single", "section": 5, "stem": "信息科技教学过程本质上是一种（ ）。", "options": ["简单的技能训练过程", "特殊的认识过程", "纯粹的娱乐活动", "机械的记忆过程"], "answer": 1, "analysis": "本题考查教学过程本质。教学过程本质上是一种特殊的认识过程，具有间接性、引导性、简捷性。信息科技教学既是知识技能传授，更是核心素养培育过程。故B正确。"}, {"type": "single", "section": 5, "stem": "信息科技教学区别于许多其他学科最突出的特点是（ ）。", "options": ["理论性强、少动手", "实践性", "以教师讲授为主", "完全不需要设备"], "answer": 1, "analysis": "本题考查信息科技教学特点。信息科技教学最突出的特点是实践性，强调上机操作、自主探究、作品创作与创新。故B正确。"}, {"type": "single", "section": 6, "stem": "以“任务”为主线，学生在完成任务过程中自主建构知识的教学方法是（ ）。", "options": ["讲授法", "演示法", "任务驱动法", "练习法"], "answer": 2, "analysis": "本题考查教学方法。任务驱动法以“任务”为中心组织教学，核心是“以任务为主线、教师为主导、学生为主体”，学生在分析、探究、完成任务中建构知识。故C正确。"}, {"type": "single", "section": 6, "stem": "新课改背景下，信息科技课堂倡导的教学策略是（ ）。", "options": ["教师满堂灌、学生被动听", "教师主导、学生主体", "只重操作技能、忽视素养", "取消所有教学评价"], "answer": 1, "analysis": "本题考查教学策略。新课改倡导“教师主导、学生主体”的混合型策略，既发挥教师引导作用，又突出学生主体地位。故B正确。"}, {"type": "single", "section": 0, "stem": "信息科技课程标准修订坚持的三大原则不包括下列哪项？（ ）", "options": ["目标导向", "问题导向", "创新导向", "学科导向"], "answer": 3, "analysis": "修订三原则为目标导向、问题导向、创新导向。"}, {"type": "single", "section": 0, "stem": "修订原则的“目标导向”主要指（ ）。", "options": ["落实立德树人，聚焦核心素养", "提高学生的体育成绩", "减少课程数量", "取消考试"], "answer": 0, "analysis": "目标导向即落实立德树人，聚焦核心素养。"}, {"type": "single", "section": 0, "stem": "修订原则的“问题导向”针对的突出问题是（ ）。", "options": ["重操作轻素养、学段衔接不畅", "教师工资低", "教室不足", "教材太厚"], "answer": 0, "analysis": "问题导向针对重操作轻素养、学段衔接不畅等问题。"}, {"type": "single", "section": 0, "stem": "修订原则的“创新导向”强调吸纳（ ）等前沿成果。", "options": ["人工智能、物联网", "蒸汽机", "印章技术", "算盘"], "answer": 0, "analysis": "创新导向吸纳人工智能、物联网等前沿成果，体现科与技并重。"}, {"type": "multi", "section": 0, "stem": "信息科技课程标准修订坚持的原则包括（ ）。", "options": ["目标导向", "问题导向", "创新导向", "行政导向"], "answer": [0, 1, 2], "analysis": "修订三原则：目标导向、问题导向、创新导向。"}, {"type": "single", "section": 0, "stem": "信息科技课程标准修订坚持目标导向、问题导向、创新导向三大原则。", "options": ["正确", "错误"], "answer": 0, "analysis": "修订三原则即目标、问题、创新导向。"}, {"type": "single", "section": 0, "stem": "信息科技课程地位的重要变化是（ ）。", "options": ["从“综合实践活动”中独立，成为义务教育独立设置的必修课程", "并入语文课程", "降为选修", "取消"], "answer": 0, "analysis": "信息科技从综合实践活动独立，成为义务教育独立必修课程。"}, {"type": "single", "section": 0, "stem": "2022年版义务教育新课标将信息科技设为独立课程。", "options": ["正确", "错误"], "answer": 0, "analysis": "2022版起信息科技成为独立设置的必修课程。"}, {"type": "single", "section": 0, "stem": "2022年版义务教育信息科技课程开设的年级主要是（ ）。", "options": ["3~8年级单独开设", "仅高中", "仅大学", "全部年级从1年级开始"], "answer": 0, "analysis": "3~8年级单独开设；1~2年级融入其他学科，9年级可延展。"}, {"type": "single", "section": 0, "stem": "关于信息科技课程开设安排，下列说法正确的是（ ）。", "options": ["1~2年级融入其他学科", "3~9年级全部单独开设且完全一致", "9年级禁止开设", "仅在高中开设"], "answer": 0, "analysis": "1~2年级融入其他学科，3~8年级单独开设，9年级可延展。"}, {"type": "single", "section": 0, "stem": "信息科技课程占总课时的比例约为（ ）。", "options": ["1%~3%", "50%以上", "10%~20%", "0%"], "answer": 0, "analysis": "课时占比约占总课时1%~3%。"}, {"type": "multi", "section": 0, "stem": "关于信息科技课程的开设安排，下列说法正确的有（ ）。", "options": ["2022版起为独立课程", "3~8年级单独开设", "课时占比约1%~3%", "1~2年级单独开设且与3~8年级一致"], "answer": [0, 1, 2], "analysis": "2022独立设课、3~8单独开设、占比约1%~3%；1~2年级融入其他学科而非单独开设。"}, {"type": "single", "section": 0, "stem": "信息科技在2001/2017版中属于“综合实践活动”，2022版起成为独立课程。", "options": ["正确", "错误"], "answer": 0, "analysis": "2001/2017属综合实践活动，2022起独立。"}, {"type": "single", "section": 0, "stem": "2001版信息技术（信息科技）归入的教育领域是（ ）。", "options": ["综合实践活动", "语文", "数学", "体育"], "answer": 0, "analysis": "2001版归入“综合实践活动”领域。"}, {"type": "single", "section": 0, "stem": "2017版（高中）信息技术课标的主要贡献是（ ）。", "options": ["确立学科大概念", "取消信息技术课", "改为体育课", "废除考试"], "answer": 0, "analysis": "2017版高中课标确立学科大概念。"}, {"type": "single", "section": 0, "stem": "2022版义务教育信息科技以（ ）重构内容体系。", "options": ["六条逻辑主线", "八条主线", "单一主线", "无固定结构"], "answer": 0, "analysis": "2022版以六条逻辑主线重构内容。"}, {"type": "multi", "section": 0, "stem": "课程结构演变过程中，下列说法正确的有（ ）。", "options": ["2001版归入综合实践活动", "2017版高中确立学科大概念", "2022版独立设课并以六条逻辑主线重构", "2022版重新并入语文"], "answer": [0, 1, 2], "analysis": "2001综合实践、2017高中大概念、2022独立+六主线。"}, {"type": "single", "section": 0, "stem": "2001版信息科技（信息技术）归入“综合实践活动”领域。", "options": ["正确", "错误"], "answer": 0, "analysis": "2001版归入综合实践活动。"}, {"type": "single", "section": 0, "stem": "2022版信息科技六条逻辑主线不包括（ ）。", "options": ["语法主线", "数据主线", "算法主线", "网络主线"], "answer": 0, "analysis": "六条主线：数据、算法、网络、信息处理、信息安全、人工智能。"}, {"type": "single", "section": 0, "stem": "下列关于信息科技课程地位的描述，最准确的是（ ）。", "options": ["成为义务教育独立设置的必修课程", "一直是独立必修课", "从未开设", "仅作为兴趣课"], "answer": 0, "analysis": "2022版起成为独立设置的必修课程。"}, {"type": "multi", "section": 0, "stem": "2022版义务教育信息科技课程结构演变的关键节点包括（ ）。", "options": ["2001版：归入综合实践活动", "2017版（高中）：确立学科大概念", "2022版（义务）：独立设课", "2022版：以六条逻辑主线重构内容"], "answer": [0, 1, 2, 3], "analysis": "三个版本演变节点如述。"}, {"type": "single", "section": 0, "stem": "创新导向要求信息科技课程体现“科”与“技”并重。", "options": ["正确", "错误"], "answer": 0, "analysis": "创新导向吸纳前沿成果，科与技并重。"}, {"type": "single", "section": 0, "stem": "信息科技课程成为独立必修课程是在（ ）。", "options": ["2022年版义务教育新课标", "2001年版", "2017年版高中课标", "1990年版"], "answer": 0, "analysis": "2022年版义务教育新课标起独立设课。"}, {"type": "multi", "section": 0, "stem": "关于信息科技课程地位与开设，下列说法正确的有（ ）。", "options": ["2022版起为独立必修课程", "3~8年级单独开设", "1~2年级融入其他学科", "9年级可延展开设"], "answer": [0, 1, 2, 3], "analysis": "独立设课、3~8单独开、1~2融入、9可延展。"}, {"type": "single", "section": 0, "stem": "信息科技课程课时约占总课时的1%~3%。", "options": ["正确", "错误"], "answer": 0, "analysis": "课时占比约1%~3%。"}, {"type": "single", "section": 0, "stem": "修订原则中强调“吸纳人工智能、物联网等前沿成果”的是（ ）。", "options": ["创新导向", "目标导向", "问题导向", "行政导向"], "answer": 0, "analysis": "创新导向吸纳AI、物联网等前沿。"}, {"type": "single", "section": 0, "stem": "“重操作轻素养”这一突出问题，是修订中（ ）原则针对的对象。", "options": ["问题导向", "目标导向", "创新导向", "行政导向"], "answer": 0, "analysis": "问题导向针对重操作轻素养等问题。"}, {"type": "multi", "section": 0, "stem": "下列可作为信息科技课程“创新导向”体现的有（ ）。", "options": ["吸纳人工智能成果", "吸纳物联网成果", "科与技并重", "取消实践操作"], "answer": [0, 1, 2], "analysis": "创新导向吸纳AI、物联网等前沿，科与技并重。"}, {"type": "single", "section": 0, "stem": "信息科技课程属于综合实践活动领域自2022版起不再成立。", "options": ["正确", "错误"], "answer": 0, "analysis": "2022版起独立设课，不再属综合实践活动。"}, {"type": "single", "section": 0, "stem": "信息科技课程在义务教育阶段的定位是（ ）。", "options": ["独立设置的必修课程", "选修兴趣课", "语文的组成部分", "仅高中才有"], "answer": 0, "analysis": "为义务教育独立设置的必修课程。"}, {"type": "multi", "section": 0, "stem": "信息科技课程标准修订的三原则体现了（ ）。", "options": ["落实立德树人（目标导向）", "解决重操作轻素养问题（问题导向）", "吸纳前沿成果（创新导向）", "完全照搬国外课程"], "answer": [0, 1, 2], "analysis": "三原则分别对应目标、问题、创新导向。"}, {"type": "single", "section": 1, "stem": "义务教育阶段信息科技课程的五大性质不包括（ ）。", "options": ["营利性", "基础性", "工具性", "综合性"], "answer": 0, "analysis": "五大性质：基础性、工具性、综合性、实践性、层次性。"}, {"type": "single", "section": 1, "stem": "信息科技课程的“基础性”是指（ ）。", "options": ["面向全体学生的基本素养", "只面向尖子生", "仅大学内容", "可有可无"], "answer": 0, "analysis": "基础性指面向全体学生的基本素养。"}, {"type": "single", "section": 1, "stem": "信息科技课程作为学习与认知工具，体现的是其（ ）。", "options": ["工具性", "基础性", "层次性", "营利性"], "answer": 0, "analysis": "工具性即作为学习与认知的工具。"}, {"type": "single", "section": 1, "stem": "信息科技课程融合多学科知识与技能，体现的是（ ）。", "options": ["综合性", "工具性", "营利性", "单一性"], "answer": 0, "analysis": "综合性指融合多学科知识与技能。"}, {"type": "single", "section": 1, "stem": "以操作、探究、创新为特征，描述的是信息科技课程的（ ）。", "options": ["实践性", "基础性", "层次性", "封闭性"], "answer": 0, "analysis": "实践性以操作、探究、创新为特征。"}, {"type": "single", "section": 1, "stem": "小学到初中螺旋上升、分层次要求，体现的是信息科技课程的（ ）。", "options": ["层次性", "基础性", "工具性", "随意性"], "answer": 0, "analysis": "层次性指螺旋上升、分层次要求。"}, {"type": "multi", "section": 1, "stem": "义务教育阶段信息科技课程的五大性质包括（ ）。", "options": ["基础性", "工具性", "综合性", "实践性"], "answer": [0, 1, 2, 3], "analysis": "五大性质：基础性、工具性、综合性、实践性、层次性。"}, {"type": "single", "section": 1, "stem": "义务教育阶段信息科技课程具有基础性、工具性、综合性、实践性、层次性五大性质。", "options": ["正确", "错误"], "answer": 0, "analysis": "五大性质如上。"}, {"type": "single", "section": 1, "stem": "高中信息科技课程的性质定位是（ ）。", "options": ["全面提升学生信息素养的基础课程", "纯技术培训", "体育课程", "仅面向研究生"], "answer": 0, "analysis": "高中信息科技是全面提升学生信息素养的基础课程。"}, {"type": "single", "section": 1, "stem": "高中信息科技关注（ ）并为个性发展提供选择性。", "options": ["系统性与迁移性，以选择性必修/选修满足", "单一记忆", "取消选修", "仅讲授"], "answer": 0, "analysis": "高中关注系统性、实践性、迁移性，以选择性必修/选修满足个性发展。"}, {"type": "single", "section": 1, "stem": "高中信息科技为全体学生构建信息素养共同基础，并以选择性必修/选修满足个性发展。", "options": ["正确", "错误"], "answer": 0, "analysis": "高中构建共同基础并提供选择性。"}, {"type": "single", "section": 1, "stem": "下列不是信息科技课程特点的是（ ）。", "options": ["封闭性", "发展性", "基础性", "实践性"], "answer": 0, "analysis": "特点：发展性、基础性、实践性、应用性、整合性、趣味性。"}, {"type": "single", "section": 1, "stem": "信息科技课程“整合性”强调（ ）。", "options": ["技术学习与应用整合、与其他学科整合", "与技术无关", "孤立学习", "拒绝合作"], "answer": 0, "analysis": "整合性强调技术学习与应用整合、与其他学科整合。"}, {"type": "single", "section": 1, "stem": "信息科技课程“应用性”强调（ ）。", "options": ["在真实情境中解决问题", "只做题不实践", "脱离情境", "仅背诵概念"], "answer": 0, "analysis": "应用性强调在真实情境中解决问题。"}, {"type": "multi", "section": 1, "stem": "信息科技课程的特点包括（ ）。", "options": ["发展性", "应用性", "整合性", "趣味性"], "answer": [0, 1, 2, 3], "analysis": "特点：发展性、基础性、实践性、应用性、整合性、趣味性。"}, {"type": "single", "section": 1, "stem": "信息科技课程特点包括发展性、基础性、实践性、应用性、整合性、趣味性。", "options": ["正确", "错误"], "answer": 0, "analysis": "六大特点如上。"}, {"type": "single", "section": 1, "stem": "信息科技课程四大核心素养不包括（ ）。", "options": ["体育素养", "信息意识", "计算思维", "信息社会责任"], "answer": 0, "analysis": "四大核心素养：信息意识、计算思维、数字化学习与创新、信息社会责任。"}, {"type": "single", "section": 1, "stem": "对信息的敏感度与价值判断，主动获取、甄别信息，属于（ ）。", "options": ["信息意识", "计算思维", "数字化学习与创新", "信息社会责任"], "answer": 0, "analysis": "信息意识是对信息的敏感度与价值判断。"}, {"type": "single", "section": 1, "stem": "运用计算机科学思想方法界定、分析、解决问题，属于（ ）。", "options": ["计算思维", "信息意识", "信息社会责任", "数字化合作"], "answer": 0, "analysis": "计算思维是运用计算机科学思想方法解决问题。"}, {"type": "single", "section": 1, "stem": "在数字化环境中自主学习、协作、创作，属于（ ）。", "options": ["数字化学习与创新", "信息意识", "计算思维", "信息社会责任"], "answer": 0, "analysis": "数字化学习与创新是在数字化环境中学习、协作、创作。"}, {"type": "single", "section": 1, "stem": "遵守伦理法规、维护信息安全、负责任地使用技术，属于（ ）。", "options": ["信息社会责任", "信息意识", "计算思维", "数字化学习与创新"], "answer": 0, "analysis": "信息社会责任是遵守伦理法规、负责任使用技术。"}, {"type": "multi", "section": 1, "stem": "信息科技课程四大核心素养包括（ ）。", "options": ["信息意识", "计算思维", "数字化学习与创新", "信息社会责任"], "answer": [0, 1, 2, 3], "analysis": "四大核心素养如上。"}, {"type": "single", "section": 1, "stem": "信息科技四大核心素养是信息意识、计算思维、数字化学习与创新、信息社会责任。", "options": ["正确", "错误"], "answer": 0, "analysis": "四大核心素养如上。"}, {"type": "single", "section": 1, "stem": "下列活动中，最能培养“计算思维”的是（ ）。", "options": ["用流程图分解问题步骤并设计算法", "单纯抄写概念", "只听音乐", "跑步"], "answer": 0, "analysis": "计算思维强调用计算机科学方法界定、分析、解决问题。"}, {"type": "single", "section": 1, "stem": "“在数字化环境中创作多媒体作品并协作分享”主要培养（ ）。", "options": ["数字化学习与创新", "信息意识", "计算思维", "信息社会责任"], "answer": 0, "analysis": "数字化学习与创新强调数字化环境下的创作与协作。"}, {"type": "multi", "section": 1, "stem": "关于信息意识，下列说法正确的有（ ）。", "options": ["表现为对信息的敏感度", "包含对信息的价值判断", "要主动获取信息", "与甄别信息能力无关"], "answer": [0, 1, 2], "analysis": "信息意识包含敏感度、价值判断、主动获取与甄别。"}, {"type": "single", "section": 1, "stem": "信息社会责任要求遵守伦理法规、维护信息安全、负责任地使用技术。", "options": ["正确", "错误"], "answer": 0, "analysis": "信息社会责任如上。"}, {"type": "single", "section": 1, "stem": "义务教育阶段信息科技五大性质中，“层次性”强调（ ）。", "options": ["小学到初中螺旋上升、分层次要求", "所有年级完全一致", "无层次区别", "只面向高中"], "answer": 0, "analysis": "层次性即螺旋上升、分层次要求。"}, {"type": "multi", "section": 1, "stem": "高中与义务教育信息科技课程性质的共同点包括（ ）。", "options": ["都关注基础性", "都关注实践性", "都旨在提升信息素养", "高中不关注素养"], "answer": [0, 1, 2], "analysis": "二者均关注基础性、实践性、提升信息素养。"}, {"type": "single", "section": 1, "stem": "“引导学生遵守网络礼仪、保护个人隐私”主要落实（ ）。", "options": ["信息社会责任", "信息意识", "计算思维", "数字化学习与创新"], "answer": 0, "analysis": "信息社会责任包含遵守伦理法规、维护信息安全。"}, {"type": "single", "section": 1, "stem": "计算思维强调运用计算机科学思想方法界定、分析、解决问题。", "options": ["正确", "错误"], "answer": 0, "analysis": "计算思维定义如上。"}, {"type": "single", "section": 1, "stem": "信息科技课程“层次性”要求在内容安排上（ ）。", "options": ["螺旋上升、分层次要求", "跳跃无序", "只讲一遍", "完全重复"], "answer": 0, "analysis": "层次性要求螺旋上升、分层次。"}, {"type": "multi", "section": 1, "stem": "下列体现了信息科技课程“整合性”的有（ ）。", "options": ["技术学习与技术应用的整合", "与其他学科的整合", "孤立封闭教学", "拒绝跨学科"], "answer": [0, 1, 2], "analysis": "整合性强调技术内外及跨学科整合。"}, {"type": "single", "section": 2, "stem": "义务教育信息科技课程理念不包括（ ）。", "options": ["选拔导向", "素养导向", "科技并重", "真实性学习"], "answer": 0, "analysis": "五条理念：素养导向、科技并重、真实性学习、跨学科主题、多元评价。"}, {"type": "single", "section": 2, "stem": "课程理念中“素养导向”是指（ ）。", "options": ["围绕核心素养确立课程目标", "围绕考试分数", "围绕升学率", "围绕竞赛"], "answer": 0, "analysis": "素养导向即围绕核心素养确立目标。"}, {"type": "single", "section": 2, "stem": "课程理念中“科技并重”指（ ）。", "options": ["遴选科学原理与实践应用并重的课程内容", "只讲理论", "只讲操作", "取消实践"], "answer": 0, "analysis": "科技并重指科学原理与实践应用并重。"}, {"type": "single", "section": 2, "stem": "倡导“做中学、用中学、创中学”体现的是（ ）。", "options": ["真实性学习", "素养导向", "行政导向", "选拔导向"], "answer": 0, "analysis": "真实性学习以真实问题/项目驱动，倡导做中学、用中学、创中学。"}, {"type": "single", "section": 2, "stem": "强化课程协同育人、设置跨学科主题学习，体现的是（ ）。", "options": ["跨学科主题", "素养导向", "科技并重", "真实性学习"], "answer": 0, "analysis": "跨学科主题学习强化协同育人。"}, {"type": "single", "section": 2, "stem": "强化素养导向的多元评价（过程+终结、自评+他评）属于（ ）。", "options": ["多元评价", "素养导向", "科技并重", "真实性学习"], "answer": 0, "analysis": "多元评价强调过程+终结、自评+他评。"}, {"type": "multi", "section": 2, "stem": "义务教育信息科技课程理念包括（ ）。", "options": ["素养导向", "科技并重", "真实性学习", "多元评价"], "answer": [0, 1, 2, 3], "analysis": "五条理念含素养导向、科技并重、真实性学习、跨学科主题、多元评价。"}, {"type": "single", "section": 2, "stem": "义务教育信息科技课程理念包括素养导向、科技并重、真实性学习、跨学科主题、多元评价五条。", "options": ["正确", "错误"], "answer": 0, "analysis": "五条理念如上。"}, {"type": "single", "section": 2, "stem": "课程总目标中“树立正确价值观，形成信息意识”属于（ ）。", "options": ["第一方面", "第二方面", "第三方面", "第四方面"], "answer": 0, "analysis": "总目标四方面之首：树立正确价值观、形成信息意识。"}, {"type": "single", "section": 2, "stem": "总目标中“初步具备解决问题的能力，发展计算思维”属于（ ）。", "options": ["第二方面", "第一方面", "第三方面", "第四方面"], "answer": 0, "analysis": "第二方面：发展计算思维、解决问题能力。"}, {"type": "single", "section": 2, "stem": "总目标中“提高数字化合作与探究能力，发扬创新精神”属于（ ）。", "options": ["第三方面", "第一方面", "第二方面", "第四方面"], "answer": 0, "analysis": "第三方面：数字化合作探究与创新能力。"}, {"type": "single", "section": 2, "stem": "总目标中“遵守信息社会法律法规，践行信息社会责任”属于（ ）。", "options": ["第四方面", "第一方面", "第二方面", "第三方面"], "answer": 0, "analysis": "第四方面：遵守法规、践行信息社会责任。"}, {"type": "multi", "section": 2, "stem": "义务教育信息科技课程总目标的四个方面包括（ ）。", "options": ["树立正确价值观，形成信息意识", "发展计算思维", "提高数字化合作探究与创新能力", "践行信息社会责任"], "answer": [0, 1, 2, 3], "analysis": "总目标四方面如上。"}, {"type": "single", "section": 2, "stem": "义务教育信息科技总目标包括树立价值观形成信息意识、发展计算思维、提高数字化合作探究创新、践行信息社会责任四个方面。", "options": ["正确", "错误"], "answer": 0, "analysis": "四方面如上。"}, {"type": "single", "section": 2, "stem": "“六三”学制下义务教育信息科技的学段划分是（ ）。", "options": ["2·2·2·3（1-2/3-4/5-6/7-9年级）", "3·3·3", "1·1·1·1", "6·3"], "answer": 0, "analysis": "六三学制按2·2·2·3划分（1-2/3-4/5-6/7-9）。"}, {"type": "single", "section": 2, "stem": "“五四”学制下义务教育信息科技的学段划分是（ ）。", "options": ["2·3·2·2（1-2/3-5/6-7/8-9年级）", "2·2·2·3", "5·4", "4·5"], "answer": 0, "analysis": "五四学制按2·3·2·2划分（1-2/3-5/6-7/8-9）。"}, {"type": "multi", "section": 2, "stem": "关于学段划分，下列说法正确的有（ ）。", "options": ["六三学制按2·2·2·3划分", "五四学制按2·3·2·2划分", "学段依据学生认知特征划分", "学制不影响划分"], "answer": [0, 1, 2], "analysis": "六三2·2·2·3、五四2·3·2·2，依认知特征划分。"}, {"type": "single", "section": 2, "stem": "“六三”学制将义务教育信息科技划分为2·2·2·3四个学段。", "options": ["正确", "错误"], "answer": 0, "analysis": "六三2·2·2·3。"}, {"type": "single", "section": 2, "stem": "六条逻辑主线不包括（ ）。", "options": ["实验主线", "数据主线", "算法主线", "网络主线"], "answer": 0, "analysis": "六条：数据、算法、网络、信息处理、信息安全、人工智能。"}, {"type": "single", "section": 2, "stem": "下列（ ）属于信息科技六条逻辑主线。", "options": ["人工智能", "语法", "书法", "体操"], "answer": 0, "analysis": "六条含人工智能主线。"}, {"type": "single", "section": 2, "stem": "“数据：来源可靠性→组织与呈现→对社会的意义”描述的是哪条逻辑主线？（ ）", "options": ["数据", "算法", "网络", "信息安全"], "answer": 0, "analysis": "数据主线按来源可靠性→组织呈现→社会意义组织。"}, {"type": "single", "section": 2, "stem": "“算法：问题步骤分解→描述/执行/效率→解决策略”描述的是（ ）。", "options": ["算法主线", "数据主线", "网络主线", "信息安全主线"], "answer": 0, "analysis": "算法主线按步骤分解→执行效率→策略组织。"}, {"type": "multi", "section": 2, "stem": "信息科技六条逻辑主线包括（ ）。", "options": ["数据", "算法", "网络", "人工智能"], "answer": [0, 1, 2, 3], "analysis": "六条：数据、算法、网络、信息处理、信息安全、人工智能。"}, {"type": "single", "section": 2, "stem": "义务教育信息科技以数据、算法、网络、信息处理、信息安全、人工智能六条逻辑主线组织内容。", "options": ["正确", "错误"], "answer": 0, "analysis": "六条主线如上。"}, {"type": "single", "section": 2, "stem": "“网络：搜索与协作→成果分享→万物互联”属于（ ）。", "options": ["网络主线", "数据主线", "算法主线", "信息处理主线"], "answer": 0, "analysis": "网络主线按搜索协作→分享→万物互联组织。"}, {"type": "single", "section": 2, "stem": "“信息安全：文明礼仪规范→规避风险→防范措施”属于（ ）。", "options": ["信息安全主线", "数据主线", "网络主线", "人工智能主线"], "answer": 0, "analysis": "信息安全主线按规范→规避→防范组织。"}, {"type": "multi", "section": 2, "stem": "关于六条逻辑主线，下列说法正确的有（ ）。", "options": ["按学生认知特征循序渐进组织", "包含数据与算法", "包含信息安全与人工智能", "是随意罗列无逻辑"], "answer": [0, 1, 2], "analysis": "六主线依认知特征循序渐进，涵盖数据、算法、网络、信息处理、信息安全、人工智能。"}, {"type": "single", "section": 2, "stem": "课程理念“科技并重”要求科学原理与实践应用并重。", "options": ["正确", "错误"], "answer": 0, "analysis": "科技并重即科学原理与实践应用并重。"}, {"type": "single", "section": 2, "stem": "“跨学科主题学习”在课程理念中主要是为了（ ）。", "options": ["强化课程协同育人", "减少学科联系", "取消主题", "增加负担"], "answer": 0, "analysis": "跨学科主题强化协同育人。"}, {"type": "multi", "section": 2, "stem": "下列可作为“真实性学习”体现的有（ ）。", "options": ["真实问题驱动", "项目驱动", "做中学、用中学、创中学", "仅纸笔刷题"], "answer": [0, 1, 2], "analysis": "真实性学习以真实/项目驱动，做中学用中学创中学。"}, {"type": "single", "section": 2, "stem": "“六三”学制信息科技学段为2·2·2·3，“五四”学制为2·3·2·2。", "options": ["正确", "错误"], "answer": 0, "analysis": "两种学制划分不同。"}, {"type": "single", "section": 3, "stem": "高中信息科技课程理念不包括（ ）。", "options": ["营利导向", "坚持立德树人", "设计多元需求课程结构", "构建核心素养评价体系"], "answer": 0, "analysis": "五条理念：立德树人、多元需求结构、时代性基础性内容、以学习为中心、核心素养评价。"}, {"type": "single", "section": 3, "stem": "高中信息科技课程理念中“坚持立德树人”旨在培养（ ）。", "options": ["具备信息素养的中国公民", "只重技术的人", "不守法的人", "运动员"], "answer": 0, "analysis": "立德树人培养具备信息素养的中国公民。"}, {"type": "single", "section": 3, "stem": "“设计满足学生多元需求的课程结构，促进个性化发展”属于（ ）。", "options": ["课程结构理念", "评价理念", "内容理念", "教学理念"], "answer": 0, "analysis": "该条为设计多元需求课程结构。"}, {"type": "single", "section": 3, "stem": "“选择体现时代性和基础性的课程内容”属于高中课程理念中的（ ）。", "options": ["内容理念", "结构理念", "评价理念", "管理理念"], "answer": 0, "analysis": "选时代性基础性内容即内容理念。"}, {"type": "single", "section": 3, "stem": "“培养以学习为中心的教与学关系，在问题解决中提升素养”属于（ ）。", "options": ["教学理念", "结构理念", "内容理念", "评价理念"], "answer": 0, "analysis": "以学习为中心的教与学关系即教学理念。"}, {"type": "single", "section": 3, "stem": "“构建基于学科核心素养的评价体系”属于（ ）。", "options": ["评价理念", "结构理念", "内容理念", "教学理念"], "answer": 0, "analysis": "基于核心素养的评价即评价理念。"}, {"type": "multi", "section": 3, "stem": "高中信息科技课程理念包括（ ）。", "options": ["坚持立德树人", "设计多元需求课程结构", "选择时代性基础性内容", "构建核心素养评价体系"], "answer": [0, 1, 2, 3], "analysis": "五条理念如上（含以学习为中心）。"}, {"type": "single", "section": 3, "stem": "高中信息科技课程理念包括坚持立德树人、多元需求结构、时代性基础性内容、以学习为中心、核心素养评价五条。", "options": ["正确", "错误"], "answer": 0, "analysis": "五条理念如上。"}, {"type": "single", "section": 3, "stem": "高中信息科技必修模块不包括（ ）。", "options": ["移动应用设计", "数据与计算", "信息系统与社会", "以上后两项是必修"], "answer": 0, "analysis": "必修为数据与计算、信息系统与社会；移动应用设计属选修。"}, {"type": "single", "section": 3, "stem": "高中信息科技必修模块的总学分与课时为（ ）。", "options": ["3学分 / 54课时", "6学分 / 108课时", "2学分 / 36课时", "0学分"], "answer": 0, "analysis": "必修两模块共3学分/54课时。"}, {"type": "multi", "section": 3, "stem": "高中信息科技必修模块包括（ ）。", "options": ["数据与计算", "信息系统与社会", "移动应用设计", "算法初步"], "answer": [0, 1], "analysis": "必修：数据与计算、信息系统与社会；移动应用设计属选修，算法初步属选修。"}, {"type": "single", "section": 3, "stem": "高中信息科技必修模块为“数据与计算”和“信息系统与社会”，共3学分。", "options": ["正确", "错误"], "answer": 0, "analysis": "必修两模块共3学分。"}, {"type": "single", "section": 3, "stem": "高中信息科技选择性必修模块的数量是（ ）。", "options": ["6个", "3个", "1个", "0个"], "answer": 0, "analysis": "选择性必修6模块。"}, {"type": "single", "section": 3, "stem": "选择性必修中作为等级性考试依据的是（ ）。", "options": ["前3个模块", "后3个模块", "全部6个", "无依据"], "answer": 0, "analysis": "前3个模块为等级性考试依据。"}, {"type": "single", "section": 3, "stem": "下列选择性必修模块中，属于等级性考试依据的是（ ）。", "options": ["数据与数据结构", "网络基础", "数据管理与分析", "三维设计与创意"], "answer": 0, "analysis": "前3（数据与数据结构、网络基础、数据管理与分析）为等级性考试依据。"}, {"type": "multi", "section": 3, "stem": "高中信息科技选择性必修模块包括（ ）。", "options": ["数据与数据结构", "网络基础", "人工智能初步", "移动应用设计"], "answer": [0, 1, 2], "analysis": "选择性必修6模块含这些；移动应用设计属选修非选择性必修，但属选修模块。"}, {"type": "single", "section": 3, "stem": "高中信息科技选择性必修包含6个模块，每模块2学分/36课时，前3个为等级性考试依据。", "options": ["正确", "错误"], "answer": 0, "analysis": "选择性必修6模块、前3等级考。"}, {"type": "single", "section": 3, "stem": "高中信息科技选修模块包括（ ）。", "options": ["算法初步、移动应用设计", "数据与计算", "信息系统与社会", "网络基础"], "answer": 0, "analysis": "选修为算法初步、移动应用设计。"}, {"type": "single", "section": 3, "stem": "高中信息科技选修模块为算法初步与移动应用设计，由学生自主选修。", "options": ["正确", "错误"], "answer": 0, "analysis": "选修两模块自主选修。"}, {"type": "single", "section": 3, "stem": "教学实施中倡导（ ）的学习方式。", "options": ["项目学习", "纯背诵", "满堂灌", "无目的游戏"], "answer": 0, "analysis": "教学实施倡导项目学习。"}, {"type": "single", "section": 3, "stem": "“学主教从、以学定教”是高中信息科技（ ）的要求。", "options": ["教学实施", "考试命题", "教材编写", "行政管理"], "answer": 0, "analysis": "教学实施落实学主教从、以学定教。"}, {"type": "multi", "section": 3, "stem": "关于高中信息科技实施与评价建议，下列说法正确的有（ ）。", "options": ["倡导项目学习", "落实学主教从、以学定教", "评价主体多元化", "总结性评价仅用纸笔测试"], "answer": [0, 1, 2], "analysis": "实施倡导项目学习、以学定教；评价主体多元，总结性采用纸笔+上机结合。"}, {"type": "single", "section": 3, "stem": "高中信息科技总结性评价采用纸笔测试 + 上机测试相结合。", "options": ["正确", "错误"], "answer": 0, "analysis": "总结性纸笔+上机结合。"}, {"type": "single", "section": 3, "stem": "评价建议中“弱化选拔甄别功能，强化改进激励”强调的是（ ）。", "options": ["评价目的转向改进", "加强选拔", "取消评价", "只排名次"], "answer": 0, "analysis": "弱化选拔、强化改进激励。"}, {"type": "single", "section": 3, "stem": "评价主体多元化包括（ ）。", "options": ["教师、学生、同伴、家长", "仅教师", "仅考试机器", "仅校长"], "answer": 0, "analysis": "主体多元含师/生/同伴/家长。"}, {"type": "single", "section": 3, "stem": "过程性评价中常用的工具是（ ）。", "options": ["评价量规", "仅分数", "仅排名", "仅考勤"], "answer": 0, "analysis": "过程性评价使用评价量规。"}, {"type": "multi", "section": 3, "stem": "关于高中信息科技评价建议，下列说法正确的有（ ）。", "options": ["评价主体多元化", "重视过程性评价", "使用评价量规", "总结性采用纸笔+上机结合"], "answer": [0, 1, 2, 3], "analysis": "评价建议如上。"}, {"type": "single", "section": 3, "stem": "高中信息科技评价倡导主体多元化并使用评价量规，重视过程性评价。", "options": ["正确", "错误"], "answer": 0, "analysis": "评价建议如上。"}, {"type": "single", "section": 3, "stem": "选择性必修每模块的学分与课时一般为（ ）。", "options": ["2学分 / 36课时", "3学分 / 54课时", "1学分 / 18课时", "6学分 / 108课时"], "answer": 0, "analysis": "选择性必修每模块2学分/36课时。"}, {"type": "multi", "section": 3, "stem": "高中信息科技课程结构中，下列说法正确的有（ ）。", "options": ["必修3学分/54课时", "选择性必修6模块各2学分/36课时", "选修自主选修", "所有模块均为必修"], "answer": [0, 1, 2], "analysis": "必修3学分、选择性必修6×2学分、选修自主。"}, {"type": "single", "section": 3, "stem": "高中信息科技必修3学分，选择性必修每模块2学分，选修自主选修。", "options": ["正确", "错误"], "answer": 0, "analysis": "学分结构如上。"}, {"type": "single", "section": 4, "stem": "课程实施是将（ ）转化为教学实践的过程。", "options": ["课程标准", "教材封面", "学生档案", "校历"], "answer": 0, "analysis": "课程实施是将课程标准转化为教学实践的过程。"}, {"type": "single", "section": 4, "stem": "课程实施中教学建议的核心导向是（ ）。", "options": ["核心素养导向", "应试导向", "随意教学", "取消目标"], "answer": 0, "analysis": "教学建议以核心素养为导向。"}, {"type": "single", "section": 4, "stem": "课程实施中创设（ ）是教学建议的重要方式。", "options": ["真实情境", "虚构无用情境", "混乱环境", "无情境"], "answer": 0, "analysis": "教学建议强调创设真实情境。"}, {"type": "single", "section": 4, "stem": "课程实施倡导采用（ ）教学方式。", "options": ["项目式、任务驱动式", "满堂灌", "纯背诵", "无组织"], "answer": 0, "analysis": "倡导项目式、任务驱动式教学。"}, {"type": "multi", "section": 4, "stem": "课程实施的教学建议包括（ ）。", "options": ["以核心素养为导向", "创设真实情境", "采用项目式教学", "采用任务驱动式教学"], "answer": [0, 1, 2, 3], "analysis": "教学建议如上。"}, {"type": "single", "section": 4, "stem": "课程实施的教学建议强调以核心素养为导向，创设真实情境，采用项目式、任务驱动式教学。", "options": ["正确", "错误"], "answer": 0, "analysis": "教学建议如上。"}, {"type": "single", "section": 4, "stem": "课程实施中“资源建设”要求（ ）。", "options": ["开发数字化教学资源，建设本地特色内容", "只买现成光盘", "禁用资源", "不建设"], "answer": 0, "analysis": "资源建设开发数字化资源、本地特色内容。"}, {"type": "multi", "section": 4, "stem": "课程实施中资源建设包括（ ）。", "options": ["开发数字化教学资源", "建设本地特色课程内容", "完全照搬外地教材", "拒绝使用技术"], "answer": [0, 1], "analysis": "资源建设开发数字化资源与本地特色内容。"}, {"type": "single", "section": 4, "stem": "课程实施要求开发数字化教学资源并建设本地特色课程内容。", "options": ["正确", "错误"], "answer": 0, "analysis": "资源建设如上。"}, {"type": "single", "section": 4, "stem": "课程实施对师资的要求是（ ）。", "options": ["提升教师信息素养与跨学科教学能力", "降低教师能力", "不需培训", "仅会讲课"], "answer": 0, "analysis": "师资要求提升信息素养与跨学科能力。"}, {"type": "multi", "section": 4, "stem": "课程实施的师资要求包括（ ）。", "options": ["提升教师信息素养", "提升跨学科教学能力", "不需任何能力", "降低专业要求"], "answer": [0, 1], "analysis": "师资提升信息素养与跨学科能力。"}, {"type": "single", "section": 4, "stem": "课程实施要求提升教师的信息素养与跨学科教学能力。", "options": ["正确", "错误"], "answer": 0, "analysis": "师资要求如上。"}, {"type": "single", "section": 4, "stem": "课程实施中“评价落地”指（ ）。", "options": ["将素养导向的多元评价融入日常教学", "只期末考一次", "取消评价", "仅排名"], "answer": 0, "analysis": "评价落地指将素养导向多元评价融入日常。"}, {"type": "multi", "section": 4, "stem": "课程实施的主要要点包括（ ）。", "options": ["教学建议以素养为导向", "资源建设数字化", "师资提升", "评价落地融入日常"], "answer": [0, 1, 2, 3], "analysis": "实施四要点如上。"}, {"type": "single", "section": 4, "stem": "课程实施要求将素养导向的多元评价融入日常教学。", "options": ["正确", "错误"], "answer": 0, "analysis": "评价落地如上。"}, {"type": "single", "section": 5, "stem": "教学是（ ）共同组成的双边活动。", "options": ["教师教与学生学", "仅教师讲", "仅学生自学", "机器自动"], "answer": 0, "analysis": "教学是教师教与学生学共同组成的双边活动，以培养人为目的。"}, {"type": "single", "section": 5, "stem": "教学过程的本质被看作一种特殊的（ ）。", "options": ["认识过程", "娱乐过程", "休息过程", "运动过程"], "answer": 0, "analysis": "教学过程本质是一种特殊的认识过程。"}, {"type": "single", "section": 5, "stem": "教学过程作为特殊认识过程，其特点不包括（ ）。", "options": ["随意性", "间接性", "引导性", "简捷性"], "answer": 0, "analysis": "特点：间接性、引导性、简捷性。"}, {"type": "single", "section": 5, "stem": "“学生以掌握间接经验为主、避免重复人类历史探索”体现教学过程的（ ）。", "options": ["简捷性", "引导性", "娱乐性", "随意性"], "answer": 0, "analysis": "简捷性指以简捷方式掌握间接经验。"}, {"type": "single", "section": 5, "stem": "信息科技教学的特点不包括（ ）。", "options": ["封闭性", "实践性", "自主性", "开放性"], "answer": 0, "analysis": "特点：实践性、自主性、开放性、创新性、整合性。"}, {"type": "single", "section": 5, "stem": "信息科技教学强调上机操作与动手实践，体现其（ ）。", "options": ["实践性", "封闭性", "理论性", "静止性"], "answer": 0, "analysis": "实践性强调上机操作与动手实践。"}, {"type": "single", "section": 5, "stem": "学生自主探究、自主学习，体现信息科技教学的（ ）。", "options": ["自主性", "封闭性", "被动性", "依赖性"], "answer": 0, "analysis": "自主性指学生自主探究、自主学习。"}, {"type": "single", "section": 5, "stem": "问题情境、资源、成果多元开放，体现信息科技教学的（ ）。", "options": ["开放性", "封闭性", "单一性", "固定性"], "answer": 0, "analysis": "开放性指情境、资源、成果多元开放。"}, {"type": "single", "section": 5, "stem": "鼓励作品创作与技术创新，体现信息科技教学的（ ）。", "options": ["创新性", "保守性", "重复性", "封闭性"], "answer": 0, "analysis": "创新性鼓励作品创作与技术创新。"}, {"type": "single", "section": 5, "stem": "信息科技教学与其他学科、生活实际整合，体现（ ）。", "options": ["整合性", "孤立性", "封闭性", "单一性"], "answer": 0, "analysis": "整合性指与其他学科、生活实际整合。"}, {"type": "multi", "section": 5, "stem": "信息科技教学的特点包括（ ）。", "options": ["实践性", "自主性", "开放性", "创新性"], "answer": [0, 1, 2, 3], "analysis": "特点：实践性、自主性、开放性、创新性、整合性。"}, {"type": "single", "section": 5, "stem": "信息科技教学具有实践性、自主性、开放性、创新性、整合性等特点。", "options": ["正确", "错误"], "answer": 0, "analysis": "特点如上。"}, {"type": "single", "section": 5, "stem": "“科学性与思想性统一”是指教学应（ ）。", "options": ["既传授科学知识，又进行思想品德教育", "只讲知识不管思想", "只讲思想不讲知识", "二者无关"], "answer": 0, "analysis": "科学性与思想性统一：知识传授与思想教育结合。"}, {"type": "single", "section": 5, "stem": "“理论联系实际”原则要求（ ）。", "options": ["把知识学习与实际应用结合", "只学理论不实践", "只实践不学理论", "理论与实际分离"], "answer": 0, "analysis": "理论联系实际：知识学习与实际应用结合。"}, {"type": "single", "section": 5, "stem": "利用多媒体、演示等手段使抽象内容直观，体现（ ）原则。", "options": ["直观性", "抽象性", "理论性", "封闭性"], "answer": 0, "analysis": "直观性原则借助多媒体、演示化抽象为直观。"}, {"type": "single", "section": 5, "stem": "“不愤不启，不悱不发”体现的教学原则是（ ）。", "options": ["启发性", "灌输性", "封闭性", "随意性"], "answer": 0, "analysis": "启发性原则强调引导学生主动思考。"}, {"type": "single", "section": 5, "stem": "按照学科逻辑和学生认知顺序逐步推进，体现（ ）原则。", "options": ["循序渐进", "跳跃式", "随意性", "颠倒式"], "answer": 0, "analysis": "循序渐进原则按逻辑与认知顺序推进。"}, {"type": "single", "section": 5, "stem": "针对学生个体差异进行教学，体现（ ）原则。", "options": ["因材施教", "一刀切", "统一要求", "忽视差异"], "answer": 0, "analysis": "因材施教针对个体差异。"}, {"type": "single", "section": 5, "stem": "以促进发展为目的进行评价，体现（ ）原则。", "options": ["发展性评价", "终结淘汰", "选拔甄别", "固定评级"], "answer": 0, "analysis": "发展性评价以促进发展为目的。"}, {"type": "multi", "section": 5, "stem": "信息科技教学应遵循的教学原则包括（ ）。", "options": ["科学性与思想性统一", "理论联系实际", "直观性", "因材施教"], "answer": [0, 1, 2, 3], "analysis": "原则含科学性与思想性统一、理论联系实际、直观性、启发性、循序渐进、因材施教、发展性评价。"}, {"type": "single", "section": 5, "stem": "信息科技教学应遵循科学性与思想性统一、理论联系实际、直观性、启发性、循序渐进、因材施教、发展性评价等原则。", "options": ["正确", "错误"], "answer": 0, "analysis": "教学原则如上。"}, {"type": "single", "section": 5, "stem": "教学作为“特殊的认识过程”，其“引导性”是指（ ）。", "options": ["在教师引导下进行", "完全自学无引导", "随意探索", "无目的"], "answer": 0, "analysis": "引导性指教学在教师引导下有目的地进行。"}, {"type": "multi", "section": 5, "stem": "关于教学过程本质，下列说法正确的有（ ）。", "options": ["是特殊的认识过程", "具有间接性", "具有引导性", "具有简捷性"], "answer": [0, 1, 2, 3], "analysis": "教学过程是特殊认识过程，具间接性、引导性、简捷性。"}, {"type": "single", "section": 5, "stem": "教学是教师教与学生学共同组成的双边活动，以培养人为目的。", "options": ["正确", "错误"], "answer": 0, "analysis": "教学定义如上。"}, {"type": "single", "section": 5, "stem": "信息科技教学既是知识技能传授，更是（ ）。", "options": ["核心素养培育过程", "单纯刷题", "娱乐活动", "体能训练"], "answer": 0, "analysis": "信息科技教学更是核心素养培育过程。"}, {"type": "multi", "section": 5, "stem": "下列符合“直观性”教学原则做法的有（ ）。", "options": ["用多媒体演示操作", "展示学生作品", "纯文字长篇讲解不配图", "以抽象代抽象"], "answer": [0, 1], "analysis": "直观性借助多媒体、作品等直观手段。"}, {"type": "single", "section": 5, "stem": "启发性原则强调引导学生主动思考、主动探究。", "options": ["正确", "错误"], "answer": 0, "analysis": "启发性如上。"}, {"type": "single", "section": 5, "stem": "“循序渐进”原则的依据主要是（ ）。", "options": ["学科逻辑与学生认知顺序", "教师喜好", "教材厚度", "天气"], "answer": 0, "analysis": "循序渐进依据学科逻辑与学生认知顺序。"}, {"type": "multi", "section": 5, "stem": "信息科技教学原则中，关注学生个体差异的是（ ）。", "options": ["因材施教", "一刀切", "统一进度不管差异", "选拔淘汰"], "answer": [2], "analysis": "因材施教关注个体差异。"}, {"type": "single", "section": 5, "stem": "发展性评价原则强调以促进学生发展为目的，而非选拔甄别。", "options": ["正确", "错误"], "answer": 0, "analysis": "发展性评价如上。"}, {"type": "single", "section": 5, "stem": "下列哪项是信息科技教学最突出的特点？（ ）", "options": ["实践性（上机操作）", "纯理论讲授", "不操作", "死记硬背"], "answer": 0, "analysis": "实践性（上机操作）是其突出特点。"}, {"type": "multi", "section": 5, "stem": "关于信息科技教学“整合性”，下列说法正确的有（ ）。", "options": ["与技术应用整合", "与其他学科整合", "与生活实际整合", "应完全孤立教学"], "answer": [0, 1, 2], "analysis": "整合性强调整合技术内外及生活、学科。"}, {"type": "single", "section": 5, "stem": "教学过程的间接性指学生以学习间接经验为主。", "options": ["正确", "错误"], "answer": 0, "analysis": "间接性即学习间接经验为主。"}, {"type": "single", "section": 6, "stem": "下列不属于信息科技常用教学方法的是（ ）。", "options": ["背诵默写竞赛法", "讲授法", "演示法", "任务驱动法"], "answer": 0, "analysis": "常用：讲授、演示、任务驱动、探究式、合作学习、练习。"}, {"type": "single", "section": 6, "stem": "教师系统讲解、效率高、需辅以直观演示的方法是（ ）。", "options": ["讲授法", "练习法", "探究式", "合作学习"], "answer": 0, "analysis": "讲授法教师系统讲解、效率高。"}, {"type": "single", "section": 6, "stem": "展示操作或作品、化抽象为直观的方法是（ ）。", "options": ["演示法", "讲授法", "练习法", "考试法"], "answer": 0, "analysis": "演示法展示操作/作品，化抽象为直观。"}, {"type": "single", "section": 6, "stem": "以“任务”为主线、学生自主完成的方法是（ ）。", "options": ["任务驱动法", "讲授法", "演示法", "考试法"], "answer": 0, "analysis": "任务驱动法以任务为主线，学生自主完成。"}, {"type": "single", "section": 6, "stem": "学生自主发现问题、设计方案、验证的方法是（ ）。", "options": ["探究式教学", "讲授法", "练习法", "演示法"], "answer": 0, "analysis": "探究式教学学生自主发现、设计、验证。"}, {"type": "single", "section": 6, "stem": "小组协作、培养交流表达能力的方法是（ ）。", "options": ["合作学习", "个人自学", "讲授法", "演示法"], "answer": 0, "analysis": "合作学习小组协作，培养交流表达。"}, {"type": "single", "section": 6, "stem": "上机操练、巩固技能的方法是（ ）。", "options": ["练习法", "讲授法", "演示法", "讨论法"], "answer": 0, "analysis": "练习法上机操练，巩固技能。"}, {"type": "multi", "section": 6, "stem": "信息科技常用教学方法包括（ ）。", "options": ["讲授法", "演示法", "任务驱动法", "合作学习"], "answer": [0, 1, 2, 3], "analysis": "常用方法含讲授、演示、任务驱动、探究式、合作学习、练习。"}, {"type": "single", "section": 6, "stem": "信息科技常用教学方法有讲授法、演示法、任务驱动法、探究式、合作学习、练习法等。", "options": ["正确", "错误"], "answer": 0, "analysis": "常用方法如上。"}, {"type": "single", "section": 6, "stem": "任务驱动教学法的核心是（ ）。", "options": ["以任务为主线、教师为主导、学生为主体", "以教师讲为主", "以学生玩为主", "无主线随意"], "answer": 0, "analysis": "任务驱动核心：以任务为主线、教师主导、学生主体。"}, {"type": "single", "section": 6, "stem": "任务驱动教学的第一步通常是（ ）。", "options": ["创设情境，提出任务", "直接考试", "结束课程", "布置作业"], "answer": 0, "analysis": "流程第一步：创设情境，提出任务。"}, {"type": "single", "section": 6, "stem": "任务驱动教学中“分析任务，分解步骤”处于（ ）。", "options": ["第二步", "第一步", "最后一步", "不需要"], "answer": 0, "analysis": "第二步：分析任务，分解步骤。"}, {"type": "single", "section": 6, "stem": "任务驱动教学中学生完成任务的阶段是（ ）。", "options": ["自主/协作探究，完成任务", "教师代办", "不完成", "抄袭"], "answer": 0, "analysis": "第三步：自主/协作探究，完成任务。"}, {"type": "single", "section": 6, "stem": "任务驱动教学的最后环节是（ ）。", "options": ["展示交流，评价反思", "直接下课", "不评价", "只做不说"], "answer": 0, "analysis": "第四步：展示交流，评价反思。"}, {"type": "multi", "section": 6, "stem": "任务驱动教学法的流程包括（ ）。", "options": ["创设情境提出任务", "分析任务分解步骤", "自主协作探究完成", "展示交流评价反思"], "answer": [0, 1, 2, 3], "analysis": "任务驱动四步流程如上。"}, {"type": "single", "section": 6, "stem": "任务驱动教学法以“任务”为中心，流程为创设情境提任务→分析分解→自主协作探究→展示评价。", "options": ["正确", "错误"], "answer": 0, "analysis": "任务驱动四步如上。"}, {"type": "single", "section": 6, "stem": "知识型目标更适合采用（ ）。", "options": ["讲授法", "纯练习法", "纯游戏", "无方法"], "answer": 0, "analysis": "知识型多用讲授法。"}, {"type": "single", "section": 6, "stem": "技能型目标更适合采用（ ）。", "options": ["任务驱动法或练习法", "纯讲授", "纯笔试", "无"], "answer": 0, "analysis": "技能型多用任务驱动/练习法。"}, {"type": "single", "section": 6, "stem": "选择教学方法时，“学生年龄、认知水平、基础”属于依据中的（ ）。", "options": ["学生特征", "教学目标", "教学条件", "课型"], "answer": 0, "analysis": "选择依据含学生特征：年龄、认知、基础。"}, {"type": "single", "section": 6, "stem": "选择教学方法时，“机房、网络、软件”属于依据中的（ ）。", "options": ["教学条件", "教学目标", "学生特征", "课型"], "answer": 0, "analysis": "教学条件含机房、网络、软件。"}, {"type": "single", "section": 6, "stem": "选择教学方法时，新授课、练习课、复习课的不同属于依据中的（ ）。", "options": ["课型", "教学目标", "学生特征", "教学条件"], "answer": 0, "analysis": "课型是方法选择依据之一。"}, {"type": "multi", "section": 6, "stem": "教学方法选择的依据包括（ ）。", "options": ["教学目标", "教学内容", "学生特征", "教学条件"], "answer": [0, 1, 2, 3], "analysis": "依据含目标、内容、学生特征、条件、课型。"}, {"type": "single", "section": 6, "stem": "教学方法选择应综合考虑教学目标、内容、学生特征、教学条件与课型。", "options": ["正确", "错误"], "answer": 0, "analysis": "选择依据如上。"}, {"type": "single", "section": 6, "stem": "下列关于任务驱动法与讲授法的说法，正确的是（ ）。", "options": ["任务驱动以学生为主体，讲授以教师为主", "两者完全相同", "讲授更适合技能训练", "任务驱动无教师作用"], "answer": 0, "analysis": "任务驱动学生主体、教师主导；讲授教师系统讲解。"}, {"type": "multi", "section": 6, "stem": "关于教学方法，下列说法正确的有（ ）。", "options": ["讲授法效率高需辅直观", "演示法化抽象为直观", "探究式让学生自主发现", "合作学习培养交流能力"], "answer": [0, 1, 2, 3], "analysis": "各方法特点如上。"}, {"type": "single", "section": 6, "stem": "练习法通过上机操练巩固技能。", "options": ["正确", "错误"], "answer": 0, "analysis": "练习法上机巩固技能。"}, {"type": "single", "section": 6, "stem": "“以问题引导学生自主设计实验方案并验证”最可能是（ ）。", "options": ["探究式教学", "讲授法", "练习法", "演示法"], "answer": 0, "analysis": "探究式强调自主发现问题、设计方案、验证。"}, {"type": "multi", "section": 6, "stem": "下列适合采用合作学习的情况有（ ）。", "options": ["需小组讨论交流", "需分工协作完成项目", "纯个人默写", "无需交流"], "answer": [0, 1], "analysis": "合作学习适合协作交流场景。"}, {"type": "single", "section": 6, "stem": "演示法通过展示操作或作品化抽象为直观。", "options": ["正确", "错误"], "answer": 0, "analysis": "演示法如上。"}, {"type": "single", "section": 6, "stem": "“任务驱动法”中学生主体地位体现在（ ）。", "options": ["自主/协作探究完成任务", "完全由教师代做", "不参与", "只听不讲"], "answer": 0, "analysis": "学生自主/协作探究完成任务，体现主体地位。"}, {"type": "multi", "section": 6, "stem": "关于教学方法选择，下列说法正确的有（ ）。", "options": ["知识型多用讲授", "技能型多用任务驱动/练习", "应考虑学生特征", "应忽视教学条件"], "answer": [0, 1, 2], "analysis": "选择应综合目标/内容/学生/条件/课型。"}, {"type": "single", "section": 6, "stem": "任务驱动教学的核心是以任务为主线、教师为主导、学生为主体。", "options": ["正确", "错误"], "answer": 0, "analysis": "任务驱动核心如上。"}, {"type": "single", "section": 7, "stem": "教学设计前期分析不包括下列哪项？（ ）", "options": ["终结性测验分析", "学习需要分析", "学习者分析", "学习内容分析"], "answer": 0, "analysis": "前期分析含学习需要、学习者、学习内容分析；终结性测验分析属评价环节。"}, {"type": "single", "section": 7, "stem": "教学设计前期分析的三个内容是（ ）。", "options": ["学习需要、学习者、学习内容", "目标、重难点、方法", "导入、新授、小结", "考试、排名、奖励"], "answer": 0, "analysis": "前期分析三内容：学习需要、学习者、学习内容分析。"}, {"type": "single", "section": 7, "stem": "“期望达到的学习状况与当前学习状况的差距”指的是（ ）。", "options": ["学习需要", "学习者特征", "教学内容", "教学目标"], "answer": 0, "analysis": "学习需要=期望状态−当前状态。"}, {"type": "single", "section": 7, "stem": "分析学生的起点能力、认知风格、学习动机，属于前期分析中的（ ）。", "options": ["学习者分析", "学习需要分析", "学习内容分析", "目标分析"], "answer": 0, "analysis": "学习者分析含起点能力、认知风格、学习动机等。"}, {"type": "single", "section": 7, "stem": "分析知识的类型、结构、重难点，属于前期分析中的（ ）。", "options": ["学习内容分析", "学习者分析", "学习需要分析", "目标分析"], "answer": 0, "analysis": "学习内容分析分析知识类型、结构、重难点。"}, {"type": "multi", "section": 7, "stem": "教学设计前期分析包括（ ）。", "options": ["学习需要分析", "学习者分析", "学习内容分析", "终结性测验分析"], "answer": [0, 1, 2], "analysis": "前期分析三内容；终结性测验分析属评价环节。"}, {"type": "single", "section": 7, "stem": "教学设计前期分析包括学习需要分析、学习者分析和学习内容分析。", "options": ["正确", "错误"], "answer": 0, "analysis": "三内容如上。"}, {"type": "single", "section": 7, "stem": "下列说法中正确的是（ ）。", "options": ["终结性测验分析属于评价环节，不属于前期分析", "前期分析就是写教案", "学习者分析无关紧要", "学习内容分析可省略"], "answer": 0, "analysis": "终结性测验分析属评价，不属前期分析。"}, {"type": "single", "section": 7, "stem": "学习者分析中的“起点能力”是指（ ）。", "options": ["已有的知识技能基础", "最终目标", "教师水平", "教材页数"], "answer": 0, "analysis": "起点能力指已有知识技能基础，避免零起点或重复。"}, {"type": "single", "section": 7, "stem": "认知风格如“场依存/场独立、视觉/动觉偏好”属于（ ）。", "options": ["学习者分析的范畴", "学习内容分析", "学习需要分析", "教学目标"], "answer": 0, "analysis": "认知风格属学习者分析。"}, {"type": "single", "section": 7, "stem": "“内在动机与外在动机”属于学习者分析中的（ ）。", "options": ["学习动机", "认知风格", "起点能力", "一般特征"], "answer": 0, "analysis": "学习动机（内在/外在）属学习者分析。"}, {"type": "single", "section": 7, "stem": "学生年龄阶段的身心发展特点属于学习者分析中的（ ）。", "options": ["一般特征", "起点能力", "认知风格", "学习动机"], "answer": 0, "analysis": "一般特征指年龄阶段的身心发展特点。"}, {"type": "multi", "section": 7, "stem": "关于学习者分析，下列说法正确的有（ ）。", "options": ["含起点能力分析", "含认知风格分析", "含学习动机分析", "含一般特征分析"], "answer": [0, 1, 2, 3], "analysis": "学习者分析含起点能力、认知风格、学习动机、一般特征。"}, {"type": "single", "section": 7, "stem": "学习者分析包括起点能力、认知风格、学习动机和一般特征。", "options": ["正确", "错误"], "answer": 0, "analysis": "学习者分析内容如上。"}, {"type": "single", "section": 7, "stem": "学习需要等于（ ）。", "options": ["期望达到的学习状况 − 当前学习状况", "当前状况 − 期望状况", "教材页数", "课时数"], "answer": 0, "analysis": "学习需要=期望−当前。"}, {"type": "single", "section": 7, "stem": "学习需要分析的目的是（ ）。", "options": ["确定教学中真正的问题与差距，作为设计起点", "确定考试分数", "取消教学", "增加课时"], "answer": 0, "analysis": "学习需要分析确定问题与差距，是设计起点。"}, {"type": "single", "section": 7, "stem": "学习需要分析常用的方法有（ ）。", "options": ["内部参照法、外部参照法", "仅考试法", "仅观察法", "无方法"], "answer": 0, "analysis": "常用内部参照法、外部参照法。"}, {"type": "multi", "section": 7, "stem": "关于学习需要分析，下列说法正确的有（ ）。", "options": ["学习需要=期望−当前", "目的是确定真正的问题与差距", "常用内部参照法和外部参照法", "与教学设计无关"], "answer": [0, 1, 2], "analysis": "学习需要分析如上。"}, {"type": "single", "section": 7, "stem": "学习需要=期望达到的学习状况 − 当前学习状况。", "options": ["正确", "错误"], "answer": 0, "analysis": "学习需要公式如上。"}, {"type": "single", "section": 7, "stem": "前期分析在整个教学设计中的位置是（ ）。", "options": ["教学设计的起点", "最后一步", "中间环节无先后", "与评价同时"], "answer": 0, "analysis": "前期分析是教学设计起点。"}, {"type": "single", "section": 7, "stem": "为避免“零起点”或“重复教学”，应在前期分析中关注（ ）。", "options": ["学生的起点能力", "教材厚度", "教室大小", "教师年龄"], "answer": 0, "analysis": "起点能力分析避免零起点或重复。"}, {"type": "multi", "section": 7, "stem": "下列做法符合前期分析要求的有（ ）。", "options": ["先分析学习需要再设计目标", "分析学习者起点能力", "分析学习内容的结构与重难点", "跳过分析直接写教案"], "answer": [0, 1, 2], "analysis": "前期分析需先分析需要/学习者/内容再设计。"}, {"type": "single", "section": 7, "stem": "学习需要分析常用内部参照法和外部参照法。", "options": ["正确", "错误"], "answer": 0, "analysis": "参照法如上。"}, {"type": "single", "section": 7, "stem": "“分析学生已具备哪些操作技能、还缺哪些”属于（ ）。", "options": ["起点能力分析", "认知风格分析", "学习动机分析", "一般特征分析"], "answer": 0, "analysis": "起点能力分析判断已有与缺失技能。"}, {"type": "single", "section": 7, "stem": "教学设计前期分析的作用主要是（ ）。", "options": ["为后续目标、策略、评价提供依据", "装饰教案", "应付检查", "无关紧要"], "answer": 0, "analysis": "前期分析为后续设计提供依据。"}, {"type": "multi", "section": 7, "stem": "关于前期分析，下列说法正确的有（ ）。", "options": ["是教学设计起点", "含学习需要、学习者、学习内容三方面", "终结性测验分析不属于前期分析", "可直接跳过"], "answer": [0, 1, 2], "analysis": "前期分析是起点、含三方面；终结性测验不属前期。"}, {"type": "single", "section": 7, "stem": "前期分析三内容中，学习内容分析关注知识的类型、结构与重难点。", "options": ["正确", "错误"], "answer": 0, "analysis": "学习内容分析如上。"}, {"type": "single", "section": 7, "stem": "既属于前期分析、又直接关系“教什么”的是（ ）。", "options": ["学习内容分析", "学习者分析", "学习需要分析", "评价设计"], "answer": 0, "analysis": "学习内容分析回答教什么。"}, {"type": "multi", "section": 7, "stem": "学习者分析中“认知风格”可进一步分为（ ）。", "options": ["场依存/场独立", "视觉/动觉偏好", "内外动机", "一般特征"], "answer": [0, 1], "analysis": "认知风格含场依存/场独立、视觉/动觉等。"}, {"type": "single", "section": 7, "stem": "前期分析是教学设计的起点，为确定目标与策略提供依据。", "options": ["正确", "错误"], "answer": 0, "analysis": "前期分析定位如上。"}, {"type": "single", "section": 8, "stem": "教学设计的三维教学目标不包括（ ）。", "options": ["身体素质目标", "知识与技能", "过程与方法", "情感态度与价值观"], "answer": 0, "analysis": "三维：知识与技能、过程与方法、情感态度与价值观。"}, {"type": "single", "section": 8, "stem": "“掌握概念、原理、操作技能（重结果）”属于三维目标中的（ ）。", "options": ["知识与技能", "过程与方法", "情感态度与价值观", "核心素养"], "answer": 0, "analysis": "知识与技能重结果。"}, {"type": "single", "section": 8, "stem": "“经历问题解决过程，形成自主学习能力（重经历）”属于（ ）。", "options": ["过程与方法", "知识与技能", "情感态度与价值观", "教学重点"], "answer": 0, "analysis": "过程与方法重经历、重思维过程。"}, {"type": "single", "section": 8, "stem": "“遵守伦理法规，负责任地使用技术”属于（ ）。", "options": ["情感态度与价值观", "知识与技能", "过程与方法", "教学难点"], "answer": 0, "analysis": "情感态度与价值观含态度、价值观、责任感。"}, {"type": "single", "section": 8, "stem": "三维目标中“过程与方法”强调的是（ ）。", "options": ["学生的思维/学习过程", "教师的教学过程", "考试分数", "教材页数"], "answer": 0, "analysis": "过程与方法强调学生的思维/学习过程。"}, {"type": "multi", "section": 8, "stem": "教学设计三维目标包括（ ）。", "options": ["知识与技能", "过程与方法", "情感态度与价值观", "身体素质"], "answer": [0, 1, 2], "analysis": "三维目标如上。"}, {"type": "single", "section": 8, "stem": "三维教学目标包括知识与技能、过程与方法、情感态度与价值观。", "options": ["正确", "错误"], "answer": 0, "analysis": "三维如上。"}, {"type": "single", "section": 8, "stem": "教学重点是指（ ）。", "options": ["教材中最基本、最重要的知识与技能，学生必须掌握", "可有可无的内容", "最难的题", "教师的爱好"], "answer": 0, "analysis": "重点是教材最基本重要的核心知识技能。"}, {"type": "single", "section": 8, "stem": "确定教学重点的主要依据是（ ）。", "options": ["教学内容（教材本身的核心知识与技能）", "学生的身高", "教室大小", "天气"], "answer": 0, "analysis": "重点依据教学内容（教材核心）。"}, {"type": "single", "section": 8, "stem": "教学难点是指（ ）。", "options": ["学生难以理解或易混淆的内容", "最简单的内容", "所有内容", "教师最熟的内容"], "answer": 0, "analysis": "难点是学生难理解、易混淆的内容。"}, {"type": "single", "section": 8, "stem": "确定教学难点的依据主要是（ ）。", "options": ["学生的认知水平与学习心理", "教材厚度", "教师喜好", "课时数"], "answer": 0, "analysis": "难点依据学生认知水平与学习心理。"}, {"type": "multi", "section": 8, "stem": "关于教学重点，下列说法正确的有（ ）。", "options": ["是教材最基本重要的知识技能", "学生必须掌握", "依据教学内容确定", "完全由学生决定"], "answer": [0, 1, 2], "analysis": "重点定义与依据如上。"}, {"type": "single", "section": 8, "stem": "教学重点依据教学内容确定，是教材中最基本重要的知识技能。", "options": ["正确", "错误"], "answer": 0, "analysis": "重点依据如上。"}, {"type": "multi", "section": 8, "stem": "关于教学难点，下列说法正确的有（ ）。", "options": ["是学生难以理解或易混淆的内容", "依据学生认知水平确定", "常出现于抽象概念、易混淆知识等", "与重点完全相同"], "answer": [0, 1, 2], "analysis": "难点定义与依据如上，难点≠重点。"}, {"type": "single", "section": 8, "stem": "教学难点依据学生的认知水平与学习心理确定。", "options": ["正确", "错误"], "answer": 0, "analysis": "难点依据如上。"}, {"type": "single", "section": 8, "stem": "下列情形中，最可能成为教学难点的是（ ）。", "options": ["抽象概念的理解", "教材封面", "目录", "课后习题答案"], "answer": 0, "analysis": "抽象概念、易混淆知识常是难点。"}, {"type": "single", "section": 8, "stem": "“教学重点”与“教学难点”的关系是（ ）。", "options": ["重点依据教材、难点依据学生，二者不一定相同", "完全相同", "毫不相关", "难点比重点重要"], "answer": 0, "analysis": "重点依教材、难点依学生，可重叠也可不同。"}, {"type": "multi", "section": 8, "stem": "下列可作为教学难点的有（ ）。", "options": ["抽象概念的理解", "易混淆知识的区分", "操作技能的迁移", "教材页码"], "answer": [0, 1, 2], "analysis": "难点常是抽象、易混淆、迁移、综合运用。"}, {"type": "single", "section": 8, "stem": "教学重点与教学难点依据不同，二者不一定相同。", "options": ["正确", "错误"], "answer": 0, "analysis": "重点难点关系如上。"}, {"type": "single", "section": 8, "stem": "“知识与技能”维度更关注（ ）。", "options": ["学习的结果", "学习的过程", "情感体验", "价值观"], "answer": 0, "analysis": "知识与技能重结果。"}, {"type": "single", "section": 8, "stem": "“过程与方法”维度强调学生（ ）。", "options": ["经历思维过程、学会学习", "只记结论", "不做思考", "抄写"], "answer": 0, "analysis": "过程与方法强调思维过程与学会学习。"}, {"type": "multi", "section": 8, "stem": "三维目标中“情感态度与价值观”包含（ ）。", "options": ["态度", "价值观", "责任感（如负责任使用技术）", "操作技能熟练度"], "answer": [0, 1, 2], "analysis": "情感态度价值观含态度、价值观、责任感。"}, {"type": "single", "section": 8, "stem": "“过程与方法”强调学生的思维与学习过程，而非教师的教学过程。", "options": ["正确", "错误"], "answer": 0, "analysis": "过程与方法如上。"}, {"type": "single", "section": 8, "stem": "教师在设定目标时把“过程与方法”写成“教师讲解流程”，这违背了（ ）。", "options": ["过程与方法应强调学生过程", "知识与技能", "情感目标", "重难点"], "answer": 0, "analysis": "过程与方法应强调学生过程而非教师讲解流程。"}, {"type": "single", "section": 8, "stem": "确定重难点后，下一步教学设计通常应（ ）。", "options": ["选择教学策略与方法", "直接考试", "结束课程", "不处理"], "answer": 0, "analysis": "确定重难点后选策略方法。"}, {"type": "multi", "section": 8, "stem": "关于三维目标，下列说法正确的有（ ）。", "options": ["知识与技能重结果", "过程与方法重经历", "情感态度价值观重态度与责任", "三者互无关可缺其一"], "answer": [0, 1, 2], "analysis": "三维目标三者相辅相成，不可偏废。"}, {"type": "single", "section": 8, "stem": "教学难点常出现在抽象概念、易混淆知识、操作技能迁移与综合运用等情形。", "options": ["正确", "错误"], "answer": 0, "analysis": "难点情形如上。"}, {"type": "single", "section": 8, "stem": "“熟练使用某软件工具”最应归入三维目标中的（ ）。", "options": ["知识与技能", "过程与方法", "情感态度与价值观", "重难点"], "answer": 0, "analysis": "操作技能熟练属知识与技能。"}, {"type": "single", "section": 8, "stem": "“形成自主学习能力”最应归入（ ）。", "options": ["过程与方法", "知识与技能", "情感态度与价值观", "教学难点"], "answer": 0, "analysis": "自主学习能力属过程与方法。"}, {"type": "multi", "section": 8, "stem": "下列表述符合重难点确定的有（ ）。", "options": ["重点依据教学内容", "难点依据学生认知水平", "重点学生必须掌握", "难点一定比重点难"], "answer": [0, 1, 2], "analysis": "重点依内容、难点依学生认知；难点未必比重点难。"}, {"type": "single", "section": 8, "stem": "三维目标中“知识与技能”强调对概念、原理、操作技能的掌握（重结果）。", "options": ["正确", "错误"], "answer": 0, "analysis": "知识与技能如上。"}, {"type": "single", "section": 9, "stem": "“以教为主”的教学策略不包括（ ）。", "options": ["探究式、发现式", "接受式", "传递—接受", "讲授主导"], "answer": 0, "analysis": "以教为主含接受式、传递—接受；探究式、发现式属以学为主。"}, {"type": "single", "section": 9, "stem": "“以学为主”的教学策略包括（ ）。", "options": ["探究式、发现式、自主学习", "讲授式", "满堂灌", "传递—接受"], "answer": 0, "analysis": "以学为主含探究式、发现式、自主学习策略。"}, {"type": "single", "section": 9, "stem": "新课改倡导的教学策略是（ ）。", "options": ["教师主导、学生主体的混合型", "纯以教为主", "纯以学为主无序", "无策略"], "answer": 0, "analysis": "新课改倡导主导—主体结合的混合型。"}, {"type": "multi", "section": 9, "stem": "教学策略的类型包括（ ）。", "options": ["以教为主", "以学为主", "混合型", "无类型之分"], "answer": [0, 1, 2], "analysis": "策略分以教为主、以学为主、混合型。"}, {"type": "single", "section": 9, "stem": "新课改倡导“教师主导、学生主体”的混合型教学策略。", "options": ["正确", "错误"], "answer": 0, "analysis": "混合型如上。"}, {"type": "single", "section": 9, "stem": "教学媒体选择的基本依据不包括（ ）。", "options": ["教师的个人爱好", "教学目标", "教学内容", "学生特征"], "answer": 0, "analysis": "依据：目标、内容、学生特征、条件、媒体特性、经济实用。"}, {"type": "single", "section": 9, "stem": "“抽象内容选用直观媒体”体现了媒体选择依据中的（ ）。", "options": ["教学内容", "教学目标", "学生特征", "经济实用"], "answer": 0, "analysis": "内容抽象→直观媒体。"}, {"type": "single", "section": 9, "stem": "“操作技能内容选用演示媒体”体现了媒体选择依据中的（ ）。", "options": ["教学内容", "教学目标", "学生特征", "课型"], "answer": 0, "analysis": "操作内容→演示媒体，依教学内容。"}, {"type": "single", "section": 9, "stem": "依据“设备、环境（多媒体/网络教室）”选择媒体，属于依据中的（ ）。", "options": ["教学条件", "教学目标", "学生特征", "媒体特性"], "answer": 0, "analysis": "设备环境属教学条件。"}, {"type": "single", "section": 9, "stem": "媒体选择要“避免滥用，适度即可”，体现的是（ ）。", "options": ["经济实用", "教学目标", "学生特征", "内容"], "answer": 0, "analysis": "经济实用：避免滥用、适度。"}, {"type": "multi", "section": 9, "stem": "教学媒体选择的依据包括（ ）。", "options": ["教学目标", "教学内容", "学生特征", "教学条件"], "answer": [0, 1, 2, 3], "analysis": "依据含目标、内容、学生特征、条件、媒体特性、经济实用。"}, {"type": "single", "section": 9, "stem": "教学媒体选择应依据教学目标、内容、学生特征、教学条件、媒体特性并经济实用。", "options": ["正确", "错误"], "answer": 0, "analysis": "媒体选择依据如上。"}, {"type": "single", "section": 9, "stem": "“文本、图像、音视频、交互各自有不同优势”属于媒体选择依据中的（ ）。", "options": ["媒体特性", "教学目标", "学生特征", "课型"], "answer": 0, "analysis": "不同媒体特性决定其适用场景。"}, {"type": "single", "section": 9, "stem": "下列教学模式中，以教师讲授为主的是（ ）。", "options": ["传递—接受", "探究式", "WebQuest", "合作学习"], "answer": 0, "analysis": "传递—接受以教师讲授为主。"}, {"type": "single", "section": 9, "stem": "“提出问题→假设→验证→结论”描述的教学模式是（ ）。", "options": ["探究式", "传递—接受", "合作学习", "任务驱动"], "answer": 0, "analysis": "探究式：提出问题→假设→验证→结论。"}, {"type": "single", "section": 9, "stem": "基于网络的探究学习模式是（ ）。", "options": ["WebQuest", "传递—接受", "讲授式", "练习法"], "answer": 0, "analysis": "WebQuest是基于网络的探究学习。"}, {"type": "single", "section": 9, "stem": "以任务组织教学、学生自主完成的模式是（ ）。", "options": ["任务驱动", "传递—接受", "探究式", "WebQuest"], "answer": 0, "analysis": "任务驱动以任务组织。"}, {"type": "single", "section": 9, "stem": "小组协作完成学习的模式是（ ）。", "options": ["合作学习", "个人自学", "讲授式", "演示法"], "answer": 0, "analysis": "合作学习小组协作完成。"}, {"type": "multi", "section": 9, "stem": "常见的教学模式包括（ ）。", "options": ["传递—接受", "探究式", "WebQuest", "合作学习"], "answer": [0, 1, 2, 3], "analysis": "常见模式含传递—接受、探究式、WebQuest、任务驱动、合作学习。"}, {"type": "single", "section": 9, "stem": "常见教学模式有传递—接受、探究式、WebQuest、任务驱动、合作学习等。", "options": ["正确", "错误"], "answer": 0, "analysis": "教学模式如上。"}, {"type": "single", "section": 9, "stem": "“教师主导、学生主体”混合型策略强调（ ）。", "options": ["教师帮助促进、学生主动建构", "教师包办", "学生放任", "无需教师"], "answer": 0, "analysis": "混合型：教师主导帮助、学生主体建构。"}, {"type": "multi", "section": 9, "stem": "关于教学策略，下列说法正确的有（ ）。", "options": ["以教为主如传递—接受", "以学为主如探究式", "混合型倡主导—主体", "探究式属于以教为主"], "answer": [0, 1, 2], "analysis": "探究式属以学为主，其余正确。"}, {"type": "single", "section": 9, "stem": "教学媒体选择要经济实用，避免滥用。", "options": ["正确", "错误"], "answer": 0, "analysis": "经济实用如上。"}, {"type": "single", "section": 9, "stem": "选择媒体时考虑“学生年龄、认知特点”属于依据（ ）。", "options": ["学生特征", "教学目标", "教学条件", "媒体特性"], "answer": 0, "analysis": "学生年龄认知属学生特征。"}, {"type": "single", "section": 9, "stem": "下列关于媒体选择的说法，正确的是（ ）。", "options": ["应综合多依据适度选用", "越多越好", "越贵越好", "无需考虑内容"], "answer": 0, "analysis": "应综合依据、经济实用、适度。"}, {"type": "multi", "section": 9, "stem": "下列符合媒体“经济实用”原则的有（ ）。", "options": ["避免滥用媒体", "根据内容适度选用", "越贵越好", "越多越杂越好"], "answer": [0, 1], "analysis": "经济实用：适度、避免滥用。"}, {"type": "single", "section": 9, "stem": "探究式教学以学生自主发现问题、设计方案、验证为特点，属以学为主策略。", "options": ["正确", "错误"], "answer": 0, "analysis": "探究式属以学为主。"}, {"type": "single", "section": 9, "stem": "“传递—接受”策略最适合用来（ ）。", "options": ["系统传授知识", "完全放手让学生探究", "不做讲解", "娱乐"], "answer": 0, "analysis": "传递—接受适合系统讲授知识。"}, {"type": "single", "section": 9, "stem": "“WebQuest”区别于一般探究式的特点是（ ）。", "options": ["基于网络", "无网络", "只讲授", "只练习"], "answer": 0, "analysis": "WebQuest突出基于网络的探究。"}, {"type": "multi", "section": 9, "stem": "关于教学模式选用，下列说法正确的有（ ）。", "options": ["知识系统传授可用传递—接受", "培养探究能力可用探究式", "网络探究可用WebQuest", "所有课型都用同一模式"], "answer": [0, 1, 2], "analysis": "模式应依目标内容选用。"}, {"type": "single", "section": 9, "stem": "媒体特性指文本、图像、音视频、交互各有优势，应据此选用。", "options": ["正确", "错误"], "answer": 0, "analysis": "媒体特性如上。"}, {"type": "single", "section": 10, "stem": "教学设计是以（ ）为目的，运用系统方法分析教学问题、设计方案的过程。", "options": ["优化教学效果", "应付检查", "增加课时", "减少内容"], "answer": 0, "analysis": "教学设计以优化教学效果为目的。"}, {"type": "single", "section": 10, "stem": "教学设计的中心是（ ）。", "options": ["学生的学", "教师的讲", "教材的厚度", "考试分数"], "answer": 0, "analysis": "教学设计中心是学生的学，学生是认知主体。"}, {"type": "single", "section": 10, "stem": "“学生是认知主体、知识意义的主动建构者；教师起帮助促进作用”说明教学设计应以（ ）为中心。", "options": ["学生的学", "教师的权威", "教材", "考试"], "answer": 0, "analysis": "中心是学生的学，教师帮助促进。"}, {"type": "multi", "section": 10, "stem": "关于教学设计的概念与中心，下列说法正确的有（ ）。", "options": ["以优化教学效果为目的", "运用系统方法", "中心是学生的学", "教师是知识灌输者"], "answer": [0, 1, 2], "analysis": "教学设计优化效果、系统方法、以学生学为中心。"}, {"type": "single", "section": 10, "stem": "教学设计的中心是“学生的学”，学生是认知主体、知识意义的主动建构者。", "options": ["正确", "错误"], "answer": 0, "analysis": "中心如上。"}, {"type": "single", "section": 10, "stem": "教学设计基本流程的第一步是（ ）。", "options": ["前期分析（需要/学习者/内容）", "编写教案", "考试", "评价"], "answer": 0, "analysis": "流程首步为前期分析。"}, {"type": "single", "section": 10, "stem": "教学设计基本流程中，在“确定教学目标”之后通常应（ ）。", "options": ["确定重难点", "直接写板书", "结束", "考试"], "answer": 0, "analysis": "目标之后确定重难点。"}, {"type": "single", "section": 10, "stem": "教学设计基本流程包括：前期分析→确定目标→确定重难点→选择策略方法→选择媒体→（ ）→设计评价→编写教案。", "options": ["设计教学过程", "直接放学", "不设计过程", "只考试"], "answer": 0, "analysis": "流程含设计教学过程（导入、新授、练习、小结、作业）。"}, {"type": "single", "section": 10, "stem": "教案编写属于教学设计基本流程的（ ）。", "options": ["最后环节之一", "第一步", "中间无关", "不需要"], "answer": 0, "analysis": "编写教案是流程末尾环节。"}, {"type": "multi", "section": 10, "stem": "教学设计的基本流程包括（ ）。", "options": ["前期分析", "确定教学目标", "选择教学策略与方法", "设计评价"], "answer": [0, 1, 2, 3], "analysis": "流程含前期分析、目标、重难点、策略方法、媒体、过程、评价、教案。"}, {"type": "single", "section": 10, "stem": "教学设计基本流程包括前期分析、确定目标、确定重难点、选策略方法、选媒体、设计过程、设计评价、编写教案。", "options": ["正确", "错误"], "answer": 0, "analysis": "流程如上。"}, {"type": "single", "section": 10, "stem": "教案的基本要素不包括（ ）。", "options": ["学生家庭住址", "课题", "教学目标", "重难点"], "answer": 0, "analysis": "要素：课题、目标、重难点、方法、媒体、过程、板书、作业、反思。"}, {"type": "single", "section": 10, "stem": "下列（ ）属于教案基本要素。", "options": ["课题、教学目标、重难点、教学方法、教学过程", "仅分数", "仅姓名", "仅日期"], "answer": 0, "analysis": "教案含课题、目标、重难点、方法、媒体、过程、板书、作业、反思。"}, {"type": "single", "section": 10, "stem": "教案中“板书设计”属于（ ）。", "options": ["教案要素之一", "无关内容", "考试分数", "学生作业"], "answer": 0, "analysis": "板书设计是教案要素。"}, {"type": "single", "section": 10, "stem": "教案中“教学反思”的作用是（ ）。", "options": ["总结改进教学", "装饰", "应付", "无关"], "answer": 0, "analysis": "反思用于总结改进。"}, {"type": "multi", "section": 10, "stem": "教案编写要素包括（ ）。", "options": ["课题", "教学目标", "重难点", "板书设计与作业布置"], "answer": [0, 1, 2, 3], "analysis": "教案含课题、目标、重难点、方法、媒体、过程、板书、作业、反思。"}, {"type": "single", "section": 10, "stem": "教案基本要素包括课题、教学目标、重难点、教学方法、教学媒体、教学过程、板书设计、作业布置、教学反思。", "options": ["正确", "错误"], "answer": 0, "analysis": "教案要素如上。"}, {"type": "single", "section": 10, "stem": "课堂导入的主要作用是（ ）。", "options": ["吸引注意、激发兴趣、明确目标", "拖长时间", "无关紧要", "只复习不导入"], "answer": 0, "analysis": "导入作用：吸引注意、激发兴趣动机、复习旧知、明确目标、创设情境。"}, {"type": "single", "section": 10, "stem": "“复习旧知，引向新内容”是课堂导入的（ ）作用。", "options": ["承上启下", "浪费时间", "无关", "结束"], "answer": 0, "analysis": "导入可复习旧知、引向新内容。"}, {"type": "single", "section": 10, "stem": "用展示动画或作品等直观手段进行导入，核心在于（ ）。", "options": ["激发兴趣、启发思考", "单纯表演", "拖延", "无目的"], "answer": 0, "analysis": "直观导入核心激发兴趣、启发思考。"}, {"type": "single", "section": 10, "stem": "课堂导入应（ ）。", "options": ["明确本课教学目标", "不告知目标", "只做游戏", "无目的"], "answer": 0, "analysis": "导入应明确本课教学目标。"}, {"type": "multi", "section": 10, "stem": "课堂导入的主要作用包括（ ）。", "options": ["吸引学生注意力", "激发兴趣与学习动机", "复习旧知引向新内容", "明确教学目标"], "answer": [0, 1, 2, 3], "analysis": "导入作用如上。"}, {"type": "single", "section": 10, "stem": "课堂导入的作用包括吸引注意、激发兴趣动机、复习旧知、明确目标、渲染气氛。", "options": ["正确", "错误"], "answer": 0, "analysis": "导入作用如上。"}, {"type": "single", "section": 10, "stem": "“渲染气氛，创设情境”属于课堂导入的（ ）。", "options": ["作用之一", "副作用", "无关", "结束"], "answer": 0, "analysis": "渲染气氛、创设情境是导入作用。"}, {"type": "single", "section": 10, "stem": "下列关于课堂导入的说法，正确的是（ ）。", "options": ["应激发兴趣并启发思考", "越长越好", "越复杂越好", "可有可无"], "answer": 0, "analysis": "导入应激发兴趣、启发思考，并非越长越复杂越好。"}, {"type": "multi", "section": 10, "stem": "关于教学设计中心，下列说法正确的有（ ）。", "options": ["以学生学为中心", "教师起帮助促进作用", "学生是主动建构者", "以教师讲为中心"], "answer": [0, 1, 2], "analysis": "中心是学生的学。"}, {"type": "single", "section": 10, "stem": "课堂导入的核心在于激发兴趣、启发思考。", "options": ["正确", "错误"], "answer": 0, "analysis": "导入核心如上。"}, {"type": "single", "section": 10, "stem": "设计教学过程时通常包含的环节是（ ）。", "options": ["导入、新授、练习、小结、作业", "仅考试", "仅放学", "只讲不练"], "answer": 0, "analysis": "过程含导入、新授、练习、小结、作业。"}, {"type": "single", "section": 10, "stem": "“选择教学媒体”在基本流程中位于（ ）。", "options": ["确定重难点之后、设计过程之前", "第一步", "最后", "不需要"], "answer": 0, "analysis": "媒体选择在确定重难点后、设计过程前。"}, {"type": "multi", "section": 10, "stem": "下列符合教学设计理念的有（ ）。", "options": ["以学生学为中心", "运用系统方法优化效果", "流程完整可操作", "只重教师讲授忽略学生"], "answer": [0, 1, 2], "analysis": "教学设计以学生为中心、系统优化。"}, {"type": "single", "section": 10, "stem": "设计教学过程通常包括导入、新授、练习、小结、作业等环节。", "options": ["正确", "错误"], "answer": 0, "analysis": "过程环节如上。"}, {"type": "single", "section": 11, "stem": "教学评价是依据（ ）对教学过程及结果进行价值判断的过程。", "options": ["教学目标", "教师心情", "教材厚度", "天气"], "answer": 0, "analysis": "教学评价依据教学目标进行价值判断。"}, {"type": "single", "section": 11, "stem": "教学评价的根本目的在于（ ）。", "options": ["改进教学", "证明学生优劣", "选拔淘汰", "排名次"], "answer": 0, "analysis": "评价根本目的在改进教学，而非证明或选拔。"}, {"type": "single", "section": 11, "stem": "教学评价能发现教学问题，这体现其（ ）。", "options": ["诊断作用", "激励作用", "调控作用", "无关作用"], "answer": 0, "analysis": "诊断作用：发现教学问题。"}, {"type": "single", "section": 11, "stem": "教学评价能促进师生发展，体现其（ ）。", "options": ["激励作用", "诊断作用", "选拔作用", "淘汰作用"], "answer": 0, "analysis": "激励作用促进师生发展。"}, {"type": "single", "section": 11, "stem": "教学评价可调整教学，体现其（ ）。", "options": ["调控/反馈作用", "选拔作用", "淘汰作用", "装饰作用"], "answer": 0, "analysis": "调控/反馈作用：调整教学。"}, {"type": "single", "section": 11, "stem": "教学评价对教学工作本身的改进作用是其（ ）。", "options": ["核心目的", "次要目的", "无关", "副作用"], "answer": 0, "analysis": "改进教学工作是评价的核心目的。"}, {"type": "multi", "section": 11, "stem": "教学评价的作用包括（ ）。", "options": ["教学作用（改进教学）", "诊断作用", "激励作用", "调控/反馈作用"], "answer": [0, 1, 2, 3], "analysis": "评价作用含教学、诊断、激励、调控反馈。"}, {"type": "single", "section": 11, "stem": "教学评价的根本目的在于改进教学，而非证明或选拔。", "options": ["正确", "错误"], "answer": 0, "analysis": "评价根本目的如上。"}, {"type": "single", "section": 11, "stem": "在教学前摸底、了解起点，采用的是（ ）。", "options": ["诊断性评价", "形成性评价", "总结性评价", "相对评价"], "answer": 0, "analysis": "诊断性评价在教学前摸底。"}, {"type": "single", "section": 11, "stem": "在教学过程中及时反馈、改进教学，采用的是（ ）。", "options": ["形成性评价", "诊断性评价", "总结性评价", "个体内差异评价"], "answer": 0, "analysis": "形成性评价在教学中及时反馈。"}, {"type": "single", "section": 11, "stem": "教学结束后评定学业成就，采用的是（ ）。", "options": ["总结性评价", "诊断性评价", "形成性评价", "相对评价"], "answer": 0, "analysis": "总结性评价在教学后评定成就。"}, {"type": "single", "section": 11, "stem": "“与他人比较（常模参照）”属于（ ）。", "options": ["相对评价", "绝对评价", "个体内差异评价", "定性评价"], "answer": 0, "analysis": "相对评价与他人比较（常模参照）。"}, {"type": "single", "section": 11, "stem": "“与固定标准比较（标准参照）”属于（ ）。", "options": ["绝对评价", "相对评价", "个体内差异评价", "定量评价"], "answer": 0, "analysis": "绝对评价与标准比较（标准参照）。"}, {"type": "single", "section": 11, "stem": "“自身前后比较”属于（ ）。", "options": ["个体内差异评价", "相对评价", "绝对评价", "定性评价"], "answer": 0, "analysis": "个体内差异评价自身前后比较。"}, {"type": "multi", "section": 11, "stem": "按评价时机，教学评价可分为（ ）。", "options": ["诊断性评价", "形成性评价", "总结性评价", "相对评价"], "answer": [0, 1, 2], "analysis": "按时机分诊断、形成、总结。"}, {"type": "single", "section": 11, "stem": "按时机教学评价分为诊断性、形成性、总结性评价。", "options": ["正确", "错误"], "answer": 0, "analysis": "时机三分如上。"}, {"type": "multi", "section": 11, "stem": "按评价基准，教学评价可分为（ ）。", "options": ["相对评价", "绝对评价", "个体内差异评价", "诊断性评价"], "answer": [0, 1, 2], "analysis": "按基准分相对、绝对、个体内差异。"}, {"type": "single", "section": 11, "stem": "按基准教学评价分为相对评价、绝对评价、个体内差异评价。", "options": ["正确", "错误"], "answer": 0, "analysis": "基准三分如上。"}, {"type": "single", "section": 11, "stem": "评价理念“立足过程，促进发展”强调（ ）。", "options": ["关注学习过程与结果，激励改进", "只重结果排名", "只重选拔", "忽视过程"], "answer": 0, "analysis": "该理念关注过程与结果，激励学生、改进教学。"}, {"type": "single", "section": 11, "stem": "“多元评价”不包括（ ）。", "options": ["单一主体单一方式", "主体多元", "方式多元", "内容多元"], "answer": 0, "analysis": "多元评价含主体多元（师/生/同伴/家长）、方式多元、内容多元。"}, {"type": "single", "section": 11, "stem": "民主评价强调（ ）。", "options": ["师生民主平等共同参与", "教师独裁", "学生独裁", "无人参与"], "answer": 0, "analysis": "民主评价师生平等共同参与。"}, {"type": "multi", "section": 11, "stem": "评价理念包括（ ）。", "options": ["立足过程促进发展", "多元评价", "民主评价", "选拔淘汰为主"], "answer": [0, 1, 2], "analysis": "理念含立足过程促发展、多元评价、民主评价。"}, {"type": "single", "section": 11, "stem": "评价理念包括立足过程促进发展、多元评价、民主评价。", "options": ["正确", "错误"], "answer": 0, "analysis": "评价理念如上。"}, {"type": "single", "section": 11, "stem": "过程性评价的价值不包括（ ）。", "options": ["增加考试次数", "及时反馈调整", "关注进步激励", "全面考查素养形成"], "answer": 0, "analysis": "过程性评价价值：及时反馈、关注进步、全面考查、弱化甄别。"}, {"type": "single", "section": 11, "stem": "过程性评价能“及时反馈，便于调整教学与学习”，体现其（ ）。", "options": ["及时反馈价值", "选拔价值", "淘汰价值", "装饰价值"], "answer": 0, "analysis": "过程性评价及时反馈。"}, {"type": "single", "section": 11, "stem": "过程性评价“弱化甄别选拔，促进全体学生发展”，符合（ ）。", "options": ["其价值之一", "错误说法", "选拔导向", "淘汰导向"], "answer": 0, "analysis": "弱化甄别促进发展是过程性评价价值。"}, {"type": "multi", "section": 11, "stem": "过程性评价在教学中的价值包括（ ）。", "options": ["及时反馈便于调整", "关注学生进步与努力", "全面考查素养形成过程", "强化甄别选拔"], "answer": [0, 1, 2], "analysis": "过程性评价价值含及时反馈、关注进步、全面考查、弱化甄别。"}, {"type": "single", "section": 11, "stem": "过程性评价具有及时反馈、关注进步、全面考查素养形成、弱化甄别选拔等价值。", "options": ["正确", "错误"], "answer": 0, "analysis": "过程性价值如上。"}, {"type": "single", "section": 11, "stem": "下列属于定性评价的是（ ）。", "options": ["用描述性语言评价", "用分数排名", "用数值统计", "用百分数"], "answer": 0, "analysis": "定性评价用描述；定量用数值。"}, {"type": "multi", "section": 11, "stem": "关于教学评价分类，下列说法正确的有（ ）。", "options": ["按方法有定性/定量评价", "按基准有相对/绝对/个体内差异", "按时机有诊断/形成/总结", "只有一种分类"], "answer": [0, 1, 2], "analysis": "分类可从时机、基准、方法多角度。"}, {"type": "single", "section": 11, "stem": "教学评价可依据教学目标，对教学过程及结果进行价值判断。", "options": ["正确", "错误"], "answer": 0, "analysis": "评价定义如上。"}, {"type": "single", "section": 11, "stem": "“关注学生努力程度与进步，而非仅看分数”体现了（ ）。", "options": ["过程性评价理念", "总结性评价", "相对评价", "选拔评价"], "answer": 0, "analysis": "关注进步体现过程性评价。"}, {"type": "multi", "section": 11, "stem": "下列哪些体现了“多元评价”？（ ）", "options": ["评价主体含师/生/同伴/家长", "方式含纸笔+上机+作品", "内容多维", "仅教师打分"], "answer": [0, 1, 2], "analysis": "多元评价主体、方式、内容均多元。"}, {"type": "single", "section": 11, "stem": "诊断性评价用于教学前摸底，形成性评价用于教学中反馈，总结性评价用于教学后评定。", "options": ["正确", "错误"], "answer": 0, "analysis": "三类时机如上。"}, {"type": "single", "section": 12, "stem": "多媒体教室通常由（ ）组成，以教师演示为主。", "options": ["投影/电子白板+计算机", "仅黑板", "仅学生机", "无设备"], "answer": 0, "analysis": "多媒体教室是投影/电子白板+计算机，教师演示为主。"}, {"type": "single", "section": 12, "stem": "网络教室由（ ）组成，支持资源共享与交流协作。", "options": ["学生机+教师机+网络", "仅一台计算机", "仅投影", "无网络"], "answer": 0, "analysis": "网络教室含学生机+教师机+网络。"}, {"type": "single", "section": 12, "stem": "网络教室相对多媒体教室的独特优势是（ ）。", "options": ["提供丰富学习资源与便于交流的平台", "只能教师演示", "不能共享", "无互动"], "answer": 0, "analysis": "网络教室独特优势：丰富资源与便于交流协作的平台。"}, {"type": "single", "section": 12, "stem": "下列关于多媒体教学环境的说法，正确的是（ ）。", "options": ["多媒体教室以教师演示为主，网络教室支持协作", "两者完全相同", "网络教室不能共享资源", "多媒体教室支持充分协作"], "answer": 0, "analysis": "多媒体教室演示为主，网络教室支持资源共享协作。"}, {"type": "multi", "section": 12, "stem": "关于多媒体教学环境，下列说法正确的有（ ）。", "options": ["多媒体教室投影/电子白板+计算机", "网络教室含学生机+教师机+网络", "网络教室便于资源共享与协作", "多媒体教室以学生机为主"], "answer": [0, 1, 2], "analysis": "多媒体教室演示为主，网络教室含学生机+教师机+网络、便于协作。"}, {"type": "single", "section": 12, "stem": "网络教室相比多媒体教室，独特优势在于提供丰富学习资源与便于交流协作的平台。", "options": ["正确", "错误"], "answer": 0, "analysis": "网络教室优势如上。"}, {"type": "single", "section": 12, "stem": "PowerPoint课件制作的基本原则是（ ）。", "options": ["简明扼要、突出重点", "内容越多越好", "越复杂越好", "无需重点"], "answer": 0, "analysis": "课件原则：简明扼要、突出重点，避免无关干扰。"}, {"type": "single", "section": 12, "stem": "关于PPT课件“简洁”，正确的理解是（ ）。", "options": ["内容精炼，并非要求无颜色无背景", "必须全白无色彩", "不能有任何背景", "越花哨越好"], "answer": 0, "analysis": "简洁指内容精炼，适当色彩背景有助于理解记忆。"}, {"type": "single", "section": 12, "stem": "PPT课件的作用不包括（ ）。", "options": ["增加考试难度", "化抽象为直观", "记录操作过程便于复习", "提炼书本知识助记忆"], "answer": 0, "analysis": "课件作用：化抽象为直观、记录操作便于复习、提炼知识助记忆。"}, {"type": "multi", "section": 12, "stem": "PPT课件的作用包括（ ）。", "options": ["化抽象为直观", "记录操作过程便于复习", "提炼书本知识帮助记忆", "增加无关干扰"], "answer": [0, 1, 2], "analysis": "课件作用如上；应避免无关干扰。"}, {"type": "single", "section": 12, "stem": "PPT课件应简明扼要、突出重点，适当色彩与背景有助于理解与记忆。", "options": ["正确", "错误"], "answer": 0, "analysis": "课件原则如上。"}, {"type": "single", "section": 12, "stem": "电子白板是（ ）。", "options": ["交互式教学设备，可与计算机程序联动", "普通黑板", "投影仪", "打印机"], "answer": 0, "analysis": "电子白板是交互式设备，可联动计算机。"}, {"type": "single", "section": 12, "stem": "关于电子白板，正确的认识是（ ）。", "options": ["不能完全替代投影仪和PPT，可与软件PPT相互调用", "可完全替代投影和PPT", "适用于所有课型", "毫无局限"], "answer": 0, "analysis": "白板不能完全替代投影/PPT，可相互调用，非所有课型适用。"}, {"type": "multi", "section": 12, "stem": "关于电子白板，下列说法正确的有（ ）。", "options": ["交互式教学设备", "可与计算机程序联动", "白板、软件、PPT可相互调用", "能完全替代投影仪和PPT"], "answer": [0, 1, 2], "analysis": "白板交互式、可联动、可相互调用，但不能完全替代投影/PPT。"}, {"type": "single", "section": 12, "stem": "电子白板是交互式教学设备，不能完全替代投影仪和PPT。", "options": ["正确", "错误"], "answer": 0, "analysis": "电子白板定位如上。"}, {"type": "single", "section": 12, "stem": "微课是以（ ）为核心的教学资源。", "options": ["短视频", "长篇小说", "黑板板书", "试卷"], "answer": 0, "analysis": "微课以短视频为核心，含辅助资源。"}, {"type": "single", "section": 12, "stem": "下列关于微课的说法，正确的是（ ）。", "options": ["主持人可出镜也可话外音", "只能教师出镜", "只能在课后用", "学生不能选看"], "answer": 0, "analysis": "微课主持人可出镜或话外音，课前中后均可，学生可自主选看。"}, {"type": "single", "section": 12, "stem": "微课的适宜时长一般为（ ）。", "options": ["5~10分钟，最长不宜超过20分钟", "1小时以上", "正好60分钟", "无限制"], "answer": 0, "analysis": "微课以5~10分钟为宜，最长不宜超过20分钟。"}, {"type": "multi", "section": 12, "stem": "关于微课，下列说法正确的有（ ）。", "options": ["以短视频为核心", "课前/课中/课后均可使用", "学生可自主选看支持分层", "主持人必须全程出镜"], "answer": [0, 1, 2], "analysis": "微课短视频为核心、全时段可用、可自主选看；主持人可出镜或话外音。"}, {"type": "single", "section": 12, "stem": "微课以短视频为核心，时长以5~10分钟为宜，最长不宜超过20分钟。", "options": ["正确", "错误"], "answer": 0, "analysis": "微课时长如上。"}, {"type": "single", "section": 12, "stem": "翻转课堂将知识传授放在（ ），课堂时间用于答疑、讨论、练习、创作。", "options": ["课前（视频/微课）", "课中", "课后", "考试时"], "answer": 0, "analysis": "翻转课堂知识传授放课前（视频/微课）。"}, {"type": "single", "section": 12, "stem": "翻转课堂的益处不包括（ ）。", "options": ["增加教师满堂灌时间", "学生自定步调学习", "课堂高效用于深度互动", "培养自主学习能力"], "answer": 0, "analysis": "翻转课堂减少满堂灌，增加互动与自主。"}, {"type": "multi", "section": 12, "stem": "翻转课堂的特点包括（ ）。", "options": ["知识传授放课前", "课堂用于答疑讨论创作", "学生自定步调", "微视频应短小精悍目标明确"], "answer": [0, 1, 2, 3], "analysis": "翻转课堂如上特点。"}, {"type": "single", "section": 12, "stem": "翻转课堂将知识传授放课前，课堂时间用于答疑、讨论、练习与创作。", "options": ["正确", "错误"], "answer": 0, "analysis": "翻转课堂如上。"}, {"type": "single", "section": 12, "stem": "网络教室教学中，内容选择上应（ ）。", "options": ["以制作作品/项目为主", "只讲理论不操作", "只做试卷", "拒绝网络"], "answer": 0, "analysis": "网络教室内容以作品/项目为主。"}, {"type": "single", "section": 12, "stem": "网络教室教学应遵循（ ）。", "options": ["自主—合作—探究为主", "教师满堂灌", "不协作", "不使用网络"], "answer": 0, "analysis": "网络教室学习活动以自主—合作—探究为主。"}, {"type": "single", "section": 12, "stem": "网络教室教学中教师应有的作用是（ ）。", "options": ["发挥指导作用，避免满堂灌、避免占用过多讲解", "全程满堂灌", "不指导", "只看守"], "answer": 0, "analysis": "教师发挥指导作用，避免满堂灌、避免过多讲解。"}, {"type": "multi", "section": 12, "stem": "网络教室教学特征包括（ ）。", "options": ["内容以作品/项目为主", "充分发挥网络功能交流协作", "教师指导避免满堂灌", "学习活动自主—合作—探究"], "answer": [0, 1, 2, 3], "analysis": "网络教室特征如上。"}, {"type": "single", "section": 12, "stem": "网络教室教学应遵循新课改理念，以自主—合作—探究为主，教师发挥指导作用。", "options": ["正确", "错误"], "answer": 0, "analysis": "网络教室特征如上。"}, {"type": "single", "section": 12, "stem": "下列关于多媒体教学设备的说法，正确的是（ ）。", "options": ["电子白板兼作屏幕与书写板，可联动程序", "电子白板不能书写", "投影仪可替代一切", "PPT无用"], "answer": 0, "analysis": "电子白板兼屏幕与书写板、可联动程序。"}, {"type": "multi", "section": 12, "stem": "下列符合多媒体教学应用原则的有（ ）。", "options": ["PPT简洁突出重点", "电子白板与PPT合理配合", "微课短小精悍", "滥用媒体越多越好"], "answer": [0, 1, 2], "analysis": "应合理适度使用媒体。"}, {"type": "single", "section": 12, "stem": "微课主持人可出镜也可使用话外音，学生可自主选看支持分层教学。", "options": ["正确", "错误"], "answer": 0, "analysis": "微课特点如上。"}, {"type": "single", "section": 12, "stem": "翻转课堂中微视频应注意（ ）。", "options": ["短小精悍、目标明确，避免过度依赖", "越长越好", "越多越杂", "无需目标"], "answer": 0, "analysis": "微视频应短小精悍、目标明确。"}, {"type": "multi", "section": 12, "stem": "关于多媒体教室与网络教室的比较，下列说法正确的有（ ）。", "options": ["多媒体教室以教师演示为主", "网络教室支持资源共享与协作", "网络教室有独特协作平台优势", "多媒体教室比网络教室功能更强"], "answer": [0, 1, 2], "analysis": "多媒体教室演示为主，网络教室协作优势更强。"}, {"type": "single", "section": 12, "stem": "网络教室应充分发挥网络功能，支持学生交流协作，教师发挥指导作用避免满堂灌。", "options": ["正确", "错误"], "answer": 0, "analysis": "网络教室教学特征如上。"}]};
+
+// ============ 应用状态 ============
+const STATE = {
+  currentSection: 0,
+  currentTab: 'read',
+  currentQuizIndex: 0,
+  quizAnswers: {},       // {qIndex: selectedOptionIndex}
+  quizSubmitted: {},     // {qIndex: true}
+  doneSections: new Set(),
+  bookmarks: new Set(),
+  errorQuestions: new Set(),
+  openChapters: new Set(['第一章 信息科技课程知识']),
+  theme: 'light',
+  searchQuery: ''
+};
+
+// ============ 初始化 ============
+function init() {
+  loadState();
+  renderSidebar();
+  renderContent();
+  updateProgress();
+  updateErrorCount();
+}
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('course_teach_kb_state') || '{}');
+    if (saved.doneSections) STATE.doneSections = new Set(saved.doneSections);
+    if (saved.bookmarks) STATE.bookmarks = new Set(saved.bookmarks);
+    if (saved.errorQuestions) STATE.errorQuestions = new Set(saved.errorQuestions);
+    if (saved.openChapters) STATE.openChapters = new Set(saved.openChapters);
+    if (saved.theme) STATE.theme = saved.theme;
+    if (saved.quizAnswers) STATE.quizAnswers = saved.quizAnswers;
+    if (saved.quizSubmitted) STATE.quizSubmitted = saved.quizSubmitted;
+  } catch(e) {}
+  applyTheme();
+}
+
+function saveState() {
+  localStorage.setItem('course_teach_kb_state', JSON.stringify({
+    doneSections: [...STATE.doneSections],
+    bookmarks: [...STATE.bookmarks],
+    errorQuestions: [...STATE.errorQuestions],
+    openChapters: [...STATE.openChapters],
+    theme: STATE.theme,
+    quizAnswers: STATE.quizAnswers,
+    quizSubmitted: STATE.quizSubmitted
+  }));
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', STATE.theme);
+  document.getElementById('themeIcon').textContent = STATE.theme === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = STATE.theme === 'dark' ? '亮色模式' : '暗色模式';
+}
+
+// ============ 侧边栏 ============
+function getChapterGroups() {
+  // Group sections by chapter
+  const groups = {};
+  KB_DATA.sections.forEach((s, si) => {
+    const ch = s.chapter || '其他';
+    if (!groups[ch]) groups[ch] = [];
+    groups[ch].push({section: s, si: si});
+  });
+  return groups;
+}
+
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  let html = '';
+  const groups = getChapterGroups();
+  Object.keys(groups).forEach((chName) => {
+    const items = groups[chName];
+    const isOpen = STATE.openChapters.has(chName);
+    const chDone = items.filter(it => STATE.doneSections.has(it.si)).length;
+    html += '<div class="chapter-group">';
+    html += `<button class="chapter-title ${isOpen ? 'open' : ''}" onclick="toggleChapter('${chName.replace(/'/g, "\\'")}')">`;
+    html += `<span class="arrow">▶</span>${chName}`;
+    html += `<span class="count">${chDone}/${items.length}节</span>`;
+    html += '</button>';
+    html += `<div class="section-list ${isOpen ? 'open' : ''}" id="sectionList-${chName}">`;
+    items.forEach(({section, si}) => {
+      const isActive = si === STATE.currentSection;
+      const isDone = STATE.doneSections.has(si);
+      const quizCount = KB_DATA.quizzes.filter(q => q.section === si).length;
+      html += `<div class="section-row ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}" onclick="selectSection(${si})">`;
+      html += `<span class="check">${isDone ? '✓' : ''}</span>`;
+      html += `<span class="section-title">${section.title}</span>`;
+      html += `<button class="mini-quiz-btn" onclick="event.stopPropagation();selectSectionAndQuiz(${si})" title="本节练习(${quizCount}题)">📝${quizCount}</button>`;
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  nav.innerHTML = html;
+}
+
+function toggleChapter(chName) {
+  if (STATE.openChapters.has(chName)) {
+    STATE.openChapters.delete(chName);
+  } else {
+    STATE.openChapters.add(chName);
+  }
+  renderSidebar();
+}
+
+function selectSection(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'read';
+  // Auto-expand the chapter containing this section
+  const sec = KB_DATA.sections[si];
+  if (sec && sec.chapter) STATE.openChapters.add(sec.chapter);
+  switchTab('read');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function selectSectionAndQuiz(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'quiz';
+  const sec = KB_DATA.sections[si];
+  if (sec && sec.chapter) STATE.openChapters.add(sec.chapter);
+  // Find first quiz question index for this section
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === si);
+  if (firstQ >= 0) STATE.currentQuizIndex = firstQ;
+  switchTab('quiz');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ============ 标签页切换 ============
+function switchTab(tab) {
+  STATE.currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+  document.getElementById('readContent').style.display = tab === 'read' ? 'block' : 'none';
+  document.getElementById('quizContent').style.display = tab === 'quiz' ? 'block' : 'none';
+  document.getElementById('bookmarksContent').style.display = tab === 'bookmarks' ? 'block' : 'none';
+  document.getElementById('errorsContent').style.display = tab === 'errors' ? 'block' : 'none';
+  renderContent();
+  if (tab === 'read') document.getElementById('searchInput').value = STATE.searchQuery;
+}
+
+// ============ 内容渲染 ============
+function renderContent() {
+  if (STATE.currentTab === 'read' || STATE.currentTab === 'bookmarks' || STATE.currentTab === 'errors') {
+    renderReadContent();
+  }
+  if (STATE.currentTab === 'quiz') {
+    renderQuizContent();
+  }
+  document.getElementById('breadcrumbCurrent').textContent = (KB_DATA.sections[STATE.currentSection]?.chapter || '') +
+    (KB_DATA.sections[STATE.currentSection] ? ' › ' : '') + (KB_DATA.sections[STATE.currentSection]?.title || '第一章');
+}
+
+function renderReadContent() {
+  const container = document.getElementById('readContent');
+  const section = KB_DATA.sections[STATE.currentSection];
+  let cards = section.cards;
+
+  // Handle bookmarks tab
+  if (STATE.currentTab === 'bookmarks') {
+    const allCards = KB_DATA.sections.flatMap((s, si) => s.cards.map(c => ({...c, sectionIdx: si, sectionTitle: s.title})));
+    cards = allCards.filter(c => STATE.bookmarks.has(c.id));
+    if (cards.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+      container.style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'block';
+      document.getElementById('errorsContent').style.display = 'none';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'block';
+    document.getElementById('errorsContent').style.display = 'none';
+
+    let html = `<div class="section-header"><h2>⭐ 我的收藏</h2><div class="meta">共 ${cards.length} 个收藏</div></div>`;
+    cards.forEach(c => {
+      html += renderCard(c, true);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Handle errors tab
+  if (STATE.currentTab === 'errors') {
+    const errorQuizList = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+    if (errorQuizList.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">📝</div><h3>暂无错题</h3><p>做错的题目会自动收入错题本</p></div>';
+      document.getElementById('readContent').style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'none';
+      document.getElementById('errorsContent').style.display = 'block';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'none';
+    document.getElementById('errorsContent').style.display = 'block';
+
+    let html = `<div class="section-header"><h2>📝 错题本</h2><div class="meta">共 ${errorQuizList.length} 道错题</div></div>`;
+    errorQuizList.forEach((q, idx) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderErrorQuiz(q, qi, idx + 1);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Normal read mode
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'none';
+
+  let html = `<div class="section-header">`;
+  html += `<h2>${section.title}</h2>`;
+  html += `<div class="meta">`;
+  html += `<span>📄 ${section.cards.length} 个知识点</span>`;
+  html += `<span>📝 ${KB_DATA.quizzes.filter(q => q.section === STATE.currentSection).length} 道练习题</span>`;
+  html += `</div></div>`;
+
+  let filteredCards = cards;
+  if (STATE.searchQuery) {
+    const q = STATE.searchQuery.toLowerCase();
+    filteredCards = cards.filter(c => {
+      const text = c.title + c.html.replace(/<[^>]*>/g, '');
+      return text.toLowerCase().includes(q);
+    });
+    if (filteredCards.length === 0) {
+      html += '<div class="empty-state"><div class="icon">🔍</div><h3>未找到匹配的知识点</h3><p>试试其他关键词</p></div>';
+    }
+  }
+
+  filteredCards.forEach(c => {
+    html += renderCard(c);
+  });
+
+  html += `<div style="text-align:center;margin-top:24px">`;
+  html += `<button class="btn btn-primary" onclick="markSectionDone(${STATE.currentSection})" ${STATE.doneSections.has(STATE.currentSection) ? 'disabled' : ''}>`;
+  html += STATE.doneSections.has(STATE.currentSection) ? '✅ 已学完本节' : '✓ 标记本节为已学';
+  html += '</button>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderCard(card, showSection = false) {
+  let html = `<div class="knowledge-card" id="card-${card.id}">`;
+  html += `<h3><span class="icon">${card.icon}</span>${card.title}</h3>`;
+  if (showSection && card.sectionTitle) {
+    html += `<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">📂 ${card.sectionTitle}</div>`;
+  }
+  html += card.html;
+  if (card.tags) {
+    html += '<div class="tag-row">';
+    card.tags.forEach(t => {
+      html += `<span class="tag">${t}</span>`;
+    });
+    html += '</div>';
+  }
+  html += `<div class="card-actions">`;
+  html += `<button class="card-action-btn ${STATE.bookmarks.has(card.id) ? 'bookmarked':''}" onclick="toggleBookmark('${card.id}')">`;
+  html += STATE.bookmarks.has(card.id) ? '⭐ 已收藏' : '☆ 收藏';
+  html += '</button>';
+  html += '</div></div>';
+  return html;
+}
+
+function renderErrorQuiz(q, qi, num) {
+  const sectionTitle = KB_DATA.sections[q.section]?.title || '';
+  const labels = ['A','B','C','D'];
+  let html = `<div class="quiz-container">`;
+  html += `<div class="quiz-header"><span class="quiz-section-label">${sectionTitle}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += `<div class="quiz-options">`;
+  q.options.forEach((opt, oi) => {
+    const isMulti = q.type === 'multi';
+  let cls = '';
+    if ((isMulti && q.answer.includes(oi)) || (!isMulti && oi === q.answer)) cls = 'correct';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += `<div class="quiz-actions">`;
+  html += `<button class="btn btn-outline" onclick="removeError(${qi})">✓ 已掌握，移除</button>`;
+  html += '</div></div>';
+  return html;
+}
+
+// ============ 练习模式 ============
+function renderQuizContent() {
+  const container = document.getElementById('quizContent');
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  const total = KB_DATA.quizzes.length;
+  const sectionTotal = sectionQuizzes.length;
+
+  // Show score summary if all questions in current section are answered
+  const allAnswered = sectionQuizzes.every((_, i) => {
+    const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+    return STATE.quizSubmitted[qi];
+  });
+
+  if (allAnswered) {
+    const correct = sectionQuizzes.filter((_, i) => {
+      const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+      return isCorrect(sectionQuizzes[i], STATE.quizAnswers[qi]);
+    }).length;
+    const pct = Math.round((correct / sectionTotal) * 100);
+
+    let html = '<div class="score-display">';
+    html += `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">${KB_DATA.sections[STATE.currentSection].title} · 练习成绩</div>`;
+    html += `<div class="score-number">${pct}%</div>`;
+    html += '<div class="stats-row">';
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--success)">${correct}</div><div class="stat-label">正确</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--danger)">${sectionTotal - correct}</div><div class="stat-label">错误</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value">${sectionTotal}</div><div class="stat-label">总计</div></div>`;
+    html += '</div>';
+    html += '<div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">';
+    html += '<button class="btn btn-primary" onclick="resetSectionQuiz()">🔄 重新练习</button>';
+    if (sectionQuizzes.some((_, i) => !isCorrect(sectionQuizzes[i], STATE.quizAnswers[KB_DATA.quizzes.indexOf(sectionQuizzes[i])]))) {
+      html += '<button class="btn btn-outline" onclick="reviewSectionErrors()">📝 回看本节错题</button>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // Show all questions with results
+    sectionQuizzes.forEach((q, si) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderQuizResult(q, qi, si + 1);
+    });
+
+    container.innerHTML = html;
+    return;
+  }
+
+  const q = sectionQuizzes[STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0])] || sectionQuizzes[0];
+  const qi = KB_DATA.quizzes.indexOf(q);
+  const localIdx = STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0]);
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const labels = ['A','B','C','D'];
+  const isMulti = q.type === 'multi';
+  const hasAns = isMulti ? (Array.isArray(selected) && selected.length > 0) : (selected !== undefined);
+
+  let html = '<div class="section-header">';
+  html += `<h2>${KB_DATA.sections[STATE.currentSection].title} · 章节练习</h2>`;
+  html += `<div class="meta"><span>第 ${localIdx + 1}/${sectionTotal} 题</span></div>`;
+  html += '</div>';
+
+  html += '<div class="quiz-container">';
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}${isMulti ? ' <span style="color:var(--accent);font-size:13px;font-weight:normal">（多选）</span>' : ''}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    const isSel = isMulti ? (Array.isArray(selected) && selected.includes(oi)) : (selected === oi);
+    let cls = '';
+    if (submitted) {
+      if ((isMulti && q.answer.includes(oi)) || (!isMulti && oi === q.answer)) cls = 'correct';
+      else if (isSel) cls = 'wrong';
+    } else if (isSel) {
+      cls = 'selected';
+    }
+    html += `<div class="quiz-option ${cls}" onclick="selectOption(${qi}, ${oi})">`;
+    html += `<span class="option-letter">${labels[oi]}</span>${opt}`;
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Analysis
+  html += `<div class="analysis-box ${submitted ? 'show' : ''}" id="analysis${qi}">${q.analysis}</div>`;
+
+  // Actions
+  html += '<div class="quiz-actions">';
+  if (!submitted) {
+    html += `<button class="btn btn-primary" onclick="submitAnswer(${qi})" ${!hasAns ? 'disabled' : ''}>确认提交</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="prevQuiz()">上一题</button>`;
+  html += `<button class="btn btn-outline" onclick="nextQuiz()">下一题</button>`;
+  if (STATE.errorQuestions.has(qi)) {
+    html += `<button class="btn btn-outline" style="color:var(--danger)" onclick="removeError(${qi})">从错题本移除</button>`;
+  }
+  html += '</div>';
+  html += '</div>';
+
+  // Dots navigation
+  html += '<div class="quiz-nav">';
+  sectionQuizzes.forEach((sq, idx) => {
+    const qi2 = KB_DATA.quizzes.indexOf(sq);
+    let dotCls = '';
+    if (idx === localIdx) dotCls += ' current';
+    if (STATE.quizSubmitted[qi2]) {
+      dotCls += isCorrect(sq, STATE.quizAnswers[qi2]) ? ' correct-dot' : ' wrong-dot';
+    }
+    html += `<button class="quiz-nav-dot ${dotCls}" onclick="goToQuestion(${qi2})">${idx + 1}</button>`;
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderQuizResult(q, qi, num) {
+  const labels = ['A','B','C','D'];
+  const isMulti = q.type === 'multi';
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const correct = submitted && isCorrect(q, selected);
+
+  let html = '<div class="quiz-container">';
+  html += `<div class="quiz-header"><span class="quiz-section-label" style="background:${correct ? 'var(--success-light)' : 'var(--danger-light)'};color:${correct ? 'var(--success)' : 'var(--danger)'}">${correct ? '✓ 正确' : '✗ 错误'}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}${isMulti ? ' <span style="color:var(--accent);font-size:13px;font-weight:normal">（多选）</span>' : ''}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if ((isMulti && q.answer.includes(oi)) || (!isMulti && oi === q.answer)) cls = 'correct';
+    else if ((isMulti && Array.isArray(selected) && selected.includes(oi)) || (!isMulti && oi === selected)) cls = 'wrong';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += '</div>';
+  return html;
+}
+
+// ============ 练习操作 ============
+function isCorrect(q, ans) {
+  if (q.type === 'multi') {
+    if (!Array.isArray(ans)) return false;
+    const a = [...ans].sort((x, y) => x - y);
+    const b = [...(q.answer || [])].sort((x, y) => x - y);
+    return a.length === b.length && a.every((v, i) => v === b[i]);
+  }
+  return ans === q.answer;
+}
+
+function selectOption(qi, oi) {
+  if (STATE.quizSubmitted[qi]) return;
+  const q = KB_DATA.quizzes[qi];
+  if (q.type === 'multi') {
+    if (!Array.isArray(STATE.quizAnswers[qi])) STATE.quizAnswers[qi] = [];
+    const arr = STATE.quizAnswers[qi];
+    const pos = arr.indexOf(oi);
+    if (pos >= 0) arr.splice(pos, 1); else arr.push(oi);
+    arr.sort((x, y) => x - y);
+  } else {
+    STATE.quizAnswers[qi] = oi;
+  }
+  saveState();
+  renderQuizContent();
+}
+
+function submitAnswer(qi) {
+  const q = KB_DATA.quizzes[qi];
+  let hasAns;
+  if (q.type === 'multi') hasAns = Array.isArray(STATE.quizAnswers[qi]) && STATE.quizAnswers[qi].length > 0;
+  else hasAns = STATE.quizAnswers[qi] !== undefined;
+  if (!hasAns) return;
+  STATE.quizSubmitted[qi] = true;
+  if (!isCorrect(q, STATE.quizAnswers[qi])) {
+    STATE.errorQuestions.add(qi);
+  }
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function findLastSectionQuizIdx(sectionIdx) {
+  let last = -1;
+  for (let i = 0; i < KB_DATA.quizzes.length; i++) {
+    if (KB_DATA.quizzes[i].section === sectionIdx) last = i;
+  }
+  return last;
+}
+
+function prevQuiz() {
+  const sectionStart = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex > sectionStart) {
+    STATE.currentQuizIndex--;
+  }
+  renderQuizContent();
+}
+
+function nextQuiz() {
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex < sectionEnd) {
+    STATE.currentQuizIndex++;
+  }
+  renderQuizContent();
+}
+
+function goToQuestion(qi) {
+  STATE.currentQuizIndex = qi;
+  renderQuizContent();
+}
+
+function resetSectionQuiz() {
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  sectionQuizzes.forEach(q => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    delete STATE.quizAnswers[qi];
+    delete STATE.quizSubmitted[qi];
+     STATE.errorQuestions.delete(qi);
+  });
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  STATE.currentQuizIndex = firstQ >= 0 ? firstQ : 0;
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function reviewSectionErrors() {
+  // Switch to errors tab
+  STATE.currentTab = 'errors';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('errorsTab').classList.add('active');
+  document.getElementById('errorsTab').style.display = '';
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'block';
+  renderContent();
+}
+
+function removeError(qi) {
+  STATE.errorQuestions.delete(qi);
+  saveState();
+  updateErrorCount();
+  if (STATE.currentTab === 'errors') renderContent();
+  if (STATE.currentTab === 'quiz') renderQuizContent();
+}
+
+// ============ 收藏 ============
+function toggleBookmark(cardId) {
+  if (STATE.bookmarks.has(cardId)) {
+    STATE.bookmarks.delete(cardId);
+    showToast('已取消收藏');
+  } else {
+    STATE.bookmarks.add(cardId);
+    showToast('已加入收藏夹');
+  }
+  saveState();
+  renderContent();
+}
+
+function toggleBookmarks() {
+  const tabBtn = document.getElementById('bookmarksTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'bookmarks';
+  switchTab('bookmarks');
+  const allBookmarks = KB_DATA.sections.flatMap(s => s.cards).filter(c => STATE.bookmarks.has(c.id));
+  if (allBookmarks.length === 0) {
+    document.getElementById('bookmarksContent').innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+  }
+}
+
+function toggleErrors() {
+  const tabBtn = document.getElementById('errorsTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'errors';
+  switchTab('errors');
+}
+
+// ============ 节完成标记 ============
+function markSectionDone(si) {
+  STATE.doneSections.add(si);
+  saveState();
+  updateProgress();
+  renderSidebar();
+  renderContent();
+  setTimeout(() => showToast('✅ 已标记本节为已学'), 300);
+}
+
+function updateProgress() {
+  const total = KB_DATA.sections.length;
+  const done = STATE.doneSections.size;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function updateErrorCount() {
+  document.getElementById('errorCount').textContent = STATE.errorQuestions.size > 0 ? `(${STATE.errorQuestions.size})` : '';
+}
+
+// ============ 搜索 ============
+function onSearch() {
+  STATE.searchQuery = document.getElementById('searchInput').value.trim();
+  if (STATE.currentTab !== 'read') {
+    switchTab('read');
+  }
+  renderContent();
+}
+
+// ============ 主题 ============
+function toggleTheme() {
+  STATE.theme = STATE.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  saveState();
+}
+
+// ============ 错题导出 ============
+function exportErrorsCSV() {
+  const errors = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+  if (errors.length === 0) {
+    showToast('暂无错题可导出');
+    return;
+  }
+  const labels = ['A','B','C','D'];
+  let csv = '\uFEFF序号,题目,选项A,选项B,选项C,选项D,正确答案,你的答案,解析\n';
+  errors.forEach((q, idx) => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    const yourAnswer = Array.isArray(STATE.quizAnswers[qi]) ? STATE.quizAnswers[qi].map(i => labels[i]).join('') : (STATE.quizAnswers[qi] !== undefined ? labels[STATE.quizAnswers[qi]] : '未答');
+    const correctAnswer = Array.isArray(q.answer) ? q.answer.map(i => labels[i]).join('') : labels[q.answer];
+    const stem = q.stem.replace(/"/g, '""');
+    const opts = q.options.map(o => o.replace(/"/g, '""'));
+    const analysis = q.analysis.replace(/<[^>]*>/g, '').replace(/"/g, '""');
+    csv += `${idx + 1},"${stem}","${opts[0] || ''}","${opts[1] || ''}","${opts[2] || ''}","${opts[3] || ''}","${correctAnswer}","${yourAnswer}","${analysis}"\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '信息技术_错题导出.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============ 移动端 ============
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ============ Toast ============
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.getElementById('toastContainer').appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+// ============ 启动 ============
+document.addEventListener('DOMContentLoaded', function() {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+});
+// 兜底：如果DOMContentLoaded已触发
+if (document.readyState !== 'loading') {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+}
+</script>
+</body>
+</html>

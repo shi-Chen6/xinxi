@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法与程序（程序设计） · 知识库</title>
+<style>
+:root {
+  --bg: #f8f9fb;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #5a5d6e;
+  --text-muted: #9498a8;
+  --border: #e8eaef;
+  --accent: #4f46e5;
+  --accent-light: #eef0ff;
+  --success: #059669;
+  --success-light: #ecfdf5;
+  --warning: #d97706;
+  --warning-light: #fffbeb;
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --info: #2563eb;
+  --info-light: #eff6ff;
+  --tag-bg: #f1f5f9;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-sidebar: #1e293b;
+  --text: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #334155;
+  --accent: #818cf8;
+  --accent-light: #1e1b4b;
+  --tag-bg: #334155;
+  --shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.4;
+}
+
+.sidebar-header .subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+}
+
+.chapter-group {
+  margin-bottom: 4px;
+}
+
+.chapter-title {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: background var(--transition);
+}
+
+.chapter-title:hover { background: var(--accent-light); }
+.chapter-title .arrow {
+  font-size: 10px;
+  transition: transform var(--transition);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.chapter-title.open .arrow { transform: rotate(90deg); }
+.chapter-title .count {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.section-list {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+}
+
+.section-list.open { max-height: 500px; }
+
+.section-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.section-item:hover { background: var(--accent-light); color: var(--accent); }
+.section-item.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+
+.section-item .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.section-item.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.section-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all var(--transition);
+  border-radius: var(--radius-xs);
+  margin: 1px 8px;
+  width: calc(100% - 16px);
+}
+
+.section-row:hover { background: var(--accent-light); color: var(--accent); }
+.section-row.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+.section-row .section-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.section-row .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.section-row.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.mini-quiz-btn {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.mini-quiz-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-bar-wrap { margin-bottom: 4px; }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text-muted); margin-bottom: 6px;
+}
+.progress-bar {
+  height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease;
+}
+
+.sidebar-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: var(--radius-xs);
+  font-size: 12px; color: var(--text-secondary); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg-card);
+  transition: all var(--transition);
+  width: 100%;
+}
+
+.sidebar-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sidebar-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+
+.top-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 50;
+}
+
+.breadcrumb {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.breadcrumb span { color: var(--text); font-weight: 500; }
+
+.search-box {
+  margin-left: auto;
+  position: relative;
+}
+
+.search-box input {
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-size: 13px; width: 240px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.search-box input:focus { border-color: var(--accent); }
+.search-box .search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); font-size: 14px;
+}
+
+.content-area {
+  padding: 24px;
+  max-width: 900px;
+}
+
+.tab-bar {
+  display: flex; gap: 4px; margin-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  font-size: 14px; font-weight: 500; color: var(--text-muted);
+  border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn .badge {
+  font-size: 11px; background: var(--tag-bg); color: var(--text-secondary);
+  padding: 1px 8px; border-radius: 10px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 20px; font-weight: 700; color: var(--text);
+  margin-bottom: 4px;
+}
+
+.section-header .meta {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; gap: 16px;
+}
+
+.knowledge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--transition);
+}
+
+.knowledge-card:hover { box-shadow: var(--shadow-md); }
+
+.knowledge-card h3 {
+  font-size: 16px; font-weight: 600; color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.knowledge-card h3 .icon {
+  font-size: 18px;
+}
+
+.knowledge-card p {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.knowledge-card ul, .knowledge-card ol {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.knowledge-card li {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.knowledge-card .highlight {
+  background: var(--warning-light);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.knowledge-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.knowledge-table th, .knowledge-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.knowledge-table th {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.knowledge-table td { color: var(--text-secondary); }
+
+.tag-row {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 12px; background: var(--tag-bg);
+  color: var(--text-secondary);
+}
+
+.tag.accent { background: var(--accent-light); color: var(--accent); }
+.tag.success { background: var(--success-light); color: var(--success); }
+.tag.warning { background: var(--warning-light); color: var(--warning); }
+
+.card-actions {
+  display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.card-action-btn {
+  font-size: 12px; padding: 5px 12px;
+  border-radius: var(--radius-xs); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 4px;
+}
+
+.card-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.card-action-btn.bookmarked { border-color: #f59e0b; color: #f59e0b; background: #fffbeb; }
+
+.quiz-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+
+.quiz-section-label {
+  font-size: 12px; color: var(--text-muted);
+  background: var(--tag-bg);
+  padding: 3px 10px; border-radius: 12px;
+}
+
+.quiz-question {
+  font-size: 15px; font-weight: 500; color: var(--text);
+  margin-bottom: 16px; line-height: 1.6;
+}
+
+.quiz-options {
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.quiz-option {
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 14px; color: var(--text-secondary);
+  background: var(--bg);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.quiz-option:hover { border-color: var(--accent); }
+.quiz-option.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.quiz-option.correct { border-color: var(--success); background: var(--success-light); color: var(--success); font-weight: 600; }
+.quiz-option.wrong { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.quiz-option .option-letter {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-weight: 600; font-size: 13px;
+  background: var(--tag-bg); color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.quiz-option.selected .option-letter { background: var(--accent); color: #fff; }
+.quiz-option.correct .option-letter { background: var(--success); color: #fff; }
+.quiz-option.wrong .option-letter { background: var(--danger); color: #fff; }
+
+.analysis-box {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--info-light);
+  border: 1px solid #93c5fd;
+  font-size: 13px; color: #1e40af;
+  line-height: 1.7;
+  display: none;
+}
+
+.analysis-box.show { display: block; }
+
+.analysis-box strong { color: #1e3a5f; }
+
+.quiz-actions {
+  display: flex; gap: 8px; margin-top: 12px;
+}
+
+.btn {
+  padding: 8px 16px; border-radius: var(--radius-xs);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: none; transition: all var(--transition);
+}
+
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
+
+.quiz-nav {
+  display: flex; justify-content: center; gap: 8px; margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.quiz-nav-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg);
+  font-size: 12px; cursor: pointer; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+
+.quiz-nav-dot:hover { border-color: var(--accent); }
+.quiz-nav-dot.current { border-color: var(--accent); background: var(--accent); color: #fff; font-weight: 600; }
+.quiz-nav-dot.correct-dot { border-color: var(--success); background: var(--success-light); }
+.quiz-nav-dot.wrong-dot { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state h3 { font-size: 16px; margin-bottom: 8px; color: var(--text); }
+.empty-state p { font-size: 13px; }
+
+.score-display {
+  text-align: center; padding: 40px 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.score-number {
+  font-size: 48px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stats-row {
+  display: flex; justify-content: center; gap: 32px;
+  margin: 16px 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value { font-size: 20px; font-weight: 600; color: var(--text); }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.bookmark-list-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.bookmark-list-item:hover { background: var(--bg); }
+
+.bookmark-list-item .title { font-size: 13px; color: var(--text); font-weight: 500; }
+.bookmark-list-item .meta { font-size: 11px; color: var(--text-muted); }
+
+.mobile-menu-btn {
+  display: none;
+  width: 36px; height: 36px; border: none; background: none;
+  font-size: 20px; cursor: pointer; color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .search-box input { width: 160px; }
+  .content-area { padding: 16px; }
+}
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  padding: 10px 20px; background: var(--text); color: var(--bg);
+  border-radius: 20px; font-size: 13px; z-index: 1000;
+  animation: toastIn 0.3s ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>算法与程序（程序设计）</h1>
+      <div class="subtitle">算法与程序 · 知识库 · 全四章</div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+    <div class="sidebar-footer">
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>学习进度</span><span id="progressPercent">0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+      <button class="sidebar-btn" onclick="toggleBookmarks()" id="bookmarkBtn">
+        <span>⭐</span> 收藏夹
+      </button>
+      <button class="sidebar-btn" onclick="toggleErrors()" id="errorBtn">
+        <span>📝</span> 错题本 <span style="font-size:10px;color:var(--text-muted)" id="errorCount"></span>
+      </button>
+      <button class="sidebar-btn" onclick="exportErrorsCSV()">
+        <span>📥</span> 导出错题CSV
+      </button>
+      <button class="sidebar-btn" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">暗色模式</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="breadcrumb" id="breadcrumb">
+        首页 <span style="margin:0 4px;color:var(--text-muted)">›</span> <span id="breadcrumbCurrent">第一章</span>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜索知识点..." oninput="onSearch()">
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="read" onclick="switchTab('read')">
+          📖 知识阅读
+        </button>
+        <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">
+          📝 章节练习 <span class="badge" id="quizBadge">200题</span>
+        </button>
+        <button class="tab-btn" data-tab="bookmarks" onclick="switchTab('bookmarks')" style="display:none" id="bookmarksTab">
+          ⭐ 收藏夹
+        </button>
+        <button class="tab-btn" data-tab="errors" onclick="switchTab('errors')" style="display:none" id="errorsTab">
+          📝 错题本
+        </button>
+      </div>
+
+      <div id="readContent"></div>
+      <div id="quizContent" style="display:none"></div>
+      <div id="bookmarksContent" style="display:none"></div>
+      <div id="errorsContent" style="display:none"></div>
+    </div>
+  </main>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+// ============ 知识数据 ============
+const KB_DATA = {"title": "算法与程序（程序设计） · 知识库", "sections": [{"chapter": "第一章 程序设计语言", "title": "第一节 LOGO语言", "cards": [{"id": "c101", "title": "LOGO语言概述", "icon": "🐢", "html": "<p>Logo 语言是一种<strong>早期、与自然语言非常接近</strong>的编程语言，1968 年由美国国家科学基金会资助、在<strong>麻省理工学院（MIT）人工智能研究室</strong>完成。</p><p>它主要面向儿童编程启蒙，通过<strong>“绘图”方式</strong>学习编程，具有三方面功能：</p><ul><li>编辑功能：编辑命令与过程；</li><li><strong>海龟作图</strong>功能：指挥“小海龟”移动绘制图形；</li><li>字表处理与数值处理功能。</li></ul><p><span class='highlight'>Logo 语言在编写时不区分大小写，PC Logo 在 DOS 系统中运行，默认背景色为白色。</span></p>", "tags": ["LOGO", "MIT", "海龟作图", "必考"]}, {"id": "c102", "title": "LOGO语言启动与窗口", "icon": "🪟", "html": "<p>启动：单击“开始”→“程序”→“PC Logo”即可打开窗口。</p><ul><li><strong>视图窗口</strong>：屏幕上方，中央“小海龟”是绘图工具，初始位置称<strong>“母位”</strong>，小海龟默认<strong>头朝上</strong>。</li><li><strong>命令窗口</strong>：屏幕下方，输入命令指挥小海龟；“<strong>?</strong>”是提示符，“<strong>|</strong>”是光标。</li></ul><p><span class='highlight'>命令与参数之间要有空格。</span></p>", "tags": ["窗口", "母位", "提示符"]}, {"id": "c103", "title": "LOGO常用命令", "icon": "⌨️", "html": "<table class='knowledge-table'><tr><th>命令</th><th>含义</th></tr><tr><td>FD 前进</td><td>forward，必须配数字，如 FD 100</td></tr><tr><td>RT 右转 / LT 左转</td><td>改变海龟方向</td></tr><tr><td>BK 后退</td><td>back</td></tr><tr><td>PU 抬笔 / PD 落笔</td><td>移动时是否画线</td></tr><tr><td>HT 藏龟 / ST 显龟</td><td>hide/show turtle</td></tr><tr><td>CS 清屏复位</td><td>clear screen，海龟回母位、头朝上</td></tr><tr><td>DRAW / CLEAN</td><td>清屏并复位</td></tr><tr><td>WRAP / FENCE</td><td>绕回 / 边界模式</td></tr><tr><td>REPEAT n[…]</td><td>重复执行 n 次</td></tr></table><p><span class='highlight'>正三角形外角为 120°，画正三角形可用 REPEAT 3[FD 步数 RT 120]。</span></p>", "tags": ["LOGO命令", "FD", "REPEAT", "必考"]}, {"id": "c104", "title": "LOGO过程定义", "icon": "📝", "html": "<p>把一组命令定义为<strong>过程</strong>，可重复调用：</p><pre style='background:#f5f7fa;padding:8px;border-radius:6px;'>TO 过程名（过程头）\n  过程体\nEND（过程尾）</pre><p>例：画边长为 50 步的正方形可定义为一个过程；定义好的过程在退出 Logo 前可<strong>重复使用</strong>。</p>", "tags": ["过程", "TO", "END"]}]}, {"chapter": "第一章 程序设计语言", "title": "第二节 Scratch语言", "cards": [{"id": "c111", "title": "Scratch概述", "icon": "🧱", "html": "<p>Scratch 是由<strong>麻省理工学院（MIT）设计开发</strong>的少儿编程工具，采用<strong>图形化积木编程</strong>，用来创造交互式故事、动画、游戏、音乐和艺术。</p><p>程序命令以<strong>木块形状的积木</strong>表示，用鼠标拖拽到脚本区即可，<strong>无须记忆语法</strong>，深受小学生喜爱。</p><p><span class='highlight'>安徽省小学信息科技教材安排了 Scratch 编程单元。</span></p>", "tags": ["Scratch", "MIT", "图形化", "必考"]}, {"id": "c112", "title": "Scratch 3.0 工作界面", "icon": "🖥️", "html": "<p>Scratch 3.0 界面主要包含<strong>2 个板块、5 个区域</strong>：</p><ul><li><strong>菜单栏</strong>：顶部，含语言切换、文件、编辑等；</li><li><strong>标签栏</strong>：代码 / 舞台 / 造型（或声音）；</li><li><strong>舞台区</strong>：展示程序运行效果，默认背景为白色；</li><li><strong>角色 / 背景区</strong>：管理角色与背景；</li><li><strong>积木区</strong>：分类存放各类积木；</li><li><strong>脚本区</strong>：编写程序的地方，把积木块组合。</li></ul><p><span class='highlight'>新建作品时默认角色是“小猫”。</span></p>", "tags": ["界面", "舞台", "角色", "小猫", "必考"]}, {"id": "c113", "title": "Scratch特征与积木", "icon": "🧩", "html": "<p>Scratch 3.0 特征：</p><ul><li>对移动设备更好支持，<strong>无须插件</strong>即可在手机等移动设备播放；</li><li>积木样式丰富（运动、外观、声音、事件、控制、侦测、运算、变量等）；</li><li>变量支持 <strong>3 种数据类型</strong>；</li><li>可导入 Scratch 2.0 项目。</li></ul>", "tags": ["特征", "积木", "变量"]}, {"id": "c114", "title": "Scratch控制语句", "icon": "🔀", "html": "<p><strong>条件语句</strong>：根据指定条件执行不同脚本（如果…那么）。</p><p><strong>循环语句</strong>：让程序执行规律性重复操作，如“重复执行”“重复执行直到…”。</p><p>例：制作加法器，按键启动程序，回答正确/错误执行不同语句；蜗牛赛跑小游戏利用“在…之间”随机数与重复执行实现。</p>", "tags": ["条件", "循环", "重复执行"]}]}, {"chapter": "第一章 程序设计语言", "title": "第三节 Visual Basic语言", "cards": [{"id": "c121", "title": "VB概述与开发环境", "icon": "🅱️", "html": "<p>Visual Basic（VB）是一种<strong>面向对象、事件驱动</strong>的结构化程序设计语言，易学易懂、易于掌握。</p><p>集成开发环境主要窗口：</p><ul><li><strong>窗体设计窗口</strong>：设计界面；</li><li><strong>工具箱</strong>：控件；</li><li><strong>属性窗口</strong>：设置对象属性；</li><li><strong>工程窗口</strong>：管理工程；</li><li><strong>代码窗口</strong>：编写代码。</li></ul>", "tags": ["VB", "面向对象", "事件驱动", "必考"]}, {"id": "c122", "title": "对象的三要素", "icon": "🎯", "html": "<p>VB 是面向对象的，核心是<strong>对象</strong>。对象具有三要素：</p><ul><li><strong>属性</strong>：对象的特征（如位置、高度、背景图片）；</li><li><strong>事件</strong>：对象能识别的动作（如单击 Click、双击 DblClick）；</li><li><strong>方法</strong>：对象能执行的动作（如 Print 方法、Show 方法）。</li></ul><p><span class='highlight'>类是具有相同性质的对象的抽象；事件是触发代码执行的前提。</span></p>", "tags": ["属性", "事件", "方法", "必考"]}, {"id": "c123", "title": "VB数据类型", "icon": "🔢", "html": "<p>数据类型精度由低到高排序：</p><p><span class='highlight'>Integer &lt; Long &lt; Single &lt; Double &lt; Currency</span></p><p>运算结果的数据类型向<strong>精度高</strong>的方向靠。例：Long 型与 Single 型数据运算，结果为 <strong>Double</strong> 型。</p><p>其他类型：字符串（String，长度≤255）、布尔（Boolean）、日期（Date）等。</p>", "tags": ["数据类型", "精度排序", "必考"]}, {"id": "c124", "title": "常量、变量与运算符", "icon": "🅰️", "html": "<p><strong>变量命名规则</strong>：必须以<strong>字母或汉字开头</strong>。</p><p>字符串运算符：<strong>&amp;</strong> 和 <strong>+</strong>，作用都是连接两个字符串。</p><p>常用内部函数：</p><ul><li>数学函数：Sqr（开平方）、Abs（绝对值）、Int（取不大于 x 的最大整数）、Rnd（0~1 随机数）；</li><li>类型转换函数：Val（字符→数值）、Str（数值→字符）；</li><li>输入输出函数：InputBox（输入对话框）、Print（输出）、MsgBox（消息框）。</li></ul><p><span class='highlight'>Int(Rnd*10) 产生 0~9 的随机整数；Abs 取绝对值。</span></p>", "tags": ["变量", "字符串", "内部函数", "必考"]}, {"id": "c125", "title": "选择与循环结构", "icon": "🔁", "html": "<p><strong>选择结构</strong>：If…Then…Else、Select Case，根据条件执行不同分支。</p><p><strong>循环结构</strong>：For…Next（计数循环，先检查条件）、Do…Loop（条件循环）、While。</p><p>例：用循环计算 2+4+6+…+200 的和，需在循环体中累加并改变步长变量。</p>", "tags": ["选择结构", "循环结构", "For", "Do"]}]}, {"chapter": "第一章 程序设计语言", "title": "第四节 C语言", "cards": [{"id": "c131", "title": "C语言概述", "icon": "🔤", "html": "<p>C 语言是一种<strong>高级语言</strong>，同时具备：</p><ul><li>结构化（由函数组成，结构清晰）；</li><li>运算能力丰富（多种运算符与数据类型）；</li><li>数据类型丰富（整型、实型、字符型、指针、void 等）；</li><li>具有预处理能力（#define 等）；</li><li><strong>可移植性好</strong>。</li></ul>", "tags": ["C语言", "高级", "结构化", "必考"]}, {"id": "c132", "title": "C语言的结构特点", "icon": "🏗️", "html": "<ul><li><strong>函数是 C 程序的基本单位</strong>，必须有且只有一个 <strong>main 函数</strong>；</li><li>C 程序从 <strong>main 函数开始</strong>，在 main 函数结束；</li><li>函数由<strong>说明部分</strong>和<strong>函数体</strong>组成；</li><li>程序书写格式自由，每条语句后必须有<strong>分号</strong>；</li><li>C 语言<strong>本身没有输入输出语句</strong>（由库函数 scanf/printf 实现）；</li><li>注释用 <code>/* … */</code>，可放在任何位置，不被执行，不能嵌套。</li></ul><p><span class='highlight'>main 函数是程序入口与出口，不可缺少。</span></p>", "tags": ["main函数", "分号", "注释", "必考"]}, {"id": "c133", "title": "C语言标识符", "icon": "🆔", "html": "<p>标识符是常量、变量、函数、类型的名字，分三类：</p><ul><li><strong>用户标识符</strong>：用户自定命名；</li><li><strong>保留字（关键字）</strong>：C 语言提供，如 DEFAULT、int、if 等；</li><li><strong>预定义标识符</strong>：如 #define、scanf、printf。</li></ul><p><strong>命名规则</strong>：由字母、数字、下划线组成，<span class='highlight'>第一个字符必须是字母或下划线，不能是数字</span>；C 编译系统通常只识别前 8 个字符。</p>", "tags": ["标识符", "关键字", "下划线", "必考"]}, {"id": "c134", "title": "常量与变量", "icon": "📦", "html": "<p><strong>常量</strong>：程序运行中值不变。包括数值常量（整型、实型）、字符常量（ASCII 字符，如 'A'）、字符串常量（双引号括起，如 “hello”）。</p><p><strong>变量</strong>：程序运行中值可变的量，用标识符表示。按作用域分<strong>全局变量</strong>和<strong>局部变量</strong>；用 static 说明的为<strong>静态局部变量</strong>。</p><p>基本数据类型：整型、实型、字符型，还有特殊类型 <strong>void</strong>。</p><p><span class='highlight'>字符常量用单引号，字符串常量用双引号且末尾隐含有 '\\0'。</span></p>", "tags": ["常量", "变量", "全局", "局部", "必考"]}, {"id": "c135", "title": "运算符、表达式与类型转换", "icon": "➗", "html": "<p>赋值运算符 “=” 将右侧表达式值赋给左侧变量。</p><p>C 中<strong>真为 1、假为 0</strong>。运算符含算术、关系、逻辑、位运算（按位与或非、移位，二进制计算）。</p><p>类型转换：<strong>自动转换</strong>（向高精度靠）与<strong>强制类型转换</strong>（一般格式 (类型)表达式）。</p><p>例：合法关键字判定、关系表达式 x&gt;=y &amp;&amp; y&gt;=z 表示“x≥y 且 y≥z”。</p>", "tags": ["运算符", "真1假0", "强制转换", "必考"]}, {"id": "c136", "title": "C语言函数", "icon": "📞", "html": "<p>函数是 C 程序的基本单位，可使代码功能化、模块化。</p><p><strong>函数定义</strong>：</p><pre style='background:#f5f7fa;padding:8px;border-radius:6px;'>返回值类型 函数名(形参){\n  函数体\n}</pre><p><strong>函数调用</strong>：<code>函数名(实参)</code>。形参是函数定义的参数，实参是调用时传入的值。</p>", "tags": ["函数", "定义", "调用", "形参", "实参"]}]}, {"chapter": "第一章 程序设计语言", "title": "第五节 Python语言", "cards": [{"id": "c141", "title": "Python概述", "icon": "🐍", "html": "<p>Python 是<strong>高层次</strong>的脚本语言，兼具<strong>解释性</strong>（源代码 .py 由解释器解释）与编译性（可编译为 .pyc/.pyo 字节码）。</p><ul><li><strong>严格使用缩进</strong>表示代码块，缩进不对会报错；</li><li>变量<strong>不需要声明</strong>，赋值即定义；</li><li>函数之外定义的变量是<strong>全局变量</strong>，函数内可访问。</li></ul><p><span class='highlight'>源文件以 .py 为扩展名；导入模块用 import。</span></p>", "tags": ["Python", "缩进", "解释型", "必考"]}, {"id": "c142", "title": "Python数据类型", "icon": "🗂️", "html": "<p>常用数据类型：</p><ul><li><strong>数字</strong>：整型、长整型、浮点型、复数；</li><li><strong>字符串</strong>：用引号括起；</li><li><strong>列表（list）</strong>：可变序列；</li><li><strong>元组（tuple）</strong>：不可变序列；</li><li><strong>字典（dict）</strong>：键值对；</li><li><strong>集合（set）</strong>：用 set() 或 {} 创建，注意空集合用 set() 而非 {}。</li></ul>", "tags": ["数字", "列表", "元组", "字典", "集合"]}, {"id": "c143", "title": "Python函数与控制结构", "icon": "⚙️", "html": "<p><strong>函数定义</strong>：以 <code>def</code> 开头，函数名后跟括号与冒号，<strong>内容缩进</strong>；<code>return</code> 结束函数并可返回值。</p><p><strong>控制结构</strong>：</p><ul><li><code>if / elif / else</code> 条件；</li><li><code>for</code> 循环（遍历序列）；</li><li><code>while</code> 循环。</li></ul><p>例：输出 1~100 内所有偶数，可用 for 循环加取余判断。</p>", "tags": ["def", "return", "for", "while", "必考"]}]}, {"chapter": "第二章 算法与程序设计", "title": "第一节 程序设计基础", "cards": [{"id": "c211", "title": "程序与程序设计", "icon": "📜", "html": "<p><strong>程序</strong>是一组<strong>计算机能识别和执行的指令</strong>集合，是软件的核心。</p><p><strong>程序设计</strong>是利用计算机解决问题的全过程，本质是：分析问题 → 设计算法 → 编码调试 → 得到正确结果。</p><p>程序的质量标准包括：正确性、可读性、健壮性、可维护性、可移植性、效率。</p>", "tags": ["程序", "程序设计", "质量标准", "必考"]}, {"id": "c212", "title": "程序设计语言的发展", "icon": "🔤", "html": "<p>计算机语言经历三个层次：</p><ul><li><strong>机器语言</strong>：用二进制代码表示，计算机能<strong>直接执行</strong>，但难写难读；</li><li><strong>汇编语言</strong>：用助记符表示，需翻译（汇编）后执行；</li><li><strong>高级语言</strong>：接近自然语言，须经翻译执行。</li></ul><p><strong>翻译方式</strong>：</p><ul><li><strong>编译</strong>：一次性翻译为二进制文件，效率高（如 C）；</li><li><strong>解释</strong>：逐句翻译逐句执行（如早期 BASIC、Python 解释执行）。</li></ul><p><span class='highlight'>源程序是用高级语言编写、须经编译/解释的程序。</span></p>", "tags": ["机器语言", "汇编", "高级语言", "编译", "解释", "必考"]}, {"id": "c213", "title": "程序设计方法", "icon": "🧩", "html": "<p><strong>结构化程序设计</strong>：三种基本结构——<strong>顺序、选择、循环</strong>，强调自顶向下、模块化。</p><p><strong>面向对象程序设计</strong>：四大特征——<strong>封装、继承、多态、抽象</strong>。</p><ul><li><strong>封装</strong>：隐藏对象内部细节；</li><li><strong>继承</strong>：子类拥有父类的属性和方法，可重用；</li><li><strong>多态</strong>：同一操作作用于不同对象有不同表现。</li></ul>", "tags": ["结构化", "面向对象", "封装", "继承", "多态", "必考"]}, {"id": "c214", "title": "程序设计的基本结构", "icon": "🧱", "html": "<p>任何程序都可分解为三种基本控制结构：</p><ul><li><strong>顺序结构</strong>：语句依次执行，最简单；</li><li><strong>选择结构</strong>：if/switch，按条件分支；</li><li><strong>循环结构</strong>：for/while，重复执行。</li></ul><p><span class='highlight'>顺序结构是所有结构的基础。</span></p>", "tags": ["顺序", "选择", "循环", "必考"]}]}, {"chapter": "第二章 算法与程序设计", "title": "第二节 算法基础知识", "cards": [{"id": "c221", "title": "算法的概念与特征", "icon": "💡", "html": "<p><strong>算法</strong>是解决某个特定问题的<strong>方法和步骤的精确描述</strong>。</p><p>算法五大特性：</p><ul><li><strong>有穷性</strong>：执行有限步后结束；</li><li><strong>确定性</strong>：每步含义确切，无歧义；</li><li><strong>可行性</strong>：每步都能在有限时间内完成；</li><li><strong>输入</strong>：有零个或多个输入；</li><li><strong>输出</strong>：有一个或多个输出。</li></ul><p><span class='highlight'>没有输出的算法无意义；有穷性要求算法必须能结束。</span></p>", "tags": ["算法", "五大特性", "有穷性", "必考"]}, {"id": "c222", "title": "算法的描述", "icon": "📝", "html": "<p>算法可用多种方法描述：</p><ul><li><strong>自然语言</strong>：符合表达习惯、易理解；缺点书写繁、不确定性、复杂问题难准确表达、不能被计算机识别；</li><li><strong>流程图（程序框图）</strong>：图框+流程线，形象直观；</li><li><strong>伪代码</strong>：类自然语言+类程序设计语言，便于转程序。</li></ul><p>流程图中：<strong>圆角矩形</strong>表示开始/结束，<strong>平行四边形</strong>表示输入输出，<strong>菱形</strong>表示条件判断。</p>", "tags": ["自然语言", "流程图", "伪代码", "必考"]}, {"id": "c223", "title": "算法设计的基本方法", "icon": "🛠️", "html": "<p>常用算法设计方法：</p><ul><li><strong>枚举法（穷举法）</strong>：列举所有可能，逐个检验是否满足条件；</li><li><strong>迭代法</strong>：反复用新值代替旧值逐步逼近；</li><li><strong>递归法</strong>：函数调用自身；</li><li><strong>分治法</strong>：把复杂问题分成相同或相似的子问题，再合并子问题的解；</li><li><strong>贪心法</strong>：每步取局部最优；</li><li><strong>动态规划</strong>：把子问题解存起来避免重复计算；</li><li><strong>回溯法</strong>：试探，不满足时退回换路径。</li></ul>", "tags": ["枚举", "迭代", "递归", "分治", "贪心", "必考"]}, {"id": "c224", "title": "算法的评价标准", "icon": "⭐", "html": "<p>评价一个算法优劣的主要标准：</p><ul><li><strong>正确性</strong>：能否解决问题；</li><li><strong>可读性</strong>：便于人理解；</li><li><strong>健壮性</strong>：对非法输入能适当处理；</li><li><strong>效率</strong>：<strong>时间复杂度</strong>（执行时间随规模增长）与<strong>空间复杂度</strong>（占用空间）。</li></ul><p><span class='highlight'>时间复杂度与空间复杂度是衡量算法效率的核心指标。</span></p>", "tags": ["正确性", "可读性", "时间复杂度", "空间复杂度", "必考"]}]}, {"chapter": "第三章 数据结构", "title": "第一节 数据结构基本概念", "cards": [{"id": "c311", "title": "数据结构的概念", "icon": "📊", "html": "<p><strong>数据</strong>是描述事物的符号记录；<strong>数据元素</strong>是数据的基本单位；<strong>数据结构</strong>是相互之间存在一种或多种特定关系的数据元素的集合。</p><p>数据结构包括两方面：</p><ul><li><strong>逻辑结构</strong>：数据元素间的逻辑关系——集合、线性结构、树形结构、图状结构；</li><li><strong>存储结构（物理结构）</strong>：顺序存储、链式存储、索引存储、散列存储。</li></ul><p><span class='highlight'>线性结构（线性表、栈、队列、数组、串）元素间为“一对一”；树和图为非线性结构。</span></p>", "tags": ["数据结构", "逻辑结构", "存储结构", "必考"]}, {"id": "c312", "title": "数据类型与抽象数据类型", "icon": "🧮", "html": "<p><strong>数据类型</strong>：一组值及可施加于此组值的操作的集合（如整型、实型、字符型）。</p><p><strong>抽象数据类型（ADT）</strong>：由用户定义、用以表示应用问题的数据模型，含数据对象、数据关系及操作。它把数据和操作封装，实现信息隐藏。</p>", "tags": ["数据类型", "ADT", "抽象"]}]}, {"chapter": "第三章 数据结构", "title": "第二节 线性表", "cards": [{"id": "c321", "title": "线性表的概念", "icon": "📏", "html": "<p>线性表是由 n（n≥0）个<strong>数据元素组成的有限序列</strong>，表中元素类型相同，第一个元素无前驱，最后一个无后继。</p><p><strong>顺序存储</strong>：所有元素占<strong>连续存储空间</strong>，按逻辑顺序存放。若首地址为 ADR(a₁)，每个元素占 k 字节，则第 i 个元素地址 = <code>ADR(a₁)+(i-1)k</code>。</p><p><strong>链式存储</strong>：用<strong>结点</strong>存储，结点 = <strong>数据域</strong> + <strong>指针域</strong>（指向下一结点），n 个结点链接成链表。</p>", "tags": ["线性表", "顺序存储", "链式存储", "必考"]}, {"id": "c322", "title": "线性表的运算", "icon": "🔧", "html": "<p>常见运算：</p><ul><li><strong>插入</strong>：在第 i 个位置前插入新元素（顺序表需移动元素）；</li><li><strong>删除</strong>：删除第 i 个元素；</li><li><strong>查找</strong>：按值或按位查找；</li><li><strong>遍历</strong>：依次访问每个元素。</li></ul><p>顺序存储优点：随机存取快；缺点：插入删除需移动元素。链式存储优点：插入删除方便；缺点：不能随机存取。</p>", "tags": ["插入", "删除", "查找", "遍历"]}]}, {"chapter": "第三章 数据结构", "title": "第三节 栈和队列", "cards": [{"id": "c331", "title": "栈（Stack）", "icon": "🥞", "html": "<p>栈是<strong>只允许在一端（栈顶）进行插入和删除</strong>的线性表，遵循<strong>后进先出（LIFO）</strong>原则。</p><ul><li>栈顶：可操作端，指针 top；</li><li>栈底：固定端；</li><li>入栈 push、出栈 pop。</li></ul><p>应用：<strong>递归调用、表达式求值、函数调用</strong>。例：入栈顺序 12,25,31,7,43,21，全部入栈再出栈，出栈顺序为 21,43,7,31,25,12。</p><p><span class='highlight'>栈是一种运算受限的线性表，具有“后进先出”特征。</span></p>", "tags": ["栈", "LIFO", "后进先出", "必考"]}, {"id": "c332", "title": "队列（Queue）", "icon": "🚶", "html": "<p>队列是<strong>只允许在一端（队尾）插入、另一端（队头）删除</strong>的线性表，遵循<strong>先进先出（FIFO）</strong>原则。</p><ul><li>队头 front：删除端；</li><li>队尾 rear：插入端。</li></ul><p>应用：<strong>打印缓冲区、排队系统</strong>。解决主机与打印机速度不匹配时设置打印缓冲区，对应数据结构就是<strong>队列</strong>。</p><p><span class='highlight'>队列具有“先进先出”特征，与栈相反。</span></p>", "tags": ["队列", "FIFO", "先进先出", "缓冲区", "必考"]}]}, {"chapter": "第三章 数据结构", "title": "第四节 树和二叉树", "cards": [{"id": "c341", "title": "树与二叉树的基本概念", "icon": "🌳", "html": "<p><strong>树</strong>是 n（n&gt;0）个结点的有限集合，有且仅有一个<strong>根</strong>结点，其余结点分成若干互不相交的子树。</p><p>相关术语：<strong>结点度、叶子结点、孩子/双亲、深度（高度）</strong>。</p><p><strong>二叉树</strong>：每个结点<strong>最多有两个子树</strong>，且左右子树<strong>有次序之分</strong>（有序）。</p>", "tags": ["树", "根", "二叉树", "必考"]}, {"id": "c342", "title": "满二叉树与完全二叉树", "icon": "🌲", "html": "<table class='knowledge-table'><tr><th>类型</th><th>定义</th></tr><tr><td>满二叉树</td><td>每一层结点都达到最大，所有结点都有两个子结点</td></tr><tr><td>完全二叉树</td><td>除最后一层外全满，最后一层结点靠左连续排列</td></tr></table><p><strong>二叉树性质</strong>：</p><ul><li>第 i 层（i≥1）至多有 <code>2^(i-1)</code> 个结点；</li><li>深度为 k 的二叉树至多有 <code>2^k − 1</code> 个结点；</li><li>叶子结点数 n₀ 与度为 2 的结点数 n₂ 满足 <code>n₀ = n₂ + 1</code>。</li></ul>", "tags": ["满二叉树", "完全二叉树", "性质", "必考"]}, {"id": "c343", "title": "二叉树的遍历", "icon": "🔄", "html": "<p>三种遍历（按<strong>根</strong>的位置）：</p><ul><li><strong>先序（先根）遍历</strong>：根 → 左 → 右；</li><li><strong>中序（中根）遍历</strong>：左 → 根 → 右；</li><li><strong>后序（后根）遍历</strong>：左 → 右 → 根。</li></ul><p>例：表达式可用二叉树表示，遍历顺序不同得到前缀、中缀、后缀表达式。</p><p><span class='highlight'>中序遍历得到中缀表达式；后序遍历得到后缀（逆波兰）表达式。</span></p>", "tags": ["先序", "中序", "后序", "遍历", "必考"]}, {"id": "c344", "title": "哈夫曼树（最优二叉树）", "icon": "⚖️", "html": "<p><strong>哈夫曼（Huffman）树</strong>又称<strong>最优二叉树</strong>，是一类<strong>带权路径长度（WPL）最短</strong>的树。</p><ul><li><strong>路径</strong>：两结点间的分支；</li><li><strong>路径长度</strong>：分支数；</li><li><strong>带权路径长度 WPL</strong>：所有叶子结点的（权 × 路径长度）之和；</li><li><strong>完全二叉树</strong>是路径长度最短的二叉树。</li></ul><p>构造：每次取权值最小的两棵子树合并，重复至成为一棵树。</p>", "tags": ["哈夫曼", "WPL", "最优二叉树", "必考"]}]}, {"chapter": "第三章 数据结构", "title": "第五节 图", "cards": [{"id": "c351", "title": "图的基本概念", "icon": "🔗", "html": "<p><strong>图</strong>由<strong>顶点</strong>和<strong>边</strong>组成；边有向则为有向图，无向则为无向图。</p><ul><li><strong>连通图</strong>：无向图中任意两顶点间都有路径；</li><li><strong>连通分量</strong>：无向图的极大连通子图；</li><li><strong>强连通图 / 强连通分量</strong>：有向图的对应概念；</li><li><strong>生成树</strong>：连通图的<strong>极小连通子图</strong>，含全部顶点但只有 n−1 条边；</li><li><strong>生成森林</strong>：非连通图各连通分量的生成树集合。</li></ul>", "tags": ["图", "顶点", "连通图", "生成树", "必考"]}, {"id": "c352", "title": "图的遍历", "icon": "🧭", "html": "<p>两种基本遍历：</p><ul><li><strong>深度优先搜索（DFS）</strong>：从顶点出发，沿一条路走到底，回溯后再访未访问邻接点（类似栈）；</li><li><strong>广度优先搜索（BFS）</strong>：从顶点出发，先访问其所有邻接点，再逐层扩展（类似队列）。</li></ul>", "tags": ["DFS", "BFS", "深度优先", "广度优先", "必考"]}, {"id": "c353", "title": "最小生成树与拓扑排序", "icon": "🌐", "html": "<p><strong>最小生成树</strong>：带权图中权最小的生成树。两种构造算法：</p><ul><li><strong>普里姆（Prim）</strong>：以某顶点为起点，逐步找最小权值的边加入；</li><li><strong>克鲁斯卡尔（Kruskal）</strong>：按边权从小到大选 n−1 条边，且不构成回路。</li></ul><p><strong>拓扑排序</strong>：由集合上的偏序得到全序，用于<strong>有向无环图（DAG）</strong>，可判断活动能否顺利完成（无环才可拓扑排序）。</p>", "tags": ["最小生成树", "Prim", "Kruskal", "拓扑排序", "必考"]}]}, {"chapter": "第三章 数据结构", "title": "第六节 查找", "cards": [{"id": "c361", "title": "查找", "icon": "🔍", "html": "<p><strong>顺序查找</strong>：从一端开始逐个比较，直到找到或扫描结束。时间复杂度 <strong>O(n)</strong>，对表无要求（可无序）。</p><p><strong>二分查找（折半查找）</strong>：表必须<strong>有序</strong>。取中间元素比较，相等则成功；否则在前后半区继续。时间复杂度 <strong>O(log n)</strong>。</p><p>例：在 [7,12,28,37,54,65] 中查 53，先与 37 比，再与 54 比，第 2 次比较即成功。</p><p><strong>索引查找</strong>：先查索引表，再在对应块内查找，提高速度。</p><p><span class='highlight'>二分查找效率远高于顺序查找，但前提是数据有序。</span></p>", "tags": ["顺序查找", "二分查找", "O(n)", "O(log n)", "必考"]}]}, {"chapter": "第三章 数据结构", "title": "第七节 排序", "cards": [{"id": "c371", "title": "排序概述与分类", "icon": "🔃", "html": "<p><strong>排序</strong>是将一组数据按关键字递增或递减排列。</p><p>常见排序算法：</p><ul><li><strong>插入排序</strong>：把元素逐个插入已排好序的部分；</li><li><strong>选择排序</strong>：每趟选最小（大）元素放到前面；</li><li><strong>冒泡排序</strong>：相邻元素比较交换，大数“沉底”；</li><li><strong>快速排序</strong>：选基准，分区，递归。</li></ul><p>评价指标：</p><ul><li><strong>稳定性</strong>：相等元素相对次序不变；</li><li><strong>时间复杂度</strong>：冒泡/选择/插入为 O(n²)，快速排序平均 O(n log n)；</li><li><strong>空间复杂度</strong>：冒泡只需 1 个辅助空间。</li></ul><p><span class='highlight'>冒泡排序每趟把最大元素“冒”到末尾；快速排序是平均最快的比较排序之一。</span></p>", "tags": ["排序", "冒泡", "快速", "稳定性", "必考"]}]}, {"chapter": "第四章 软件工程", "title": "第一节 软件工程概述与生命周期", "cards": [{"id": "c411", "title": "软件危机与软件工程", "icon": "🚨", "html": "<p><strong>软件危机</strong>：落后的软件生产方式无法满足快速增长的软件需求，导致软件开发与维护出现一系列严重问题的现象（如进度延误、成本失控、质量低下）。</p><p><strong>软件工程</strong>：将系统性的、规范化的、可定量的方法应用于软件的<strong>开发、运行和维护</strong>，以经济地生产出可靠软件。</p><p><span class='highlight'>软件工程的出现正是为应对软件危机。</span></p>", "tags": ["软件危机", "软件工程", "必考"]}, {"id": "c412", "title": "软件生命周期", "icon": "♻️", "html": "<p>软件生命周期由<strong>软件定义、软件开发、运行维护</strong>三个时期组成：</p><ul><li><strong>定义时期</strong>：问题定义、可行性研究、需求分析；</li><li><strong>开发时期</strong>：总体设计、详细设计、编码和单元测试、综合测试；</li><li><strong>维护时期</strong>：运行维护（不再细分阶段）。</li></ul><p>各阶段文档：需求分析产出<strong>规格说明书</strong>；测试含集成测试与验收测试。</p>", "tags": ["生命周期", "定义期", "开发期", "维护期", "必考"]}, {"id": "c413", "title": "UML 与敏捷开发", "icon": "📐", "html": "<p><strong>UML（统一建模语言）</strong>是面向对象的标准建模语言，常用图有：用例图、类图、对象图、状态图、活动图、序列图、协作图、构件图、部署图，用于可视化、构造、文档化系统。</p><p><strong>敏捷开发</strong>：以<strong>用户需求进化</strong>为核心，采用<strong>迭代、循序渐进</strong>方式，把项目切分为多个可测试、可运行的小子项目。</p>", "tags": ["UML", "用例图", "类图", "敏捷开发"]}]}, {"chapter": "第四章 软件工程", "title": "第二节 需求分析与可行性", "cards": [{"id": "c421", "title": "需求分析", "icon": "📋", "html": "<p>需求分析是软件定义时期的最后阶段，任务是以书面形式准确回答“<strong>系统必须做什么</strong>”，产出<strong>软件需求规格说明书</strong>。</p><p>对系统的综合要求：</p><ul><li><strong>功能需求</strong>：系统必须提供的服务；</li><li><strong>性能需求</strong>：响应时间、吞吐量等；</li><li><strong>可靠性 / 可用性需求</strong>；</li><li><strong>出错处理需求</strong>；</li><li><strong>接口需求</strong>（用户/硬件/软件/通信）；</li><li><strong>设计约束 / 逆向需求</strong>。</li></ul><p>准则：建立<strong>数据模型、功能模型、行为模型</strong>。</p>", "tags": ["需求分析", "规格说明书", "功能需求", "必考"]}, {"id": "c422", "title": "可行性分析", "icon": "✅", "html": "<p>可行性研究目的：用最小代价、最短时间确定问题<strong>是否值得解决</strong>。</p><p>从三方面研究可行性：</p><ul><li><strong>技术可行性</strong>：现有技术能否实现；</li><li><strong>经济可行性</strong>：效益是否超过开发成本；</li><li><strong>操作可行性</strong>：操作方式在用户组织内是否行得通。</li></ul><p>必要时还考虑法律、社会效益等。可行性研究成本通常仅占预期总成本的 5%~10%。</p>", "tags": ["可行性", "技术", "经济", "操作", "必考"]}]}, {"chapter": "第四章 软件工程", "title": "第三节 总体设计（模块化/耦合/内聚）", "cards": [{"id": "c431", "title": "总体设计与模块化原理", "icon": "🧱", "html": "<p><strong>总体设计（概要设计）</strong>：回答“系统应如何实现”，划分物理元素并设计软件结构（模块组成及关系）。</p><p>设计原理：</p><ul><li><strong>模块化</strong>：把程序划分为独立命名、可独立访问的模块；</li><li><strong>抽象</strong>：抽出本质特性、暂不考虑细节；</li><li><strong>逐步求精</strong>：先解决主要问题，推迟细节；</li><li><strong>信息隐藏与局部化</strong>：模块内部信息对不需者不可访问，相关元素物理靠近。</li></ul>", "tags": ["总体设计", "模块化", "抽象", "信息隐藏", "必考"]}, {"id": "c432", "title": "模块独立：耦合与内聚", "icon": "🔗", "html": "<p>模块的<strong>独立程度</strong>由两个标准度量：</p><table class='knowledge-table'><tr><th>耦合（由低到高）</th><th>内聚（由低到高）</th></tr><tr><td>非直接耦合</td><td>偶然内聚</td></tr><tr><td>数据耦合</td><td>逻辑内聚</td></tr><tr><td>标记耦合</td><td>时间内聚</td></tr><tr><td>控制耦合</td><td>过程内聚</td></tr><tr><td>特征耦合</td><td>通信内聚</td></tr><tr><td>公共耦合</td><td>顺序内聚</td></tr><tr><td>内容耦合</td><td>功能内聚</td></tr></table><p><span class='highlight'>耦合衡量模块间依赖紧密程度，内聚衡量模块内部结合紧密程度。应尽量用数据耦合，不用内容耦合；内聚越高越好（功能内聚最高）。</span></p>", "tags": ["耦合", "内聚", "数据耦合", "内容耦合", "功能内聚", "必考"]}, {"id": "c433", "title": "详细设计", "icon": "📝", "html": "<p><strong>详细设计（模块设计）</strong>：把解法具体化，设计每个模块的详细规格说明（不是写程序），常用工具：</p><ul><li><strong>程序流程图</strong>；</li><li><strong>N-S 图（盒图）</strong>；</li><li><strong>PDL（过程设计语言）</strong>等。</li></ul><p>详细设计结果为编码提供直接依据。</p>", "tags": ["详细设计", "流程图", "N-S图", "PDL"]}]}, {"chapter": "第四章 软件工程", "title": "第四节 软件测试与维护", "cards": [{"id": "c441", "title": "软件测试", "icon": "🧪", "html": "<p>测试是为了发现错误。按阶段：</p><ul><li><strong>单元测试</strong>：针对单个模块；</li><li><strong>集成测试</strong>：把模块按策略装配并测试；</li><li><strong>验收测试</strong>：按规格说明书由用户验收。</li></ul><p>按方法：</p><ul><li><strong>黑盒测试</strong>：不考虑内部，只测功能（等价类划分、边界值）；</li><li><strong>白盒测试</strong>：基于内部逻辑（语句覆盖、路径覆盖）。</li></ul><p><span class='highlight'>测试只能证明存在错误，不能证明没有错误。</span></p>", "tags": ["单元测试", "集成测试", "黑盒", "白盒", "必考"]}, {"id": "c442", "title": "软件维护", "icon": "🔧", "html": "<p>维护使系统持久满足需要，四类活动：</p><ul><li><strong>改正性维护</strong>：改正在使用中发现的错误（约占 17%~21%）；</li><li><strong>适应性维护</strong>：使软件适应信息技术/管理变化（约占 18%~25%）；</li><li><strong>完善性维护</strong>：扩充功能、改善性能（约占 50%~60%，比重最大）；</li><li><strong>预防性维护</strong>：主动增加功能以适应未来变化（约占 4%）。</li></ul><p>决定<strong>可维护性</strong>的基本因素：可理解性、可测试性、可修改性、可移植性、可重用性。</p><p><span class='highlight'>完善性维护所占工作量最大。</span></p>", "tags": ["改正性维护", "适应性维护", "完善性维护", "预防性维护", "必考"]}]}], "quizzes": [{"type": "single", "section": 0, "stem": "关于 Logo 语言，下列说法正确的是（ ）。", "options": ["Logo 语言是 1968 年设计的一种过程性语言，编写时不区分大小写", "Logo 语言是 1990 年以后才出现的纯可视化语言", "PC Logo 是在 Windows 系统中独立运行的", "Logo 中默认背景色是黑色"], "answer": 0, "analysis": "本题考查 Logo 语言。Logo 语言 1968 年由 MIT 完成，是接近自然语言的过程性语言，编写时不区分大小写，PC Logo 在 DOS 下运行，默认背景为白色。故 A 正确。"}, {"type": "single", "section": 0, "stem": "在 Logo 语言中，命令与参数之间应当（ ）。", "options": ["用顿号隔开", "用破折号隔开", "用分号隔开", "用空格隔开"], "answer": 3, "analysis": "本题考查 Logo 命令格式。Logo 语言中命令与参数之间要用空格分开。故 D 正确。"}, {"type": "single", "section": 0, "stem": "下列 Logo 命令中，用于设置画笔（前景）颜色的是（ ）。", "options": ["SETBG", "SETPC", "CLEAN", "REPEAT"], "answer": 1, "analysis": "本题考查 Logo 常用命令。SETBG 设置背景色，SETPC 设置画笔颜色，CLEAN 清屏，REPEAT 重复。故 B 正确。"}, {"type": "single", "section": 0, "stem": "在 Logo 语言中，小海龟画正三角形时，每画完一条边后必须转动的角度是（ ）。", "options": ["180 度", "60 度", "90 度", "120 度"], "answer": 3, "analysis": "本题考查 Logo 作图。正三角形外角为 120 度，画每条边后需右转 120 度。故 D 正确。"}, {"type": "single", "section": 1, "stem": "Scratch 是由哪所机构设计开发的少儿编程工具？（ ）", "options": ["哈佛大学", "麻省理工学院（MIT）", "斯坦福大学", "牛津大学"], "answer": 1, "analysis": "本题考查 Scratch 概述。Scratch 由麻省理工学院（MIT）设计开发，采用图形化积木编程。故 B 正确。"}, {"type": "single", "section": 1, "stem": "在 Scratch 3.0 中，新建作品时默认的角色是（ ）。", "options": ["小狗", "小猫", "小鱼", "小熊"], "answer": 1, "analysis": "本题考查 Scratch 角色。Scratch 默认角色是小猫。故 B 正确。"}, {"type": "single", "section": 1, "stem": "Scratch 中变量支持的数据类型有（ ）。", "options": ["1 种", "2 种", "3 种", "4 种"], "answer": 2, "analysis": "本题考查 Scratch 特征。Scratch 中的变量支持 3 种数据类型。故 C 正确。"}, {"type": "single", "section": 2, "stem": "在 Visual Basic 中，函数 Val 的作用是（ ）。", "options": ["将数值转换为字符串", "将数字字符串转换为对应的数值", "求绝对值", "开平方"], "answer": 1, "analysis": "本题考查 VB 函数。VAL 是将一个数字字符串转换成对应的数值。故 B 正确。"}, {"type": "single", "section": 2, "stem": "在 VB 中，Txt_DblClick 表示的事件是（ ）。", "options": ["文本框的双击事件", "文本框的单击事件", "窗体的双击事件", "按钮的单击事件"], "answer": 0, "analysis": "本题考查 VB 对象事件。Txt 是文本框对象，DblClick 是双击，故为文本框双击事件。故 A 正确。"}, {"type": "single", "section": 2, "stem": "Visual Basic 数据类型按精度从低到高排列，正确的是（ ）。", "options": ["Integer < Long < Single < Double < Currency", "Currency < Integer < Long < Single < Double", "Double < Single < Long < Integer < Currency", "Long < Integer < Currency < Single < Double"], "answer": 0, "analysis": "本题考查 VB 数据类型。精度由低到高为 Integer<Long<Single<Double<Currency。故 A 正确。"}, {"type": "single", "section": 2, "stem": "在 VB 中，Int(3.8) 的返回值是（ ）。", "options": ["3", "4", "3.8", "0"], "answer": 0, "analysis": "本题考查 VB 函数。Int(x) 取不大于 x 的最大整数，Int(3.8)=3。故 A 正确。"}, {"type": "single", "section": 2, "stem": "在 VB 中，表达式 5 > 3 And 2 < 1 的值是（ ）。", "options": ["True", "False", "1", "出错"], "answer": 1, "analysis": "本题考查 VB 逻辑运算。And 表示“全真则真”，2<1 为假，故整体为假（False）。故 B 正确。"}, {"type": "single", "section": 3, "stem": "关于 C 语言程序，下列说法正确的是（ ）。", "options": ["C 程序可以由多个 main 函数组成", "C 程序必须有且只有一个 main 函数", "C 程序从最后一个函数开始执行", "C 语言本身提供输入输出语句"], "answer": 1, "analysis": "本题考查 C 语言结构。函数是 C 程序的基本单位，必须有且只有一个 main 函数，程序从 main 开始、在 main 结束；C 语言本身没有输入输出语句。故 B 正确。"}, {"type": "single", "section": 3, "stem": "下列关于 C 语言标识符的说法，正确的是（ ）。", "options": ["标识符可由字母、数字、下划线组成，数字不能开头", "标识符可以以数字开头", "标识符中不能有下划线", "C 编译系统可识别标识符的前 16 个字符"], "answer": 0, "analysis": "本题考查 C 标识符。标识符由字母、数字、下划线组成，第一个字符必须是字母或下划线（不能是数字），通常只识别前 8 个字符。故 A 正确。"}, {"type": "single", "section": 3, "stem": "在 C 语言中，关于真假值的表示，正确的是（ ）。", "options": ["真为 0，假为 1", "真为 1，假为 0", "真为 -1，假为 0", "C 语言没有真假概念"], "answer": 1, "analysis": "本题考查 C 语言逻辑。C 中真（True）为 1，假（False）为 0。故 B 正确。"}, {"type": "single", "section": 4, "stem": "Python 语言最突出的特点是（ ）。", "options": ["严格采用缩进表示代码块", "变量必须先声明类型", "不需要解释器可直接运行", "只能面向对象编程"], "answer": 0, "analysis": "本题考查 Python 特点。Python 最大特点之一是严格采用缩进表示代码块，缩进不对会报错。故 A 正确。"}, {"type": "single", "section": 4, "stem": "在 Python 中，定义一个函数应以（ ）开头。", "options": ["function", "def", "func", "sub"], "answer": 1, "analysis": "本题考查 Python 函数。Python 用 def 关键字定义函数，后接函数名与冒号、缩进。故 B 正确。"}, {"type": "single", "section": 4, "stem": "关于 Python 变量，下列说法正确的是（ ）。", "options": ["变量必须先声明类型再使用", "变量的赋值操作即是变量声明和定义的过程", "Python 中变量区分大小写无关", "函数内不能访问全局变量"], "answer": 1, "analysis": "本题考查 Python 变量。Python 变量不需要声明，赋值即定义；函数外定义的是全局变量，函数内可访问。故 B 正确。"}, {"type": "single", "section": 5, "stem": "计算机程序是指（ ）。", "options": ["一组计算机能识别和执行的指令", "计算机硬件的集合", "操作系统", "数据集合"], "answer": 0, "analysis": "本题考查程序概念。程序是一组计算机能识别和执行的指令集合。故 A 正确。"}, {"type": "single", "section": 5, "stem": "计算机语言发展中，能用二进制代码直接被计算机执行的是（ ）。", "options": ["机器语言", "汇编语言", "高级语言", "所有语言"], "answer": 0, "analysis": "本题考查语言层次。机器语言是用二进制代码表示、计算机能直接执行的低级语言。故 A 正确。"}, {"type": "single", "section": 5, "stem": "将高级语言源程序翻译成目标程序的方式中，一次性翻译后效率较高的是（ ）。", "options": ["解释方式", "编译方式", "两者相同", "都不能生成目标程序"], "answer": 1, "analysis": "本题考查翻译方式。编译方式一次性把源程序翻译成二进制文件，只需翻译一次，效率明显较高。故 B 正确。"}, {"type": "single", "section": 5, "stem": "结构化程序设计的三种基本结构是（ ）。", "options": ["顺序、选择、循环", "顺序、递归、循环", "选择、循环、跳转", "过程、函数、模块"], "answer": 0, "analysis": "本题考查结构化程序。三种基本结构为顺序、选择（分支）、循环。故 A 正确。"}, {"type": "single", "section": 6, "stem": "算法是指（ ）。", "options": ["计算机硬件的配置方案", "解题方案的准确而完整的描述", "一种高级程序设计语言", "数据的存储介质"], "answer": 1, "analysis": "本题考查算法概念。算法是解题方案的准确而完整的描述，是一系列解决问题的清晰指令。故 B 正确。"}, {"type": "single", "section": 6, "stem": "一个算法必须在执行有限步后结束，这体现的是算法的（ ）。", "options": ["确定性", "有穷性", "可行性", "输入输出"], "answer": 1, "analysis": "本题考查算法特征。有穷性是指算法必须在执行有限步后结束。故 B 正确。"}, {"type": "single", "section": 6, "stem": "在流程图中，表示“开始/结束”的符号是（ ）。", "options": ["平行四边形", "菱形", "圆角矩形", "矩形"], "answer": 2, "analysis": "本题考查流程图符号。圆角矩形表示开始或结束；平行四边形表示输入输出；菱形表示条件判断。故 C 正确。"}, {"type": "single", "section": 6, "stem": "下列算法设计方法中，基本思想是根据部分条件确定取值范围并逐个检验的是（ ）。", "options": ["分治法", "递归法", "穷举法", "贪心法"], "answer": 2, "analysis": "本题考查算法设计方法。穷举法（枚举法）根据题目的部分条件确定取值范围，并对每个取值进行考查，确定是否满足条件。故 C 正确。"}, {"type": "single", "section": 7, "stem": "下列数据结构中，属于非线性结构的是（ ）。", "options": ["线性表", "栈", "队列", "树"], "answer": 3, "analysis": "本题考查逻辑结构。线性结构元素间是“一对一”关系（线性表、栈、队列、数组、串均为线性）；树和图是非线性结构。故 D 正确。"}, {"type": "single", "section": 7, "stem": "线性表的顺序存储结构，第 i 个元素（首地址 ADR(a₁)，每元素占 k 字节）的存储地址为（ ）。", "options": ["ADR(a₁) + i*k", "ADR(a₁) + (i-1)*k", "ADR(a₁) - (i-1)*k", "ADR(a₁) + i"], "answer": 1, "analysis": "本题考查顺序存储。第 i 个元素地址 = 首地址 + (i-1)*k。故 B 正确。"}, {"type": "single", "section": 8, "stem": "线性表的链式存储中，每个结点通常包含（ ）。", "options": ["仅数据域", "数据域和指针域", "仅指针域", "数据域和文件指针"], "answer": 1, "analysis": "本题考查链表。链式存储的结点由数据域和指针域（链）组成，n 个结点链接成链表。故 B 正确。"}, {"type": "single", "section": 9, "stem": "栈的基本特征是（ ）。", "options": ["先进先出", "后进先出（LIFO）", "只能顺序存取", "随机存取"], "answer": 1, "analysis": "本题考查栈。栈只允许在一端操作，遵循后进先出（LIFO）原则。故 B 正确。"}, {"type": "single", "section": 9, "stem": "为解决计算机主机与打印机之间速度不匹配问题，通常设置的打印缓冲区，对应的数据结构是（ ）。", "options": ["栈", "队列", "数组", "线性表"], "answer": 1, "analysis": "本题考查队列应用。打印缓冲区按“先到先打”的先进先出方式工作，对应队列。故 B 正确。"}, {"type": "single", "section": 9, "stem": "一组数据入栈顺序为 12,25,31,7,43,21，全部入栈后再全部出栈，出栈顺序是（ ）。", "options": ["12,25,31,7,43,21", "21,43,7,31,25,12", "12,21,25,31,43,7", "43,21,12,25,31,7"], "answer": 1, "analysis": "本题考查栈的 LIFO。最后入栈的 21 最先出，依次 43,7,31,25,12。故 B 正确。"}, {"type": "single", "section": 10, "stem": "二叉树区别于普通树的关键特征是（ ）。", "options": ["每个结点最多有两个子树且左右子树有次序之分", "结点个数必须为 2 的幂", "一定是满的", "不能有叶子结点"], "answer": 0, "analysis": "本题考查二叉树。二叉树每个结点最多有两个子树，且左右子树有次序之分（有序）。故 A 正确。"}, {"type": "single", "section": 10, "stem": "二叉树遍历中，“左—根—右”的顺序是（ ）。", "options": ["先序遍历", "中序遍历", "后序遍历", "层序遍历"], "answer": 1, "analysis": "本题考查遍历。先序=根左右，中序=左根右，后序=左右根。故 B 正确。"}, {"type": "single", "section": 10, "stem": "哈夫曼（Huffman）树又称最优二叉树，是指（ ）。", "options": ["结点最多的二叉树", "带权路径长度（WPL）最短的二叉树", "深度最大的二叉树", "完全二叉树"], "answer": 1, "analysis": "本题考查哈夫曼树。哈夫曼树是一类带权路径长度 WPL 最短的二叉树（最优二叉树）。故 B 正确。"}, {"type": "single", "section": 11, "stem": "无向图中，任意两个顶点之间都有路径，则称该图为（ ）。", "options": ["完全图", "连通图", "强连通图", "生成树"], "answer": 1, "analysis": "本题考查图概念。连通图指无向图中任意顶点间都有路径；强连通图是针对有向图。故 B 正确。"}, {"type": "single", "section": 11, "stem": "连通图的生成树是（ ）。", "options": ["含有全部顶点但只有 n-1 条边的极小连通子图", "含有部分顶点的子图", "边数最多的子图", "必须包含所有边"], "answer": 0, "analysis": "本题考查生成树。生成树是含全部顶点、只有 n-1 条边的极小连通子图。故 A 正确。"}, {"type": "single", "section": 11, "stem": "从某一顶点出发，先访问其所有邻接点、再逐层扩展的图遍历方法是（ ）。", "options": ["深度优先搜索", "广度优先搜索", "拓扑排序", "最小生成树"], "answer": 1, "analysis": "本题考查图遍历。广度优先（BFS）先访问顶点所有邻接点再逐层扩展；深度优先（DFS）沿一条路走到底。故 B 正确。"}, {"type": "single", "section": 12, "stem": "对无序表进行查找，最常用且无需排序的查找方法是（ ）。", "options": ["二分查找", "顺序查找", "索引查找", "哈希查找"], "answer": 1, "analysis": "本题考查顺序查找。顺序查找从表的一端逐个比较，对表是否有序无要求，时间复杂度 O(n)。故 B 正确。"}, {"type": "single", "section": 12, "stem": "二分查找（折半查找）要求被查找的表必须（ ）。", "options": ["无序", "有序", "元素个数固定为偶数", "是链式存储"], "answer": 1, "analysis": "本题考查二分查找。二分查找要求表元素按关键字有序，时间复杂度 O(log n)。故 B 正确。"}, {"type": "single", "section": 13, "stem": "下列排序算法中，平均时间复杂度为 O(n log n) 的是（ ）。", "options": ["冒泡排序", "选择排序", "插入排序", "快速排序"], "answer": 3, "analysis": "本题考查排序复杂度。冒泡、选择、插入均为 O(n²)；快速排序平均 O(n log n)。故 D 正确。"}, {"type": "single", "section": 13, "stem": "关于排序的稳定性，下列说法正确的是（ ）。", "options": ["相等元素相对次序不变的排序是稳定的", "所有比较排序都不稳定", "冒泡排序不稳定", "稳定性指排序速度的快慢"], "answer": 0, "analysis": "本题考查排序稳定性。若相等元素排序前后相对次序不变，则称该排序是稳定的（如冒泡、插入、归并稳定）。故 A 正确。"}, {"type": "single", "section": 14, "stem": "软件危机是指（ ）。", "options": ["软件价格过高", "落后的软件生产方式无法满足快速增长的软件需求而产生的一系列严重问题", "计算机硬件短缺", "软件功能太少"], "answer": 1, "analysis": "本题考查软件危机。软件危机是落后的软件生产方式无法满足快速增长的计算机软件需求，导致开发维护出现一系列严重问题的现象。故 B 正确。"}, {"type": "single", "section": 14, "stem": "软件生命周期中，开发时期通常不包括（ ）。", "options": ["总体设计", "详细设计", "编码和单元测试", "问题定义"], "answer": 3, "analysis": "本题考查生命周期。问题定义属于定义时期；总体设计、详细设计、编码测试属于开发时期。故 D 正确。"}, {"type": "single", "section": 14, "stem": "UML 是一种（ ）。", "options": ["编程语言", "操作系统", "面向对象的统一建模语言", "数据库管理系统"], "answer": 2, "analysis": "本题考查 UML。UML（统一建模语言）是面向对象的标准建模语言，用于可视化、构造、文档化系统。故 C 正确。"}, {"type": "single", "section": 15, "stem": "需求分析阶段最后应产生的主要文档是（ ）。", "options": ["源程序清单", "软件需求规格说明书", "用户手册", "测试报告"], "answer": 1, "analysis": "本题考查需求分析。需求分析在结束前应写出软件需求规格说明书，书面准确描述软件需求。故 B 正确。"}, {"type": "single", "section": 15, "stem": "可行性研究中，判断“现有技术能否实现该系统”属于（ ）。", "options": ["技术可行性", "经济可行性", "操作可行性", "法律可行性"], "answer": 0, "analysis": "本题考查可行性。技术可行性研究现有技术能否实现；经济可行性研究效益与成本；操作可行性研究组织内是否行得通。故 A 正确。"}, {"type": "single", "section": 16, "stem": "模块的独立程度用两个定性标准度量，分别是（ ）。", "options": ["长度与宽度", "耦合与内聚", "颜色与形状", "输入与输出"], "answer": 1, "analysis": "本题考查模块独立。耦合衡量模块间依赖紧密程度，内聚衡量模块内部结合紧密程度。故 B 正确。"}, {"type": "single", "section": 16, "stem": "下列耦合中，耦合度最低、应尽量使用的是（ ）。", "options": ["内容耦合", "公共耦合", "数据耦合", "控制耦合"], "answer": 2, "analysis": "本题考查耦合。耦合度由低到高：非直接<数据<标记<控制<特征<公共<内容。应尽量使用数据耦合，完全不用内容耦合。故 C 正确。"}, {"type": "single", "section": 16, "stem": "下列内聚中，内聚度最高的是（ ）。", "options": ["偶然内聚", "逻辑内聚", "时间内聚", "功能内聚"], "answer": 3, "analysis": "本题考查内聚。内聚由低到高：偶然<逻辑<时间<过程<通信<顺序<功能，功能内聚最高。故 D 正确。"}, {"type": "single", "section": 17, "stem": "软件调试（Debug）的目的是（ ）。", "options": ["发现错误", "诊断和改正程序中的错误", "改善软件性能", "验证软件正确性"], "answer": 1, "analysis": "本题考查软件调试。调试活动包括确定错误性质位置并对程序进行修改，其目的是诊断和改正程序中的错误。故 B 正确。"}, {"type": "single", "section": 17, "stem": "在软件维护的四类活动中，所占工作量比重最大的是（ ）。", "options": ["改正性维护", "适应性维护", "完善性维护", "预防性维护"], "answer": 2, "analysis": "本题考查软件维护。完善性维护为扩充功能、改善性能而进行，占整个维护工作量的 50%~60%，比重最大。故 C 正确。"}, {"type": "single", "section": 17, "stem": "按是否考虑程序内部结构，软件测试可分为（ ）。", "options": ["单元与集成测试", "黑盒测试与白盒测试", "静态与动态测试", "自动与手工测试"], "answer": 1, "analysis": "本题考查测试分类。黑盒测试不考虑内部只测功能，白盒测试基于内部逻辑。故 B 正确。"}, {"type": "single", "section": 0, "stem": "Logo 语言由美国麻省理工学院（MIT）人工智能研究室于哪一年完成？", "options": ["1968 年", "1972 年", "1980 年", "1990 年"], "answer": 0, "analysis": "Logo 语言 1968 年由美国国家科学基金会资助、在 MIT 人工智能研究室完成。"}, {"type": "single", "section": 0, "stem": "Logo 语言主要面向哪类人群作为编程启蒙工具？", "options": ["专业程序员", "儿童", "硬件工程师", "数据库管理员"], "answer": 1, "analysis": "Logo 主要面向儿童编程启蒙，通过绘图方式学习编程。"}, {"type": "single", "section": 0, "stem": "Logo 通过指挥“小海龟”移动来绘制图形，这种功能称为（ ）。", "options": ["编辑功能", "海龟作图功能", "字表处理功能", "数值处理功能"], "answer": 1, "analysis": "海龟作图功能是指挥小海龟移动绘制图形。"}, {"type": "single", "section": 0, "stem": "下列关于 Logo 语言特点的叙述，错误的是（ ）。", "options": ["与自然语言非常接近", "1968 年由 MIT 完成", "主要面向成人软件开发", "可用于字表与数值处理"], "answer": 2, "analysis": "Logo 主要面向儿童编程启蒙，而非成人开发。"}, {"type": "single", "section": 0, "stem": "PC Logo 通常在什么系统中运行？", "options": ["Windows", "DOS", "Linux", "macOS"], "answer": 1, "analysis": "PC Logo 在 DOS 系统中运行。"}, {"type": "single", "section": 0, "stem": "Logo 语言默认的绘图背景色是（ ）。", "options": ["黑色", "蓝色", "白色", "绿色"], "answer": 2, "analysis": "Logo 默认背景色为白色。"}, {"type": "single", "section": 0, "stem": "启动 PC Logo 的一般路径是（ ）。", "options": ["开始→程序→PC Logo", "开始→设置→PC Logo", "开始→附件→PC Logo", "双击回收站"], "answer": 0, "analysis": "启动：开始→程序→PC Logo。"}, {"type": "single", "section": 0, "stem": "Logo 视图窗口中央的“小海龟”是（ ）。", "options": ["光标", "绘图工具", "菜单栏", "提示符"], "answer": 1, "analysis": "小海龟是绘图工具。"}, {"type": "single", "section": 0, "stem": "Logo 中“小海龟”的初始位置称为（ ）。", "options": ["原点", "母位", "中心", "基点"], "answer": 1, "analysis": "初始位置称母位。"}, {"type": "single", "section": 0, "stem": "Logo 中小海龟默认的头朝向是（ ）。", "options": ["朝上", "朝下", "朝左", "朝右"], "answer": 0, "analysis": "小海龟默认头朝上。"}, {"type": "single", "section": 0, "stem": "Logo 命令窗口的提示符是（ ）。", "options": ["$", "?", "#", ">"], "answer": 1, "analysis": "命令窗口中“?”是提示符。"}, {"type": "single", "section": 0, "stem": "Logo 中输入命令时，命令与参数之间必须（ ）。", "options": ["用逗号隔开", "有空格", "用分号隔开", "无需间隔"], "answer": 1, "analysis": "命令与参数之间要有空格。"}, {"type": "single", "section": 0, "stem": "Logo 命令 FD 的含义是（ ），且必须配合数字使用。", "options": ["后退", "右转", "前进", "抬笔"], "answer": 2, "analysis": "FD 是 forward 前进，必须配数字。"}, {"type": "single", "section": 0, "stem": "下列 Logo 命令中，用于改变海龟方向的是（ ）。", "options": ["FD / BK", "RT / LT", "PU / PD", "HT / ST"], "answer": 1, "analysis": "RT 右转、LT 左转用于改变方向。"}, {"type": "single", "section": 0, "stem": "Logo 中 PU 与 PD 分别表示（ ）。", "options": ["前进/后退", "抬笔/落笔", "右转/左转", "藏龟/显龟"], "answer": 1, "analysis": "PU 抬笔、PD 落笔，控制移动时是否画线。"}, {"type": "single", "section": 0, "stem": "Logo 中 HT 与 ST 分别表示（ ）。", "options": ["抬笔/落笔", "右转/左转", "藏龟/显龟", "前进/后退"], "answer": 2, "analysis": "HT 藏龟、ST 显龟。"}, {"type": "single", "section": 0, "stem": "Logo 命令 CS（清屏复位）执行后，海龟会（ ）。", "options": ["回到母位且头朝上", "停留在原地", "消失不再出现", "转到屏幕左下角"], "answer": 0, "analysis": "CS 清屏复位，海龟回母位、头朝上。"}, {"type": "single", "section": 0, "stem": "Logo 中 REPEAT n[…] 的作用是（ ）。", "options": ["重复执行 n 次", "前进 n 步", "清屏 n 次", "定义一个过程"], "answer": 0, "analysis": "REPEAT n[…] 重复执行 n 次。"}, {"type": "single", "section": 0, "stem": "用 Logo 画正三角形，因正三角形外角为 120°，应使用（ ）。", "options": ["REPEAT 3[FD 步数 RT 120]", "REPEAT 4[FD 步数 RT 90]", "REPEAT 3[FD 步数 LT 60]", "REPEAT 2[FD 步数 RT 180]"], "answer": 0, "analysis": "正三角形外角 120°，用 REPEAT 3[FD 步数 RT 120]。"}, {"type": "single", "section": 0, "stem": "在 Logo 中定义一个过程，过程头使用的命令是（ ）。", "options": ["TO", "END", "REPEAT", "FD"], "answer": 0, "analysis": "TO 是过程头，END 是过程尾。"}, {"type": "multi", "section": 0, "stem": "Logo 语言具有下列哪些功能？（ ）", "options": ["编辑命令与过程", "海龟作图", "字表处理", "数值处理"], "answer": [0, 1, 2, 3], "analysis": "Logo 具有编辑、海龟作图、字表处理与数值处理三方面功能。"}, {"type": "multi", "section": 0, "stem": "下列 Logo 命令中，属于移动/方向控制类的是（ ）。", "options": ["FD", "RT", "BK", "CS"], "answer": [0, 1, 2], "analysis": "FD 前进、RT 右转、BK 后退属于移动/方向控制；CS 是清屏复位。"}, {"type": "multi", "section": 0, "stem": "关于 Logo 中“母位”与“小海龟”，下列说法正确的有（ ）。", "options": ["初始位置称母位", "小海龟默认头朝上", "CS 使海龟回母位", "小海龟是绘图工具"], "answer": [0, 1, 2, 3], "analysis": "母位是初始位置，小海龟默认头朝上，CS 复位回母位，小海龟是绘图工具。"}, {"type": "multi", "section": 0, "stem": "在 Logo 中定义一个可重复使用的正方形过程，下列说法正确的有（ ）。", "options": ["用 TO 开头", "用 END 结尾", "退出 Logo 前可重复使用", "只能使用一次"], "answer": [0, 1, 2], "analysis": "过程以 TO 开头、END 结尾，定义好的过程在退出 Logo 前可重复使用。"}, {"type": "multi", "section": 0, "stem": "下列关于 PC Logo 运行环境的说法，正确的有（ ）。", "options": ["在 DOS 中运行", "编写不区分大小写", "默认背景白色", "提示符为 ?"], "answer": [0, 1, 2, 3], "analysis": "PC Logo 在 DOS 运行、不区分大小写、默认背景白色、提示符为?。"}, {"type": "single", "section": 0, "stem": "Logo 语言在编写时不区分大小写。", "options": ["正确", "错误"], "answer": 0, "analysis": "Logo 语言在编写时不区分大小写。"}, {"type": "single", "section": 0, "stem": "Logo 命令窗口的提示符是“#”。", "options": ["正确", "错误"], "answer": 1, "analysis": "提示符是“?”，不是“#”。"}, {"type": "single", "section": 0, "stem": "Logo 中 CS 命令只清屏但不复位海龟位置。", "options": ["正确", "错误"], "answer": 1, "analysis": "CS 清屏复位，海龟回到母位且头朝上。"}, {"type": "single", "section": 0, "stem": "Logo 的过程必须用 TO 开头、END 结尾来定义。", "options": ["正确", "错误"], "answer": 0, "analysis": "过程定义：TO 过程名（过程头）… END（过程尾）。"}, {"type": "single", "section": 0, "stem": "Logo 中 PU 命令的作用是落笔（开始画线）。", "options": ["正确", "错误"], "answer": 1, "analysis": "PU 是抬笔，PD 才是落笔。"}, {"type": "single", "section": 1, "stem": "Scratch 是由哪所机构设计开发的少儿编程工具？", "options": ["哈佛大学", "麻省理工学院（MIT）", "斯坦福大学", "牛津大学"], "answer": 1, "analysis": "Scratch 由麻省理工学院（MIT）设计开发。"}, {"type": "single", "section": 1, "stem": "Scratch 采用的编程方式是（ ）。", "options": ["文本命令行编程", "图形化积木编程", "汇编语言编程", "机器语言编程"], "answer": 1, "analysis": "Scratch 采用图形化积木编程，拖动积木块即可。"}, {"type": "single", "section": 1, "stem": "Scratch 编程时（ ）。", "options": ["必须记忆大量语法", "无须记忆语法，拖动积木即可", "只能用键盘输入代码", "必须编写编译器"], "answer": 1, "analysis": "Scratch 用鼠标拖拽积木块，无须记忆语法。"}, {"type": "single", "section": 1, "stem": "安徽省小学信息科技教材中安排了（ ）编程单元。", "options": ["Python", "Scratch", "C 语言", "VB"], "answer": 1, "analysis": "安徽省小学信息科技教材安排了 Scratch 编程单元。"}, {"type": "single", "section": 1, "stem": "Scratch 3.0 界面主要包含（ ）。", "options": ["1 个板块、3 个区域", "2 个板块、5 个区域", "3 个板块、6 个区域", "4 个板块、4 个区域"], "answer": 1, "analysis": "Scratch 3.0 界面含 2 个板块、5 个区域。"}, {"type": "single", "section": 1, "stem": "Scratch 3.0 中位于顶部、含语言切换与文件操作的是（ ）。", "options": ["舞台区", "菜单栏", "积木区", "脚本区"], "answer": 1, "analysis": "菜单栏在顶部，含语言切换、文件、编辑等。"}, {"type": "single", "section": 1, "stem": "Scratch 中展示程序运行效果的区域是（ ）。", "options": ["积木区", "舞台区", "脚本区", "角色区"], "answer": 1, "analysis": "舞台区展示程序运行效果。"}, {"type": "single", "section": 1, "stem": "Scratch 中编写程序、组合积木块的地方是（ ）。", "options": ["舞台区", "积木区", "脚本区", "角色区"], "answer": 2, "analysis": "脚本区是编写程序、组合积木的地方。"}, {"type": "single", "section": 1, "stem": "新建 Scratch 作品时默认角色是（ ）。", "options": ["小狗", "小猫", "小人", "恐龙"], "answer": 1, "analysis": "新建作品默认角色是“小猫”。"}, {"type": "single", "section": 1, "stem": "Scratch 3.0 对移动设备的支持特点是（ ）。", "options": ["需要插件才能播放", "无须插件即可在手机等移动设备播放", "只能在电脑端运行", "不支持触屏"], "answer": 1, "analysis": "Scratch 3.0 无须插件即可在移动设备播放。"}, {"type": "single", "section": 1, "stem": "Scratch 的积木分类不包括下列哪一类别？（ ）", "options": ["运动", "外观", "声音", "数据库管理"], "answer": 3, "analysis": "Scratch 积木含运动、外观、声音、事件、控制、侦测、运算、变量等，无数据库管理。"}, {"type": "single", "section": 1, "stem": "Scratch 中“变量”支持的数据类型有（ ）种。", "options": ["1", "2", "3", "4"], "answer": 2, "analysis": "Scratch 变量支持 3 种数据类型。"}, {"type": "single", "section": 1, "stem": "Scratch 可以导入以下哪个版本的项目？（ ）", "options": ["Scratch 1.0", "Scratch 2.0", "Scratch 5.0", "仅限当前版本"], "answer": 1, "analysis": "Scratch 3.0 可导入 Scratch 2.0 项目。"}, {"type": "single", "section": 1, "stem": "Scratch 中根据指定条件执行不同脚本，这属于（ ）语句。", "options": ["循环语句", "条件语句", "赋值语句", "定义语句"], "answer": 1, "analysis": "条件语句根据条件执行不同脚本（如果…那么）。"}, {"type": "single", "section": 1, "stem": "Scratch 中让程序执行规律性重复操作，应使用（ ）语句。", "options": ["“重复执行”循环", "条件语句", "变量定义", "消息广播"], "answer": 0, "analysis": "循环语句让程序执行规律性重复操作。"}, {"type": "single", "section": 1, "stem": "下列属于 Scratch 控制类积木的是（ ）。", "options": ["移动 10 步", "说 你好", "重复执行直到…", "当绿旗被点击"], "answer": 2, "analysis": "“重复执行直到…”是控制类循环积木。"}, {"type": "single", "section": 1, "stem": "Scratch 程序命令的表现形式是（ ）。", "options": ["一行行英文代码", "木块形状的积木", "二进制指令", "流程图框"], "answer": 1, "analysis": "Scratch 命令以木块形状的积木表示。"}, {"type": "single", "section": 1, "stem": "Scratch 深受小学生喜爱的主要原因是（ ）。", "options": ["需要记忆复杂语法", "图形化、易上手", "只能做数学计算", "运行速度最快"], "answer": 1, "analysis": "图形化积木、无须记语法，深受小学生喜爱。"}, {"type": "single", "section": 1, "stem": "在 Scratch 中制作加法器时，根据回答正确或错误执行不同语句，体现了（ ）结构。", "options": ["顺序", "条件分支", "循环", "递归"], "answer": 1, "analysis": "根据不同结果执行不同语句，是条件分支。"}, {"type": "single", "section": 1, "stem": "蜗牛赛跑小游戏利用“在…之间”随机数与重复执行，主要体现了（ ）语句的应用。", "options": ["条件", "循环", "函数", "类"], "answer": 1, "analysis": "“重复执行”体现了循环语句。"}, {"type": "multi", "section": 1, "stem": "Scratch 3.0 的工作界面包含下列哪些区域？（ ）", "options": ["舞台区", "角色/背景区", "积木区", "脚本区"], "answer": [0, 1, 2, 3], "analysis": "Scratch 3.0 含舞台区、角色/背景区、积木区、脚本区、菜单栏、标签栏。"}, {"type": "multi", "section": 1, "stem": "下列关于 Scratch 的叙述，正确的有（ ）。", "options": ["由 MIT 设计开发", "采用图形化积木编程", "无须记忆语法", "深受小学生喜爱"], "answer": [0, 1, 2, 3], "analysis": "Scratch 由 MIT 开发，图形化、无须记语法、深受小学生喜爱。"}, {"type": "multi", "section": 1, "stem": "Scratch 3.0 的特征包括（ ）。", "options": ["对移动设备更好支持", "无须插件即可在手机播放", "积木样式丰富", "变量支持 3 种数据类型"], "answer": [0, 1, 2, 3], "analysis": "Scratch 3.0 对移动设备支持更好、无须插件、积木丰富、变量支持 3 种类型。"}, {"type": "multi", "section": 1, "stem": "Scratch 中常用的控制语句有（ ）。", "options": ["条件语句（如果…那么）", "循环语句（重复执行）", "重复执行直到…", "数据库查询"], "answer": [0, 1, 2], "analysis": "Scratch 控制语句包括条件语句、循环语句（重复执行、重复执行直到），不含数据库查询。"}, {"type": "multi", "section": 1, "stem": "关于 Scratch 默认角色与界面，下列说法正确的有（ ）。", "options": ["默认角色是小猫", "舞台区展示运行效果", "脚本区编写程序", "积木区存放各类积木"], "answer": [0, 1, 2, 3], "analysis": "默认小猫，舞台展示效果，脚本区编写，积木区存放积木。"}, {"type": "single", "section": 1, "stem": "Scratch 是由麻省理工学院（MIT）设计开发的。", "options": ["正确", "错误"], "answer": 0, "analysis": "Scratch 由 MIT 设计开发。"}, {"type": "single", "section": 1, "stem": "Scratch 编程时必须记忆大量英文语法。", "options": ["正确", "错误"], "answer": 1, "analysis": "Scratch 图形化积木，无须记忆语法。"}, {"type": "single", "section": 1, "stem": "新建 Scratch 作品时默认角色是“小狗”。", "options": ["正确", "错误"], "answer": 1, "analysis": "默认角色是“小猫”。"}, {"type": "single", "section": 1, "stem": "Scratch 3.0 需要安装插件才能在手机上播放。", "options": ["正确", "错误"], "answer": 1, "analysis": "Scratch 3.0 无须插件即可在移动设备播放。"}, {"type": "single", "section": 1, "stem": "Scratch 的“变量”支持多种数据类型，共有 3 种。", "options": ["正确", "错误"], "answer": 0, "analysis": "Scratch 变量支持 3 种数据类型。"}, {"type": "single", "section": 2, "stem": "Visual Basic（VB）是一种（ ）的程序设计语言。", "options": ["面向过程、顺序驱动", "面向对象、事件驱动", "纯机器语言", "仅用于网页"], "answer": 1, "analysis": "VB 是面向对象、事件驱动的结构化语言。"}, {"type": "single", "section": 2, "stem": "下列关于 VB 特点的叙述，正确的是（ ）。", "options": ["难学难懂", "易学易懂、易于掌握", "只能编写命令行程序", "不支持可视化"], "answer": 1, "analysis": "VB 易学易懂、易于掌握。"}, {"type": "single", "section": 2, "stem": "VB 集成开发环境中，用于设计界面的窗口是（ ）。", "options": ["工具箱", "窗体设计窗口", "属性窗口", "代码窗口"], "answer": 1, "analysis": "窗体设计窗口用于设计界面。"}, {"type": "single", "section": 2, "stem": "VB 中用于设置对象属性的窗口是（ ）。", "options": ["工具箱", "属性窗口", "工程窗口", "代码窗口"], "answer": 1, "analysis": "属性窗口设置对象属性。"}, {"type": "single", "section": 2, "stem": "VB 面向对象的核心是（ ）。", "options": ["函数", "对象", "变量", "模块"], "answer": 1, "analysis": "VB 核心是对象。"}, {"type": "single", "section": 2, "stem": "VB 中对象的三要素不包括（ ）。", "options": ["属性", "事件", "方法", "索引"], "answer": 3, "analysis": "对象三要素是属性、事件、方法。"}, {"type": "single", "section": 2, "stem": "VB 中“属性”是指（ ）。", "options": ["对象能识别的动作", "对象的特征", "对象能执行的动作", "对象的父类"], "answer": 1, "analysis": "属性是对象的特征。"}, {"type": "single", "section": 2, "stem": "VB 中“事件”是指（ ）。", "options": ["对象的特征", "对象能识别的动作", "对象能执行的动作", "对象的类型"], "answer": 1, "analysis": "事件指对象能识别的动作（如 Click）。"}, {"type": "single", "section": 2, "stem": "VB 中“方法”是指（ ）。", "options": ["对象的特征", "对象能识别的动作", "对象能执行的动作", "事件的名称"], "answer": 2, "analysis": "方法指对象能执行的动作（如 Print、Show）。"}, {"type": "single", "section": 2, "stem": "在 VB 中，触发代码执行的前提是（ ）。", "options": ["方法调用", "事件发生", "属性改变", "模块加载"], "answer": 1, "analysis": "事件是触发代码执行的前提。"}, {"type": "single", "section": 2, "stem": "VB 数据类型精度由低到高，下列排序正确的是（ ）。", "options": ["Integer<Long<Single<Double<Currency", "Currency<Double<Single<Long<Integer", "Single<Integer<Long<Currency<Double", "Double<Single<Long<Integer<Currency"], "answer": 0, "analysis": "精度由低到高：Integer<Long<Single<Double<Currency。"}, {"type": "single", "section": 2, "stem": "Long 型与 Single 型数据运算，结果的数据类型为（ ）。", "options": ["Long", "Single", "Double", "Currency"], "answer": 2, "analysis": "运算结果向高精度靠，Long 与 Single 运算结果为 Double。"}, {"type": "single", "section": 2, "stem": "VB 中变量命名的规则是（ ）。", "options": ["必须以数字开头", "必须以字母或汉字开头", "可以任意符号开头", "必须以下划线开头"], "answer": 1, "analysis": "变量名必须以字母或汉字开头。"}, {"type": "single", "section": 2, "stem": "VB 中用于连接两个字符串的运算符有（ ）。", "options": ["只有 &", "只有 +", "& 和 +", "只有 -"], "answer": 2, "analysis": "字符串运算符 & 和 + 都用于连接字符串。"}, {"type": "single", "section": 2, "stem": "VB 中求平方根的内部函数是（ ）。", "options": ["Abs", "Sqr", "Int", "Rnd"], "answer": 1, "analysis": "Sqr 用于开平方。"}, {"type": "single", "section": 2, "stem": "VB 中返回不大于 x 的最大整数的函数是（ ）。", "options": ["Abs(x)", "Int(x)", "Sqr(x)", "Val(x)"], "answer": 1, "analysis": "Int 返回不大于 x 的最大整数。"}, {"type": "single", "section": 2, "stem": "表达式 Int(Rnd*10) 产生的随机整数范围是（ ）。", "options": ["1~10", "0~9", "0~10", "1~9"], "answer": 1, "analysis": "Rnd 产生 0~1，Int(Rnd*10) 产生 0~9。"}, {"type": "single", "section": 2, "stem": "VB 中将字符串转换为数值的函数是（ ）。", "options": ["Val", "Str", "Abs", "Int"], "answer": 0, "analysis": "Val 将字符转为数值。"}, {"type": "single", "section": 2, "stem": "VB 中用于弹出输入对话框的函数是（ ）。", "options": ["MsgBox", "InputBox", "Print", "Sqr"], "answer": 1, "analysis": "InputBox 是输入对话框。"}, {"type": "single", "section": 2, "stem": "VB 中实现“根据条件执行不同分支”的结构是（ ）。", "options": ["If…Then…Else / Select Case", "For…Next", "Do…Loop", "While"], "answer": 0, "analysis": "选择结构用 If…Then…Else、Select Case。"}, {"type": "single", "section": 2, "stem": "VB 中计数循环（先检查条件）使用的是（ ）。", "options": ["Do…Loop", "For…Next", "While", "Switch"], "answer": 1, "analysis": "For…Next 是计数循环，先检查条件。"}, {"type": "multi", "section": 2, "stem": "VB 集成开发环境的主要窗口包括（ ）。", "options": ["窗体设计窗口", "工具箱", "属性窗口", "代码窗口"], "answer": [0, 1, 2, 3], "analysis": "VB 主要窗口：窗体设计、工具箱、属性、工程、代码窗口。"}, {"type": "multi", "section": 2, "stem": "对象的“三要素”包含（ ）。", "options": ["属性", "事件", "方法", "类"], "answer": [0, 1, 2], "analysis": "对象三要素是属性、事件、方法（类不是要素之一）。"}, {"type": "multi", "section": 2, "stem": "下列 VB 内部函数中，属于数学函数的有（ ）。", "options": ["Sqr（开平方）", "Abs（绝对值）", "Int（取整）", "Val（字符转数值）"], "answer": [0, 1, 2, 3], "analysis": "Sqr、Abs、Int、Val 等都属于常用内部函数（前三者为数学函数，Val 为类型转换）。"}, {"type": "multi", "section": 2, "stem": "关于 VB 数据类型精度，下列说法正确的有（ ）。", "options": ["Integer 精度低于 Long", "Single 精度低于 Double", "Double 精度低于 Currency", "运算结果向高精度靠"], "answer": [0, 1, 2, 3], "analysis": "精度 Integer<Long<Single<Double<Currency，结果向高精度靠。"}, {"type": "multi", "section": 2, "stem": "VB 中常用的循环结构有（ ）。", "options": ["For…Next", "Do…Loop", "While", "Select Case"], "answer": [0, 1, 2], "analysis": "循环结构有 For…Next、Do…Loop、While；Select Case 是选择结构。"}, {"type": "single", "section": 2, "stem": "VB 是一种面向对象、事件驱动的程序设计语言。", "options": ["正确", "错误"], "answer": 0, "analysis": "VB 是面向对象、事件驱动的结构化语言。"}, {"type": "single", "section": 2, "stem": "VB 中“事件”是触发代码执行的前提。", "options": ["正确", "错误"], "answer": 0, "analysis": "事件指对象能识别的动作，是触发代码执行的前提。"}, {"type": "single", "section": 2, "stem": "VB 变量名可以以数字开头。", "options": ["正确", "错误"], "answer": 1, "analysis": "变量名必须以字母或汉字开头，不能以数字开头。"}, {"type": "single", "section": 2, "stem": "VB 中 & 和 + 都可以用于连接两个字符串。", "options": ["正确", "错误"], "answer": 0, "analysis": "两者都用于连接字符串。"}, {"type": "single", "section": 2, "stem": "Int(Rnd*10) 可以产生 0 到 9 之间的随机整数。", "options": ["正确", "错误"], "answer": 0, "analysis": "Rnd 为 0~1，Int(Rnd*10) 得 0~9。"}, {"type": "single", "section": 3, "stem": "C 语言属于（ ）。", "options": ["机器语言", "汇编语言", "高级语言", "只能硬件编程"], "answer": 2, "analysis": "C 语言是一种高级语言。"}, {"type": "single", "section": 3, "stem": "下列关于 C 语言特点的叙述，错误的是（ ）。", "options": ["结构化（由函数组成）", "运算能力丰富", "数据类型丰富", "不支持预处理"], "answer": 3, "analysis": "C 语言具有预处理能力（如 #define）。"}, {"type": "single", "section": 3, "stem": "C 程序中（ ）是程序的基本单位。", "options": ["语句", "函数", "变量", "宏"], "answer": 1, "analysis": "函数是 C 程序的基本单位。"}, {"type": "single", "section": 3, "stem": "一个 C 程序中 main 函数的数量是（ ）。", "options": ["可以没有", "有且只有一个", "至少两个", "任意多个"], "answer": 1, "analysis": "C 程序必须有且只有一个 main 函数。"}, {"type": "single", "section": 3, "stem": "C 程序从（ ）开始执行，在（ ）结束。", "options": ["第一个函数，最后一个函数", "main 函数，main 函数", "头文件，源文件", "注释，注释"], "answer": 1, "analysis": "C 程序从 main 开始，在 main 结束。"}, {"type": "single", "section": 3, "stem": "C 语言中每条语句后必须有的符号是（ ）。", "options": ["逗号", "分号", "句号", "冒号"], "answer": 1, "analysis": "每条语句后必须有分号。"}, {"type": "single", "section": 3, "stem": "C 语言本身的输入输出是由（ ）实现的。", "options": ["printf/scanf 等库函数", "语言内置语句", "操作系统", "编译器"], "answer": 0, "analysis": "C 本身没有输入输出语句，由库函数 scanf/printf 实现。"}, {"type": "single", "section": 3, "stem": "C 语言注释使用的符号是（ ）。", "options": ["// 与 /* */", "# 与 ##", "/* … */", "' 与 \""], "answer": 2, "analysis": "C 语言注释用 /* … */（不能嵌套）。"}, {"type": "single", "section": 3, "stem": "C 语言注释（ ）。", "options": ["可以嵌套", "不能嵌套", "必须放在开头", "会被执行"], "answer": 1, "analysis": "C 注释不能嵌套。"}, {"type": "single", "section": 3, "stem": "C 语言标识符可以由（ ）组成。", "options": ["字母、数字、下划线", "任意符号", "只有字母", "只有数字"], "answer": 0, "analysis": "标识符由字母、数字、下划线组成。"}, {"type": "single", "section": 3, "stem": "C 语言标识符的第一个字符必须是（ ）。", "options": ["数字", "字母或下划线", "特殊符号", "小数点"], "answer": 1, "analysis": "第一个字符必须是字母或下划线，不能是数字。"}, {"type": "single", "section": 3, "stem": "C 编译器通常只识别标识符的前（ ）个字符。", "options": ["4", "8", "16", "32"], "answer": 1, "analysis": "C 编译系统通常只识别前 8 个字符。"}, {"type": "single", "section": 3, "stem": "下列可用作 C 语言用户标识符的是（ ）。", "options": ["int", "_total", "123abc", "default"], "answer": 1, "analysis": "_total 以字母/下划线开头合法；int、default 是关键字，123abc 以数字开头非法。"}, {"type": "single", "section": 3, "stem": "C 中属于保留字（关键字）的是（ ）。", "options": ["scanf", "define", "int", "printf"], "answer": 2, "analysis": "int 是 C 关键字；scanf、printf、define 不是保留字。"}, {"type": "single", "section": 3, "stem": "C 中字符常量应使用（ ）括起。", "options": ["双引号", "单引号", "方括号", "花括号"], "answer": 1, "analysis": "字符常量用单引号，如 'A'。"}, {"type": "single", "section": 3, "stem": "C 中字符串常量应使用（ ）括起，且末尾隐含有（ ）。", "options": ["单引号，\\0", "双引号，\\0", "方括号，\\n", "花括号，\\0"], "answer": 1, "analysis": "字符串常量用双引号，如 \"hello\"，末尾隐含有 '\\0'。"}, {"type": "single", "section": 3, "stem": "按作用域划分，C 变量可分为（ ）。", "options": ["整型与实型", "全局变量与局部变量", "静态与动态", "公有与私有"], "answer": 1, "analysis": "按作用域分全局变量和局部变量。"}, {"type": "single", "section": 3, "stem": "用 static 说明的变量是（ ）。", "options": ["全局变量", "静态局部变量", "形参", "寄存器变量"], "answer": 1, "analysis": "用 static 说明的是静态局部变量。"}, {"type": "single", "section": 3, "stem": "在 C 语言中，逻辑“真”用（ ）表示，“假”用（ ）表示。", "options": ["1，0", "0，1", "true，false", "yes，no"], "answer": 0, "analysis": "C 中真为 1、假为 0。"}, {"type": "single", "section": 3, "stem": "C 中“自动类型转换”的原则是（ ）。", "options": ["向低精度靠", "向高精度靠", "随机转换", "不转换"], "answer": 1, "analysis": "自动转换向高精度方向靠。"}, {"type": "multi", "section": 3, "stem": "C 语言的特点包括（ ）。", "options": ["结构化", "运算能力丰富", "数据类型丰富", "可移植性好"], "answer": [0, 1, 2, 3], "analysis": "C 具备结构化、运算丰富、数据类型丰富、预处理、可移植性好等特点。"}, {"type": "multi", "section": 3, "stem": "关于 C 语言的 main 函数，下列说法正确的有（ ）。", "options": ["是程序基本单位之一", "必须有且只有一个", "程序从 main 开始", "程序在 main 结束"], "answer": [0, 1, 2, 3], "analysis": "函数是基本单位，main 有且只有一个，程序从 main 开始并在 main 结束。"}, {"type": "multi", "section": 3, "stem": "下列可作为 C 语言标识符组成部分的有（ ）。", "options": ["字母", "数字", "下划线", "空格"], "answer": [0, 1, 2], "analysis": "标识符由字母、数字、下划线组成，空格不能作组成部分。"}, {"type": "multi", "section": 3, "stem": "关于 C 语言常量，下列说法正确的有（ ）。", "options": ["数值常量分整型、实型", "字符常量用单引号", "字符串常量用双引号", "字符串末尾隐含有 \\0"], "answer": [0, 1, 2, 3], "analysis": "常量含数值/字符('A')/字符串(\"hello\")，字符串末尾有\\0。"}, {"type": "multi", "section": 3, "stem": "关于 C 语言的类型转换，下列说法正确的有（ ）。", "options": ["有自动转换", "有强制类型转换", "自动转换向高精度靠", "强制转换格式为 (类型)表达式"], "answer": [0, 1, 2, 3], "analysis": "C 有自动与强制转换，自动向高精度靠，强制用(类型)表达式。"}, {"type": "single", "section": 3, "stem": "C 程序从 main 函数开始执行，也在 main 函数结束。", "options": ["正确", "错误"], "answer": 0, "analysis": "main 是程序入口与出口。"}, {"type": "single", "section": 3, "stem": "C 语言本身提供输入输出语句。", "options": ["正确", "错误"], "answer": 1, "analysis": "C 本身没有输入输出语句，由库函数实现。"}, {"type": "single", "section": 3, "stem": "C 语言标识符可以以数字作为第一个字符。", "options": ["正确", "错误"], "answer": 1, "analysis": "标识符首字符必须是字母或下划线。"}, {"type": "single", "section": 3, "stem": "在 C 语言中，真用 1 表示、假用 0 表示。", "options": ["正确", "错误"], "answer": 0, "analysis": "C 中真为 1、假为 0。"}, {"type": "single", "section": 3, "stem": "C 语言的注释可以嵌套使用。", "options": ["正确", "错误"], "answer": 1, "analysis": "C 注释 /* … */ 不能嵌套。"}, {"type": "single", "section": 4, "stem": "Python 是一种（ ）的脚本语言。", "options": ["低层次、编译型", "高层次、兼具解释与编译", "仅编译型", "纯机器语言"], "answer": 1, "analysis": "Python 是高层次脚本语言，兼具解释性与编译性（可编译为 .pyc/.pyo）。"}, {"type": "single", "section": 4, "stem": "Python 源代码文件的扩展名是（ ）。", "options": [".c", ".java", ".py", ".exe"], "answer": 2, "analysis": "Python 源文件以 .py 为扩展名。"}, {"type": "single", "section": 4, "stem": "Python 表示代码块依靠（ ）。", "options": ["花括号", "缩进", "关键字 end", "分号"], "answer": 1, "analysis": "Python 严格使用缩进表示代码块。"}, {"type": "single", "section": 4, "stem": "Python 中缩进不对会导致（ ）。", "options": ["警告但不报错", "报错", "自动修正", "忽略缩进"], "answer": 1, "analysis": "缩进不对会报错。"}, {"type": "single", "section": 4, "stem": "Python 中变量（ ）。", "options": ["必须提前声明类型", "不需要声明，赋值即定义", "只能为数字", "只能用全局"], "answer": 1, "analysis": "Python 变量不需声明，赋值即定义。"}, {"type": "single", "section": 4, "stem": "Python 中函数之外定义的变量是（ ）。", "options": ["局部变量", "全局变量", "静态变量", "形参"], "answer": 1, "analysis": "函数之外定义的变量是全局变量。"}, {"type": "single", "section": 4, "stem": "Python 导入模块使用的关键字是（ ）。", "options": ["include", "import", "using", "require"], "answer": 1, "analysis": "导入模块用 import。"}, {"type": "single", "section": 4, "stem": "Python 中（ ）是可变序列。", "options": ["列表 list", "元组 tuple", "字符串", "数字"], "answer": 0, "analysis": "列表（list）是可变序列。"}, {"type": "single", "section": 4, "stem": "Python 中（ ）是不可变序列。", "options": ["列表 list", "字典 dict", "元组 tuple", "集合 set"], "answer": 2, "analysis": "元组（tuple）是不可变序列。"}, {"type": "single", "section": 4, "stem": "Python 中键值对数据类型是（ ）。", "options": ["列表", "元组", "字典 dict", "集合"], "answer": 2, "analysis": "字典（dict）是键值对。"}, {"type": "single", "section": 4, "stem": "Python 中创建空集合应使用（ ）。", "options": ["{}", "set()", "[]", "()"], "answer": 1, "analysis": "空集合用 set()，{} 创建的是空字典。"}, {"type": "single", "section": 4, "stem": "Python 函数定义以（ ）开头。", "options": ["function", "def", "func", "sub"], "answer": 1, "analysis": "函数以 def 开头。"}, {"type": "single", "section": 4, "stem": "Python 中用于结束函数并可返回值的语句是（ ）。", "options": ["break", "return", "exit", "yield"], "answer": 1, "analysis": "return 结束函数并可返回值。"}, {"type": "single", "section": 4, "stem": "Python 条件分支使用（ ）。", "options": ["if / elif / else", "switch / case", "if / fi", "when / then"], "answer": 0, "analysis": "Python 用 if/elif/else。"}, {"type": "single", "section": 4, "stem": "Python 中用于遍历序列的循环是（ ）。", "options": ["for 循环", "do-while", "repeat", "goto"], "answer": 0, "analysis": "for 循环遍历序列。"}, {"type": "single", "section": 4, "stem": "Python 除了解释执行外，还可编译为（ ）字节码。", "options": [".pyc / .pyo", ".exe", ".dll", ".class"], "answer": 0, "analysis": "Python 可编译为 .pyc/.pyo 字节码。"}, {"type": "single", "section": 4, "stem": "下列 Python 数据类型中，属于不可变的是（ ）。", "options": ["列表", "字典", "元组", "集合"], "answer": 2, "analysis": "元组不可变。"}, {"type": "single", "section": 4, "stem": "下列 Python 数据类型中，用 set() 或 {} 创建的是（ ）。", "options": ["列表", "字典", "集合 set", "元组"], "answer": 2, "analysis": "集合用 set() 或 {} 创建（空集合用 set()）。"}, {"type": "single", "section": 4, "stem": "Python 中输出 1~100 内所有偶数，可用（ ）加取余判断。", "options": ["for 循环", "def 定义", "import 导入", "class 类"], "answer": 0, "analysis": "用 for 循环加取余判断输出偶数。"}, {"type": "single", "section": 4, "stem": "关于 Python 变量作用域，函数内（ ）访问函数外的全局变量。", "options": ["不能", "可以", "必须重新定义", "永远报错"], "answer": 1, "analysis": "函数内可访问全局变量。"}, {"type": "multi", "section": 4, "stem": "Python 的主要特点包括（ ）。", "options": ["高层次脚本语言", "兼具解释性与编译性", "严格使用缩进", "变量不需声明"], "answer": [0, 1, 2, 3], "analysis": "Python 高层次、兼解释与编译、严格缩进、变量不声明。"}, {"type": "multi", "section": 4, "stem": "下列 Python 数据类型中，属于序列类型的有（ ）。", "options": ["列表 list", "元组 tuple", "字典 dict", "集合 set"], "answer": [0, 1], "analysis": "列表与元组是序列类型；字典与集合不是序列。"}, {"type": "multi", "section": 4, "stem": "关于 Python 字典与集合，下列说法正确的有（ ）。", "options": ["字典是键值对", "集合用 set() 或 {} 创建", "空集合用 set()", "{} 默认是空字典"], "answer": [0, 1, 2, 3], "analysis": "字典键值对；集合用 set()/{}，空集合 set()，{}是空字典。"}, {"type": "multi", "section": 4, "stem": "Python 中函数相关说法正确的有（ ）。", "options": ["以 def 开头", "函数名后跟括号与冒号", "内容需缩进", "return 可返回值"], "answer": [0, 1, 2, 3], "analysis": "函数 def 开头、括号冒号、内容缩进、return 返回值。"}, {"type": "multi", "section": 4, "stem": "Python 的控制结构包括（ ）。", "options": ["if/elif/else 条件", "for 循环", "while 循环", "switch 语句"], "answer": [0, 1, 2], "analysis": "Python 控制结构有 if/elif/else、for、while（无 switch）。"}, {"type": "single", "section": 4, "stem": "Python 源文件的扩展名是 .py。", "options": ["正确", "错误"], "answer": 0, "analysis": "Python 源文件以 .py 为扩展名。"}, {"type": "single", "section": 4, "stem": "Python 使用花括号来划分代码块。", "options": ["正确", "错误"], "answer": 1, "analysis": "Python 使用缩进表示代码块。"}, {"type": "single", "section": 4, "stem": "Python 中变量必须先声明类型才能使用。", "options": ["正确", "错误"], "answer": 1, "analysis": "Python 变量不需声明，赋值即定义。"}, {"type": "single", "section": 4, "stem": "在 Python 中，{} 创建的是空集合。", "options": ["正确", "错误"], "answer": 1, "analysis": "{} 是空字典，空集合用 set()。"}, {"type": "single", "section": 4, "stem": "Python 函数定义以 def 关键字开头。", "options": ["正确", "错误"], "answer": 0, "analysis": "函数以 def 开头。"}, {"type": "single", "section": 5, "stem": "程序是一组（ ）的集合，是软件的核心。", "options": ["计算机能识别和执行的指令", "图片文件", "音频文件", "视频文件"], "answer": 0, "analysis": "程序是计算机能识别和执行的指令集合，是软件的核心。"}, {"type": "single", "section": 5, "stem": "利用计算机解决问题的全过程称为（ ）。", "options": ["程序", "程序设计", "编码", "调试"], "answer": 1, "analysis": "程序设计是利用计算机解决问题的全过程：分析问题→设计算法→编码调试→得到正确结果。"}, {"type": "single", "section": 5, "stem": "程序设计的本质步骤是（ ）。", "options": ["买硬件→装系统→运行", "分析问题→设计算法→编码调试→得到正确结果", "只写代码", "只画流程图"], "answer": 1, "analysis": "程序设计本质是分析→设计算法→编码调试→正确结果。"}, {"type": "single", "section": 5, "stem": "下列不直接属于程序“质量标准”的一项是（ ）。", "options": ["正确性", "可读性", "健壮性", "屏幕分辨率高低"], "answer": 3, "analysis": "质量标准含正确性、可读性、健壮性、可维护性、可移植性、效率。"}, {"type": "single", "section": 5, "stem": "计算机语言从低级到高级的发展层次依次是（ ）。", "options": ["高级→汇编→机器", "机器→汇编→高级", "汇编→机器→高级", "高级→机器→汇编"], "answer": 1, "analysis": "机器语言→汇编语言→高级语言。"}, {"type": "single", "section": 5, "stem": "机器语言使用（ ）表示，计算机（ ）执行。", "options": ["助记符，翻译后", "二进制代码，直接", "自然语言，翻译后", "高级语法，直接"], "answer": 1, "analysis": "机器语言用二进制代码，计算机能直接执行，但难写难读。"}, {"type": "single", "section": 5, "stem": "汇编语言使用（ ）表示，需要（ ）后执行。", "options": ["二进制，直接", "助记符，翻译（汇编）", "自然语言，解释", "高级语法，编译"], "answer": 1, "analysis": "汇编语言用助记符，需汇编翻译后执行。"}, {"type": "single", "section": 5, "stem": "高级语言（ ）。", "options": ["用二进制编写", "接近自然语言，须经翻译执行", "计算机能直接执行", "就是机器语言"], "answer": 1, "analysis": "高级语言接近自然语言，须经编译或解释执行。"}, {"type": "single", "section": 5, "stem": "将源程序一次性翻译为二进制文件、效率高的翻译方式是（ ）。", "options": ["解释", "编译", "汇编", "连接"], "answer": 1, "analysis": "编译一次性翻译为二进制文件，效率高（如 C）。"}, {"type": "single", "section": 5, "stem": "逐句翻译、逐句执行的翻译方式是（ ）。", "options": ["编译", "解释", "汇编", "链接"], "answer": 1, "analysis": "解释逐句翻译逐句执行（如早期 BASIC、Python）。"}, {"type": "single", "section": 5, "stem": "用高级语言编写、须经编译/解释的程序称为（ ）。", "options": ["目标程序", "源程序", "机器程序", "汇编程序"], "answer": 1, "analysis": "源程序是用高级语言编写、须经编译/解释的程序。"}, {"type": "single", "section": 5, "stem": "结构化程序设计的三种基本结构是（ ）。", "options": ["顺序、选择、循环", "封装、继承、多态", "输入、处理、输出", "定义、调用、返回"], "answer": 0, "analysis": "结构化三基本结构：顺序、选择、循环。"}, {"type": "single", "section": 5, "stem": "结构化程序设计强调（ ）。", "options": ["自底向上", "自顶向下、模块化", "随意编写", "大量使用 goto"], "answer": 1, "analysis": "结构化强调自顶向下、模块化。"}, {"type": "single", "section": 5, "stem": "面向对象程序设计的四大特征不包括（ ）。", "options": ["封装", "继承", "多态", "强制类型转换"], "answer": 3, "analysis": "面向对象四大特征：封装、继承、多态、抽象。"}, {"type": "single", "section": 5, "stem": "面向对象中“隐藏对象内部细节”称为（ ）。", "options": ["继承", "封装", "多态", "抽象"], "answer": 1, "analysis": "封装是隐藏对象内部细节。"}, {"type": "single", "section": 5, "stem": "“子类拥有父类的属性和方法，可重用”体现的是（ ）。", "options": ["封装", "继承", "多态", "抽象"], "answer": 1, "analysis": "继承使子类拥有父类属性和方法，可重用。"}, {"type": "single", "section": 5, "stem": "“同一操作作用于不同对象有不同表现”体现的是（ ）。", "options": ["封装", "继承", "多态", "抽象"], "answer": 2, "analysis": "多态是同一操作作用于不同对象有不同表现。"}, {"type": "single", "section": 5, "stem": "任何程序都可分解为三种基本控制结构，其中最简单的是（ ）。", "options": ["顺序结构", "选择结构", "循环结构", "递归结构"], "answer": 0, "analysis": "顺序结构语句依次执行，是最简单的，也是所有结构的基础。"}, {"type": "single", "section": 5, "stem": "下列控制结构中，用于“按条件分支”的是（ ）。", "options": ["顺序结构", "选择结构", "循环结构", "模块结构"], "answer": 1, "analysis": "选择结构（if/switch）按条件分支。"}, {"type": "single", "section": 5, "stem": "下列控制结构中，用于“重复执行”的是（ ）。", "options": ["顺序结构", "选择结构", "循环结构", "分支结构"], "answer": 2, "analysis": "循环结构（for/while）重复执行。"}, {"type": "multi", "section": 5, "stem": "程序的质量标准包括（ ）。", "options": ["正确性", "可读性", "健壮性", "可维护性"], "answer": [0, 1, 2, 3], "analysis": "质量标准：正确性、可读性、健壮性、可维护性、可移植性、效率。"}, {"type": "multi", "section": 5, "stem": "计算机语言的发展层次包含（ ）。", "options": ["机器语言", "汇编语言", "高级语言", "自然语言（未经翻译即可运行）"], "answer": [0, 1, 2], "analysis": "三层次：机器语言、汇编语言、高级语言。"}, {"type": "multi", "section": 5, "stem": "关于翻译方式，下列说法正确的有（ ）。", "options": ["编译一次性翻译为二进制文件", "解释逐句翻译逐句执行", "C 语言采用编译", "Python 采用解释执行"], "answer": [0, 1, 2, 3], "analysis": "编译一次性、效率高（C）；解释逐句（BASIC、Python）。"}, {"type": "multi", "section": 5, "stem": "面向对象程序设计的四大特征包括（ ）。", "options": ["封装", "继承", "多态", "抽象"], "answer": [0, 1, 2, 3], "analysis": "面向对象四大特征：封装、继承、多态、抽象。"}, {"type": "multi", "section": 5, "stem": "结构化程序设计的三种基本结构包括（ ）。", "options": ["顺序结构", "选择结构", "循环结构", "递归结构"], "answer": [0, 1, 2], "analysis": "三基本结构：顺序、选择、循环。"}, {"type": "single", "section": 5, "stem": "程序是一组计算机能识别和执行的指令集合。", "options": ["正确", "错误"], "answer": 0, "analysis": "程序是计算机能识别和执行的指令集合，是软件核心。"}, {"type": "single", "section": 5, "stem": "机器语言计算机不能直接执行，必须翻译。", "options": ["正确", "错误"], "answer": 1, "analysis": "机器语言计算机能直接执行。"}, {"type": "single", "section": 5, "stem": "高级语言编写的程序称为源程序。", "options": ["正确", "错误"], "answer": 0, "analysis": "高级语言编写、须经编译/解释的程序是源程序。"}, {"type": "single", "section": 5, "stem": "结构化程序设计的三基本结构是顺序、选择、循环。", "options": ["正确", "错误"], "answer": 0, "analysis": "三基本结构：顺序、选择、循环。"}, {"type": "single", "section": 5, "stem": "面向对象四大特征包括封装、继承、多态、抽象。", "options": ["正确", "错误"], "answer": 0, "analysis": "面向对象四大特征：封装、继承、多态、抽象。"}, {"type": "single", "section": 6, "stem": "算法是对解决某个特定问题的（ ）的精确描述。", "options": ["硬件配置", "方法和步骤", "程序语言", "网络拓扑"], "answer": 1, "analysis": "算法是解决问题的方法和步骤的精确描述。"}, {"type": "single", "section": 6, "stem": "算法的五大特性不包括（ ）。", "options": ["有穷性", "确定性", "可行性", "无限性"], "answer": 3, "analysis": "五大特性：有穷性、确定性、可行性、输入、输出。"}, {"type": "single", "section": 6, "stem": "算法“有穷性”是指（ ）。", "options": ["执行无限步", "执行有限步后结束", "没有输入", "没有输出"], "answer": 1, "analysis": "有穷性：执行有限步后结束。"}, {"type": "single", "section": 6, "stem": "算法“确定性”是指（ ）。", "options": ["每步含义确切、无歧义", "可任意执行", "不须结束", "无需输入"], "answer": 0, "analysis": "确定性：每步含义确切、无歧义。"}, {"type": "single", "section": 6, "stem": "关于算法输入输出，下列说法正确的是（ ）。", "options": ["必须有输入", "必须有一个或多个输出", "可没有输出", "输入必须多于输出"], "answer": 1, "analysis": "算法有零个或多个输入、一个或多个输出；没有输出的算法无意义。"}, {"type": "single", "section": 6, "stem": "“没有输出的算法无意义”是因为算法特性要求（ ）。", "options": ["有穷性", "必须有输出", "确定性", "可行性"], "answer": 1, "analysis": "算法必须有一个或多个输出，无输出无意义。"}, {"type": "single", "section": 6, "stem": "算法描述方法中，符合表达习惯、易理解，但书写繁、复杂问题难准确表达的是（ ）。", "options": ["自然语言", "流程图", "伪代码", "程序代码"], "answer": 0, "analysis": "自然语言易理解但有上述缺点。"}, {"type": "single", "section": 6, "stem": "流程图中表示“开始/结束”的图框是（ ）。", "options": ["平行四边形", "菱形", "圆角矩形", "矩形"], "answer": 2, "analysis": "圆角矩形表示开始/结束。"}, {"type": "single", "section": 6, "stem": "流程图中表示“输入/输出”的图框是（ ）。", "options": ["圆角矩形", "平行四边形", "菱形", "圆形"], "answer": 1, "analysis": "平行四边形表示输入输出。"}, {"type": "single", "section": 6, "stem": "流程图中表示“条件判断”的图框是（ ）。", "options": ["平行四边形", "菱形", "圆角矩形", "矩形"], "answer": 1, "analysis": "菱形表示条件判断。"}, {"type": "single", "section": 6, "stem": "下列算法设计方法中，用于“列举所有可能、逐个检验是否满足条件”的是（ ）。", "options": ["枚举法", "迭代法", "递归法", "分治法"], "answer": 0, "analysis": "枚举法（穷举法）列举所有可能逐个检验。"}, {"type": "single", "section": 6, "stem": "“反复用新值代替旧值逐步逼近”的算法设计方法是（ ）。", "options": ["迭代法", "枚举法", "递归法", "贪心法"], "answer": 0, "analysis": "迭代法反复用新值代替旧值逐步逼近。"}, {"type": "single", "section": 6, "stem": "“函数调用自身”的算法设计方法是（ ）。", "options": ["递归法", "迭代法", "分治法", "贪心法"], "answer": 0, "analysis": "递归法是函数调用自身。"}, {"type": "single", "section": 6, "stem": "“把复杂问题分成相同或相似的子问题，再合并子问题的解”是（ ）。", "options": ["分治法", "枚举法", "贪心法", "回溯法"], "answer": 0, "analysis": "分治法将问题分治再合并。"}, {"type": "single", "section": 6, "stem": "“每步取局部最优”的算法设计方法是（ ）。", "options": ["贪心法", "动态规划", "分治法", "枚举法"], "answer": 0, "analysis": "贪心法每步取局部最优。"}, {"type": "single", "section": 6, "stem": "“把子问题解存起来避免重复计算”是（ ）的思想。", "options": ["动态规划", "贪心法", "枚举法", "分治法"], "answer": 0, "analysis": "动态规划存储子问题解避免重复。"}, {"type": "single", "section": 6, "stem": "“试探，不满足时退回换路径”是（ ）的思想。", "options": ["回溯法", "贪心法", "分治法", "迭代法"], "answer": 0, "analysis": "回溯法试探并在不满足时回退。"}, {"type": "single", "section": 6, "stem": "评价算法优劣时，衡量“执行时间随规模增长”的指标是（ ）。", "options": ["空间复杂度", "时间复杂度", "可读性", "正确性"], "answer": 1, "analysis": "时间复杂度衡量执行时间随规模增长。"}, {"type": "single", "section": 6, "stem": "评价算法优劣时，衡量“占用存储空间”的指标是（ ）。", "options": ["时间复杂度", "空间复杂度", "正确性", "可读性"], "answer": 1, "analysis": "空间复杂度衡量占用空间。"}, {"type": "single", "section": 6, "stem": "衡量算法效率的核心指标是（ ）。", "options": ["界面美观", "时间复杂度与空间复杂度", "代码行数", "注释多少"], "answer": 1, "analysis": "时间复杂度与空间复杂度是衡量算法效率的核心指标。"}, {"type": "multi", "section": 6, "stem": "算法的五大特性包括（ ）。", "options": ["有穷性", "确定性", "可行性", "输入与输出"], "answer": [0, 1, 2, 3], "analysis": "五大特性：有穷性、确定性、可行性、输入（零或多个）、输出（一个或多个）。"}, {"type": "multi", "section": 6, "stem": "下列算法设计方法中，属于常用基本方法的有（ ）。", "options": ["枚举法", "迭代法", "递归法", "分治法"], "answer": [0, 1, 2, 3], "analysis": "常用方法：枚举、迭代、递归、分治、贪心、动态规划、回溯。"}, {"type": "multi", "section": 6, "stem": "关于流程图图框，下列说法正确的有（ ）。", "options": ["圆角矩形表示开始/结束", "平行四边形表示输入/输出", "菱形表示条件判断", "流程图由图框和流程线组成"], "answer": [0, 1, 2, 3], "analysis": "流程图用图框+流程线；圆角矩形开始结束、平行四边形输入输出、菱形判断。"}, {"type": "multi", "section": 6, "stem": "评价算法优劣的主要标准包括（ ）。", "options": ["正确性", "可读性", "健壮性", "效率（时间/空间复杂度）"], "answer": [0, 1, 2, 3], "analysis": "标准：正确性、可读性、健壮性、效率（时间/空间复杂度）。"}, {"type": "multi", "section": 6, "stem": "关于算法描述方法，下列说法正确的有（ ）。", "options": ["自然语言易理解但复杂问题难准确表达", "流程图形象直观", "伪代码便于转程序", "自然语言能被计算机直接识别"], "answer": [0, 1, 2], "analysis": "自然语言易理解但有缺点、不能被计算机识别；流程图直观；伪代码便于转程序。"}, {"type": "single", "section": 6, "stem": "算法必须有输入，且输入至少一个。", "options": ["正确", "错误"], "answer": 1, "analysis": "算法可有零个或多个输入，不必须至少一个。"}, {"type": "single", "section": 6, "stem": "没有输出的算法是没有意义的。", "options": ["正确", "错误"], "answer": 0, "analysis": "没有输出的算法无意义（算法必须有一个或多个输出）。"}, {"type": "single", "section": 6, "stem": "算法五大特性包含有穷性、确定性、可行性、输入、输出。", "options": ["正确", "错误"], "answer": 0, "analysis": "五大特性正是这些。"}, {"type": "single", "section": 6, "stem": "流程图中菱形图框表示条件判断。", "options": ["正确", "错误"], "answer": 0, "analysis": "菱形表示条件判断。"}, {"type": "single", "section": 6, "stem": "时间复杂度与空间复杂度是衡量算法效率的核心指标。", "options": ["正确", "错误"], "answer": 0, "analysis": "二者是衡量算法效率的核心指标。"}, {"type": "single", "section": 7, "stem": "数据是指（ ）。", "options": ["描述事物的符号记录", "一段程序", "一个文件", "一个函数"], "answer": 0, "analysis": "数据是描述事物的符号记录。"}, {"type": "single", "section": 7, "stem": "数据元素是数据的（ ）。", "options": ["最小单位", "基本单位", "最大单位", "存储介质"], "answer": 1, "analysis": "数据元素是数据的基本单位。"}, {"type": "single", "section": 7, "stem": "数据结构是指（ ）。", "options": ["数据的存储位置", "相互之间存在特定关系的数据元素的集合", "数据的类型", "数据的颜色"], "answer": 1, "analysis": "数据结构是相互之间存在特定关系的数据元素的集合。"}, {"type": "single", "section": 7, "stem": "数据结构包括的两个方面是（ ）。", "options": ["逻辑结构与存储结构", "算法与程序", "硬件与软件", "输入与输出"], "answer": 0, "analysis": "数据结构包括逻辑结构与存储结构。"}, {"type": "single", "section": 7, "stem": "下列（ ）属于逻辑结构。", "options": ["顺序存储", "链式存储", "线性结构", "索引存储"], "answer": 2, "analysis": "逻辑结构含集合、线性、树形、图状；顺序/链式/索引/散列是存储结构。"}, {"type": "single", "section": 7, "stem": "下列（ ）属于存储（物理）结构。", "options": ["集合结构", "树形结构", "顺序存储", "图状结构"], "answer": 2, "analysis": "存储结构含顺序、链式、索引、散列。"}, {"type": "single", "section": 7, "stem": "线性结构中元素之间的关系是（ ）。", "options": ["一对多", "多对多", "一对一", "无关系"], "answer": 2, "analysis": "线性结构元素间为“一对一”。"}, {"type": "single", "section": 7, "stem": "下列属于线性结构的是（ ）。", "options": ["树", "图", "栈", "二叉树"], "answer": 2, "analysis": "栈是线性结构；树和图是非线性结构。"}, {"type": "single", "section": 7, "stem": "树和图属于（ ）。", "options": ["线性结构", "非线性结构", "存储结构", "数据类型"], "answer": 1, "analysis": "树和图为非线性结构。"}, {"type": "single", "section": 7, "stem": "线性表、栈、队列、数组、串都属于（ ）。", "options": ["树形结构", "线性结构", "图状结构", "集合结构"], "answer": 1, "analysis": "这些都属于线性结构（一对一）。"}, {"type": "single", "section": 7, "stem": "数据类型是指（ ）。", "options": ["一组值及可施加的操作的集合", "变量的名字", "存储的空间", "一条语句"], "answer": 0, "analysis": "数据类型是一组值及可施加于此组值的操作的集合。"}, {"type": "single", "section": 7, "stem": "抽象数据类型（ADT）是（ ）。", "options": ["系统内置类型", "由用户定义、表示应用问题的数据模型，含数据对象、关系及操作", "只含数据的类型", "无法操作的数据"], "answer": 1, "analysis": "ADT 由用户定义，含数据对象、数据关系及操作，实现信息隐藏。"}, {"type": "single", "section": 7, "stem": "抽象数据类型通过把数据和操作封装来实现（ ）。", "options": ["信息隐藏", "数据共享", "并行处理", "内存扩容"], "answer": 0, "analysis": "ADT 把数据和操作封装，实现信息隐藏。"}, {"type": "single", "section": 7, "stem": "逻辑结构中的“集合”是指元素之间（ ）。", "options": ["存在顺序关系", "除同属一个集合外无其他关系", "存在一对多关系", "存在多对多关系"], "answer": 1, "analysis": "集合结构：元素除同属一个集合外无其他关系。"}, {"type": "single", "section": 7, "stem": "下列逻辑结构中，元素间为“多对多”关系的是（ ）。", "options": ["线性结构", "树形结构", "图状结构", "集合结构"], "answer": 2, "analysis": "图状结构元素间为多对多。"}, {"type": "single", "section": 7, "stem": "下列逻辑结构中，元素间为“一对多”关系的是（ ）。", "options": ["线性结构", "树形结构", "图状结构", "集合结构"], "answer": 1, "analysis": "树形结构元素间为一对多。"}, {"type": "single", "section": 7, "stem": "存储结构中，用结点“数据域+指针域”链接的是（ ）。", "options": ["顺序存储", "链式存储", "索引存储", "散列存储"], "answer": 1, "analysis": "链式存储用结点（数据域+指针域）链接。"}, {"type": "single", "section": 7, "stem": "存储结构中，所有元素占连续存储空间的是（ ）。", "options": ["顺序存储", "链式存储", "索引存储", "散列存储"], "answer": 0, "analysis": "顺序存储所有元素占连续空间。"}, {"type": "single", "section": 7, "stem": "下列关于数据结构的说法，错误的是（ ）。", "options": ["包含逻辑结构", "包含存储结构", "逻辑结构含线性与图状", "数据结构只研究存储不研究关系"], "answer": 3, "analysis": "数据结构既研究逻辑结构也研究存储结构及元素间关系。"}, {"type": "single", "section": 7, "stem": "数据的逻辑结构与（ ）无关。", "options": ["元素间的逻辑关系", "具体的存储介质", "是否是线性结构", "是否是树形结构"], "answer": 1, "analysis": "逻辑结构描述元素间逻辑关系，与具体存储介质无关。"}, {"type": "multi", "section": 7, "stem": "下列逻辑结构类型中，属于数据结构逻辑结构的有（ ）。", "options": ["集合", "线性结构", "树形结构", "图状结构"], "answer": [0, 1, 2, 3], "analysis": "逻辑结构含集合、线性、树形、图状四种。"}, {"type": "multi", "section": 7, "stem": "下列存储（物理）结构中，属于数据结构存储结构的有（ ）。", "options": ["顺序存储", "链式存储", "索引存储", "散列存储"], "answer": [0, 1, 2, 3], "analysis": "存储结构含顺序、链式、索引、散列。"}, {"type": "multi", "section": 7, "stem": "下列数据结构中，属于线性结构的有（ ）。", "options": ["线性表", "栈", "队列", "数组"], "answer": [0, 1, 2, 3], "analysis": "线性表、栈、队列、数组都是线性结构（一对一）。"}, {"type": "multi", "section": 7, "stem": "关于抽象数据类型 ADT，下列说法正确的有（ ）。", "options": ["由用户定义", "含数据对象、数据关系及操作", "实现信息隐藏", "就是系统内置的 int 类型"], "answer": [0, 1, 2], "analysis": "ADT 由用户定义、含数据对象/关系/操作并封装实现信息隐藏；不是内置 int。"}, {"type": "multi", "section": 7, "stem": "下列关于数据结构组成与分类的说法，正确的有（ ）。", "options": ["数据元素是基本单位", "数据结构含逻辑结构与存储结构", "线性结构元素一对一", "树与图是非线性结构"], "answer": [0, 1, 2, 3], "analysis": "数据元素是基本单位，结构含逻辑+存储，线性一对一，树图非线性。"}, {"type": "single", "section": 7, "stem": "数据元素是数据的基本单位。", "options": ["正确", "错误"], "answer": 0, "analysis": "数据元素是数据的基本单位。"}, {"type": "single", "section": 7, "stem": "数据结构只包括数据的存储结构，不包括逻辑结构。", "options": ["正确", "错误"], "answer": 1, "analysis": "数据结构包括逻辑结构与存储结构两方面。"}, {"type": "single", "section": 7, "stem": "树和图都属于非线性结构。", "options": ["正确", "错误"], "answer": 0, "analysis": "树和图为非线性结构。"}, {"type": "single", "section": 7, "stem": "抽象数据类型（ADT）把数据和操作封装，实现信息隐藏。", "options": ["正确", "错误"], "answer": 0, "analysis": "ADT 封装数据和操作，实现信息隐藏。"}, {"type": "single", "section": 7, "stem": "线性结构中的元素之间是一对多的关系。", "options": ["正确", "错误"], "answer": 1, "analysis": "线性结构元素间是一对一；一对多是树形。"}, {"type": "single", "section": 8, "stem": "线性表是由 n（n≥0）个（ ）组成的有限序列。", "options": ["不同类型数据", "数据元素", "字符", "文件"], "answer": 1, "analysis": "线性表是 n 个数据元素组成的有限序列，元素类型相同。"}, {"type": "single", "section": 8, "stem": "线性表中第一个元素（ ），最后一个元素（ ）。", "options": ["有前驱，有后继", "无前驱，无后继", "无前驱，有后继", "有前驱，无后继"], "answer": 1, "analysis": "第一个无前驱，最后一个无后继。"}, {"type": "single", "section": 8, "stem": "线性表顺序存储要求所有元素占（ ）。", "options": ["不连续空间", "连续存储空间", "分散的硬盘", "任意位置"], "answer": 1, "analysis": "顺序存储所有元素占连续存储空间。"}, {"type": "single", "section": 8, "stem": "若首地址为 ADR(a₁)，每个元素占 k 字节，则第 i 个元素地址为（ ）。", "options": ["ADR(a₁)+i×k", "ADR(a₁)+(i-1)k", "ADR(a₁)- (i-1)k", "ADR(a₁)×k"], "answer": 1, "analysis": "第 i 个元素地址 = ADR(a₁)+(i-1)k。"}, {"type": "single", "section": 8, "stem": "链式存储中，结点由（ ）组成。", "options": ["数据域", "数据域 + 指针域", "指针域", "索引"], "answer": 1, "analysis": "结点 = 数据域 + 指针域。"}, {"type": "single", "section": 8, "stem": "n 个结点通过指针链接成（ ）。", "options": ["数组", "链表", "栈", "队列"], "answer": 1, "analysis": "链式存储中 n 个结点链接成链表。"}, {"type": "single", "section": 8, "stem": "线性表的常见运算不包括（ ）。", "options": ["插入", "删除", "查找", "编译"], "answer": 3, "analysis": "运算含插入、删除、查找、遍历；编译不是。"}, {"type": "single", "section": 8, "stem": "在顺序表中插入元素，通常需要（ ）。", "options": ["移动元素", "重新分配指针", "不移动任何元素", "只改首地址"], "answer": 0, "analysis": "顺序表插入需移动元素。"}, {"type": "single", "section": 8, "stem": "顺序存储的主要优点是（ ）。", "options": ["插入删除方便", "随机存取快", "不需要连续空间", "指针简单"], "answer": 1, "analysis": "顺序存储优点：随机存取快。"}, {"type": "single", "section": 8, "stem": "顺序存储的主要缺点是（ ）。", "options": ["不能随机存取", "插入删除需移动元素", "占用空间大", "无法存储数据"], "answer": 1, "analysis": "顺序存储缺点：插入删除需移动元素。"}, {"type": "single", "section": 8, "stem": "链式存储的主要优点是（ ）。", "options": ["随机存取快", "插入删除方便（不需移动元素）", "占连续空间", "地址计算简单"], "answer": 1, "analysis": "链式存储优点：插入删除方便。"}, {"type": "single", "section": 8, "stem": "链式存储的主要缺点是（ ）。", "options": ["不能随机存取", "插入删除麻烦", "占连续空间", "元素类型必须不同"], "answer": 0, "analysis": "链式存储缺点：不能随机存取。"}, {"type": "single", "section": 8, "stem": "下列运算中，用于“按值或按位查找元素”的是（ ）。", "options": ["遍历", "查找", "插入", "删除"], "answer": 1, "analysis": "查找是按值或按位查找。"}, {"type": "single", "section": 8, "stem": "下列运算中，用于“依次访问每个元素”的是（ ）。", "options": ["遍历", "查找", "插入", "删除"], "answer": 0, "analysis": "遍历是依次访问每个元素。"}, {"type": "single", "section": 8, "stem": "线性表中元素类型必须（ ）。", "options": ["互不相同", "相同", "都是字符", "都是整数"], "answer": 1, "analysis": "线性表元素类型相同。"}, {"type": "single", "section": 8, "stem": "线性表的“删除”运算是删除（ ）。", "options": ["所有元素", "第 i 个元素", "首地址", "指针"], "answer": 1, "analysis": "删除是删除第 i 个元素。"}, {"type": "single", "section": 8, "stem": "下列关于线性表顺序存储地址计算的说法，正确的是（ ）。", "options": ["与元素大小无关", "第 i 个地址=首地址+(i-1)k", "必须递归计算", "与首地址无关"], "answer": 1, "analysis": "顺序存储第 i 个地址 = 首地址+(i-1)k。"}, {"type": "single", "section": 8, "stem": "链式存储之所以插入删除方便，是因为（ ）。", "options": ["元素连续", "只需修改指针", "无需数据域", "不占空间"], "answer": 1, "analysis": "链式插入删除只需修改指针，不用移动元素。"}, {"type": "single", "section": 8, "stem": "线性表是（ ）结构的一种具体形式。", "options": ["树形", "线性", "图状", "集合"], "answer": 1, "analysis": "线性表是线性结构的具体形式。"}, {"type": "single", "section": 8, "stem": "线性表与数组的关系是（ ）。", "options": ["线性表可以用顺序存储（类似数组）实现", "线性表与数组无关", "数组一定是链式存储", "线性表不能连续存储"], "answer": 0, "analysis": "线性表可用顺序存储（连续空间，类似数组）实现。"}, {"type": "multi", "section": 8, "stem": "线性表顺序存储的特点包括（ ）。", "options": ["所有元素占连续空间", "按逻辑顺序存放", "可随机存取", "插入删除方便"], "answer": [0, 1, 2], "analysis": "顺序存储：元素占连续空间、可随机存取；插入删除需移动元素。"}, {"type": "multi", "section": 8, "stem": "链式存储的特点包括（ ）。", "options": ["用结点存储", "结点含数据域与指针域", "n 个结点链接成链表", "元素占连续空间"], "answer": [0, 1, 2], "analysis": "链式存储：用结点链接、插入删除方便、不能随机存取。"}, {"type": "multi", "section": 8, "stem": "线性表的常见运算有（ ）。", "options": ["插入", "删除", "查找", "遍历"], "answer": [0, 1, 2, 3], "analysis": "线性表常见运算：插入、删除、查找、遍历。"}, {"type": "multi", "section": 8, "stem": "关于顺序存储与链式存储的优缺点，下列说法正确的有（ ）。", "options": ["顺序存储随机存取快", "顺序存储插入删除需移动元素", "链式存储插入删除方便", "链式存储不能随机存取"], "answer": [0, 1, 2, 3], "analysis": "顺序随机快但插入删移动；链式插删方便但不能随机存取。"}, {"type": "multi", "section": 8, "stem": "下列关于线性表的说法，正确的有（ ）。", "options": ["元素类型相同", "首元素无前驱", "末元素无后继", "是有限序列"], "answer": [0, 1, 2, 3], "analysis": "线性表是有限序列，元素同类型，首无前驱末无后继。"}, {"type": "single", "section": 8, "stem": "线性表中第一个元素有前驱，最后一个元素有后继。", "options": ["正确", "错误"], "answer": 1, "analysis": "第一个无前驱，最后一个无后继。"}, {"type": "single", "section": 8, "stem": "线性表顺序存储时所有元素必须占连续存储空间。", "options": ["正确", "错误"], "answer": 0, "analysis": "顺序存储要求连续空间。"}, {"type": "single", "section": 8, "stem": "链式存储的优点是插入删除方便。", "options": ["正确", "错误"], "answer": 0, "analysis": "链式插删方便，只需改指针。"}, {"type": "single", "section": 8, "stem": "链式存储可以像数组一样随机存取任意元素。", "options": ["正确", "错误"], "answer": 1, "analysis": "链式不能随机存取。"}, {"type": "single", "section": 8, "stem": "线性表的第 i 个元素地址 = 首地址 + (i-1)×元素字节数。", "options": ["正确", "错误"], "answer": 0, "analysis": "顺序存储地址公式：ADR(a₁)+(i-1)k。"}, {"type": "single", "section": 9, "stem": "栈只允许在（ ）进行插入和删除。", "options": ["两端", "栈顶（一端）", "队尾", "任意位置"], "answer": 1, "analysis": "栈只允许在一端（栈顶）插入删除。"}, {"type": "single", "section": 9, "stem": "栈遵循的原则是（ ）。", "options": ["先进先出 FIFO", "后进先出 LIFO", "随机进出", "只进不出"], "answer": 1, "analysis": "栈遵循后进先出（LIFO）。"}, {"type": "single", "section": 9, "stem": "栈中可操作的一端称为（ ），固定的一端称为（ ）。", "options": ["栈底，栈顶", "栈顶，栈底", "队头，队尾", "队尾，队头"], "answer": 1, "analysis": "可操作端为栈顶，固定端为栈底。"}, {"type": "single", "section": 9, "stem": "栈的入栈、出栈操作分别称为（ ）。", "options": ["push、pop", "pop、push", "in、out", "add、del"], "answer": 0, "analysis": "入栈 push、出栈 pop。"}, {"type": "single", "section": 9, "stem": "栈的应用不包括（ ）。", "options": ["递归调用", "表达式求值", "函数调用", "打印缓冲区（这是队列）"], "answer": 3, "analysis": "栈用于递归、表达式求值、函数调用；打印缓冲区是队列应用。"}, {"type": "single", "section": 9, "stem": "若入栈顺序为 12,25,31,7,43,21，全部入栈后再出栈，出栈顺序是（ ）。", "options": ["12,25,31,7,43,21", "21,43,7,31,25,12", "25,12,31,7,43,21", "任意顺序"], "answer": 1, "analysis": "后进先出，出栈顺序为 21,43,7,31,25,12。"}, {"type": "single", "section": 9, "stem": "栈是一种（ ）的线性表。", "options": ["运算不受限", "运算受限（仅一端操作）", "可随机存取", "链式专用"], "answer": 1, "analysis": "栈是运算受限的线性表（仅一端操作）。"}, {"type": "single", "section": 9, "stem": "队列只允许在（ ）插入、在（ ）删除。", "options": ["队头插入、队尾删除", "队尾插入、队头删除", "两端都插入", "两端都删除"], "answer": 1, "analysis": "队列队尾插入、队头删除。"}, {"type": "single", "section": 9, "stem": "队列遵循的原则是（ ）。", "options": ["后进先出 LIFO", "先进先出 FIFO", "随机进出", "只出不进"], "answer": 1, "analysis": "队列遵循先进先出（FIFO）。"}, {"type": "single", "section": 9, "stem": "队列中删除端是（ ），插入端是（ ）。", "options": ["队尾，队头", "队头，队尾", "栈顶，栈底", "栈底，栈顶"], "answer": 1, "analysis": "队头删除、队尾插入。"}, {"type": "single", "section": 9, "stem": "解决主机与打印机速度不匹配时设置的打印缓冲区，对应的数据结构是（ ）。", "options": ["栈", "队列", "树", "图"], "answer": 1, "analysis": "打印缓冲区对应队列。"}, {"type": "single", "section": 9, "stem": "队列的典型应用不包括（ ）。", "options": ["打印缓冲区", "排队系统", "函数调用（这是栈）", "排队叫号"], "answer": 2, "analysis": "队列用于打印缓冲、排队；函数调用是栈应用。"}, {"type": "single", "section": 9, "stem": "与栈“后进先出”相反，队列具有（ ）特征。", "options": ["后进先出", "先进先出", "随机", "无规律"], "answer": 1, "analysis": "队列先进先出，与栈相反。"}, {"type": "single", "section": 9, "stem": "栈和队列都属于（ ）。", "options": ["树形结构", "线性结构", "图状结构", "集合结构"], "answer": 1, "analysis": "栈和队列都是线性结构。"}, {"type": "single", "section": 9, "stem": "下列关于栈的叙述，正确的是（ ）。", "options": ["允许两端插入删除", "只允许栈顶操作", "先进先出", "不能用于递归"], "answer": 1, "analysis": "栈只允许栈顶插入删除，后进先出。"}, {"type": "single", "section": 9, "stem": "下列关于队列的叙述，正确的是（ ）。", "options": ["队尾插入、队头删除", "栈顶操作", "后进先出", "不能用于缓冲"], "answer": 0, "analysis": "队列队尾插入、队头删除，先进先出。"}, {"type": "single", "section": 9, "stem": "表达式求值通常借助（ ）实现。", "options": ["队列", "栈", "树", "图"], "answer": 1, "analysis": "表达式求值常用栈。"}, {"type": "single", "section": 9, "stem": "递归调用的实现依赖于（ ）。", "options": ["队列", "栈", "数组的随机存取", "图的遍历"], "answer": 1, "analysis": "递归调用依赖栈。"}, {"type": "single", "section": 9, "stem": "栈顶指针通常记作（ ）。", "options": ["top", "front", "rear", "base"], "answer": 0, "analysis": "栈顶指针 top；队头 front、队尾 rear。"}, {"type": "single", "section": 9, "stem": "队头、队尾指针通常分别记作（ ）。", "options": ["top / base", "front / rear", "rear / front", "head / tail"], "answer": 1, "analysis": "队头 front、队尾 rear。"}, {"type": "multi", "section": 9, "stem": "栈的特点与应用包括（ ）。", "options": ["后进先出 LIFO", "只允许栈顶操作", "用于递归调用", "用于表达式求值"], "answer": [0, 1, 2, 3], "analysis": "栈 LIFO、栈顶操作、用于递归与表达式求值。"}, {"type": "multi", "section": 9, "stem": "队列的特点与应用包括（ ）。", "options": ["先进先出 FIFO", "队尾插入、队头删除", "用于打印缓冲区", "用于排队系统"], "answer": [0, 1, 2, 3], "analysis": "队列 FIFO、队尾插队头删、用于打印缓冲与排队。"}, {"type": "multi", "section": 9, "stem": "下列关于栈与队列的说法，正确的有（ ）。", "options": ["栈是 LIFO", "队列是 FIFO", "两者都是线性结构", "栈和队列插入删除端不同"], "answer": [0, 1, 2, 3], "analysis": "栈LIFO、队列FIFO、均线性、操作端不同。"}, {"type": "multi", "section": 9, "stem": "下列场景中，适合用队列（而非栈）的有（ ）。", "options": ["打印缓冲区", "排队叫号系统", "函数递归调用", "表达式求值"], "answer": [0, 1], "analysis": "打印缓冲与排队叫号用队列；递归与表达式求值用栈。"}, {"type": "multi", "section": 9, "stem": "栈和队列的共同点有（ ）。", "options": ["都属于线性结构", "插入删除都受位置限制", "都可用来暂存数据", "都是树形结构"], "answer": [0, 1, 2], "analysis": "栈队列都是受限线性结构，可暂存数据；不是树形。"}, {"type": "single", "section": 9, "stem": "栈遵循先进先出（FIFO）原则。", "options": ["正确", "错误"], "answer": 1, "analysis": "栈遵循后进先出（LIFO）。"}, {"type": "single", "section": 9, "stem": "队列遵循先进先出（FIFO）原则。", "options": ["正确", "错误"], "answer": 0, "analysis": "队列先进先出。"}, {"type": "single", "section": 9, "stem": "打印缓冲区对应的数据结构是队列。", "options": ["正确", "错误"], "answer": 0, "analysis": "打印缓冲对应队列。"}, {"type": "single", "section": 9, "stem": "递归调用的实现依赖于栈。", "options": ["正确", "错误"], "answer": 0, "analysis": "递归依赖栈。"}, {"type": "single", "section": 9, "stem": "栈和队列都属于线性结构。", "options": ["正确", "错误"], "answer": 0, "analysis": "栈和队列都是线性结构。"}, {"type": "single", "section": 10, "stem": "树是 n（n>0）个结点的有限集合，有且仅有一个（ ）。", "options": ["叶子结点", "根结点", "度为 2 的结点", "空结点"], "answer": 1, "analysis": "树有且仅有一个根结点。"}, {"type": "single", "section": 10, "stem": "树的其余结点分成若干（ ）的子树。", "options": ["互不相交", "全部相交", "只有一个", "无子树"], "answer": 0, "analysis": "其余结点分成若干互不相交的子树。"}, {"type": "single", "section": 10, "stem": "二叉树中每个结点最多有（ ）个子树，且左右子树（ ）。", "options": ["1 个，无序", "2 个，有次序之分", "3 个，无序", "任意个，有序"], "answer": 1, "analysis": "二叉树每个结点最多两个子树，左右有次序。"}, {"type": "single", "section": 10, "stem": "下列关于二叉树的说法，正确的是（ ）。", "options": ["结点最多一个子树", "结点最多两个子树且左右有序", "一定是满的", "不能有叶子"], "answer": 1, "analysis": "二叉树每个结点最多两个子树，左右有序。"}, {"type": "single", "section": 10, "stem": "满二叉树是指（ ）。", "options": ["最后一层不满", "每一层结点都达到最大，所有结点都有两个子结点", "只有根结点", "叶子都在中间层"], "answer": 1, "analysis": "满二叉树每层都达最大，所有结点都有两个子结点。"}, {"type": "single", "section": 10, "stem": "完全二叉树是指（ ）。", "options": ["除最后一层外全满，最后一层靠左连续排列", "所有层都满", "只有一层", "随机排列"], "answer": 0, "analysis": "完全二叉树除最后一层外全满，最后一层结点靠左连续排列。"}, {"type": "single", "section": 10, "stem": "二叉树第 i 层（i≥1）至多有（ ）个结点。", "options": ["i", "2i", "2^(i-1)", "2^i - 1"], "answer": 2, "analysis": "第 i 层至多有 2^(i-1) 个结点。"}, {"type": "single", "section": 10, "stem": "深度为 k 的二叉树至多有（ ）个结点。", "options": ["2k", "2^k", "2^k - 1", "k^2"], "answer": 2, "analysis": "深度 k 的二叉树至多 2^k − 1 个结点。"}, {"type": "single", "section": 10, "stem": "二叉树中叶子结点数 n₀ 与度为 2 的结点数 n₂ 满足（ ）。", "options": ["n₀ = n₂", "n₀ = n₂ + 1", "n₂ = n₀ + 1", "n₀ = 2n₂"], "answer": 1, "analysis": "性质：n₀ = n₂ + 1。"}, {"type": "single", "section": 10, "stem": "二叉树的先序（先根）遍历顺序是（ ）。", "options": ["左→根→右", "根→左→右", "左→右→根", "根→右→左"], "answer": 1, "analysis": "先序：根→左→右。"}, {"type": "single", "section": 10, "stem": "二叉树的中序（中根）遍历顺序是（ ）。", "options": ["根→左→右", "左→根→右", "左→右→根", "右→根→左"], "answer": 1, "analysis": "中序：左→根→右。"}, {"type": "single", "section": 10, "stem": "二叉树的后序（后根）遍历顺序是（ ）。", "options": ["根→左→右", "左→根→右", "左→右→根", "根→右→左"], "answer": 2, "analysis": "后序：左→右→根。"}, {"type": "single", "section": 10, "stem": "二叉树中序遍历得到（ ）表达式。", "options": ["前缀", "中缀", "后缀（逆波兰）", "完全不需要"], "answer": 1, "analysis": "中序遍历得到中缀表达式。"}, {"type": "single", "section": 10, "stem": "二叉树后序遍历得到（ ）表达式。", "options": ["前缀", "中缀", "后缀（逆波兰）", "中缀加括号"], "answer": 2, "analysis": "后序遍历得到后缀（逆波兰）表达式。"}, {"type": "single", "section": 10, "stem": "哈夫曼（Huffman）树又称（ ）。", "options": ["满二叉树", "最优二叉树", "完全二叉树", "二叉排序树"], "answer": 1, "analysis": "哈夫曼树又称最优二叉树。"}, {"type": "single", "section": 10, "stem": "哈夫曼树是一类（ ）最短的树。", "options": ["高度", "带权路径长度 WPL", "结点总数", "深度之和"], "answer": 1, "analysis": "哈夫曼树是带权路径长度（WPL）最短的树。"}, {"type": "single", "section": 10, "stem": "WPL 是（ ）之和。", "options": ["所有叶子结点的（权×路径长度）", "所有结点的度", "树的深度", "根到叶的边数"], "answer": 0, "analysis": "WPL = 所有叶子结点的（权×路径长度）之和。"}, {"type": "single", "section": 10, "stem": "构造哈夫曼树时，每次取（ ）的两棵子树合并。", "options": ["权值最大", "权值最小", "任意", "权值相等"], "answer": 1, "analysis": "每次取权值最小的两棵子树合并。"}, {"type": "single", "section": 10, "stem": "完全二叉树是（ ）最短的二叉树。", "options": ["高度", "路径长度", "结点总数", "叶子数"], "answer": 1, "analysis": "完全二叉树是路径长度最短的二叉树。"}, {"type": "single", "section": 10, "stem": "树的术语中，“叶子结点”是指（ ）。", "options": ["根结点", "度为 0 的结点", "度为 2 的结点", "有最多孩子的结点"], "answer": 1, "analysis": "叶子结点度为 0（无子树）。"}, {"type": "multi", "section": 10, "stem": "二叉树的性质包括（ ）。", "options": ["第 i 层至多 2^(i-1) 个结点", "深度 k 至多 2^k−1 个结点", "n₀ = n₂ + 1", "叶子结点数等于度为 2 的结点数"], "answer": [0, 1, 2], "analysis": "二叉树的三个重要性质：第i层2^(i-1)、深度k为2^k−1、n₀=n₂+1。"}, {"type": "multi", "section": 10, "stem": "三种二叉树遍历方式包括（ ）。", "options": ["先序（根左右）", "中序（左根右）", "后序（左右根）", "层序（按层）"], "answer": [0, 1, 2], "analysis": "常见遍历：先序根左右、中序左根右、后序左右根。"}, {"type": "multi", "section": 10, "stem": "关于满二叉树与完全二叉树，下列说法正确的有（ ）。", "options": ["满二叉树每层都达最大", "满二叉树所有结点都有两个子结点", "完全二叉树最后一层靠左连续", "完全二叉树除最后一层外全满"], "answer": [0, 1, 2, 3], "analysis": "满二叉树每层最大、全双子；完全二叉树除末层全满、末层靠左连续。"}, {"type": "multi", "section": 10, "stem": "下列关于哈夫曼树的说法，正确的有（ ）。", "options": ["又称最优二叉树", "WPL 最短", "构造时取权值最小的两棵合并", "是路径长度最短的二叉树"], "answer": [0, 1, 2, 3], "analysis": "哈夫曼树=最优二叉树、WPL最短、取最小两棵合并、路径长度最短。"}, {"type": "multi", "section": 10, "stem": "遍历二叉树时，以“根”的位置区分，下列说法正确的有（ ）。", "options": ["先序：根在最前（根左右）", "中序：根在中间（左根右）", "后序：根在最后（左右根）", "先序：根在最后"], "answer": [0, 1, 2], "analysis": "先序根前、中序根中、后序根后。"}, {"type": "single", "section": 10, "stem": "二叉树每个结点最多有两个子树，且左右子树有次序之分。", "options": ["正确", "错误"], "answer": 0, "analysis": "二叉树每个结点最多两子树，左右有序。"}, {"type": "single", "section": 10, "stem": "二叉树中叶子结点数 n₀ 等于度为 2 的结点数 n₂。", "options": ["正确", "错误"], "answer": 1, "analysis": "n₀ = n₂ + 1。"}, {"type": "single", "section": 10, "stem": "二叉树后序遍历得到中缀表达式。", "options": ["正确", "错误"], "answer": 1, "analysis": "后序得后缀（逆波兰）表达式；中序得中缀。"}, {"type": "single", "section": 10, "stem": "哈夫曼树是一类带权路径长度（WPL）最短的树。", "options": ["正确", "错误"], "answer": 0, "analysis": "哈夫曼树是 WPL 最短的最优二叉树。"}, {"type": "single", "section": 10, "stem": "完全二叉树要求最后一层结点靠右连续排列。", "options": ["正确", "错误"], "answer": 1, "analysis": "完全二叉树最后一层结点靠左连续排列。"}, {"type": "single", "section": 11, "stem": "图由（ ）组成。", "options": ["顶点和边", "结点和指针", "根和子树", "栈和队列"], "answer": 0, "analysis": "图由顶点和边组成。"}, {"type": "single", "section": 11, "stem": "边有方向的有向图，与边无方向的无向图，区分依据是（ ）。", "options": ["顶点数", "边是否有向", "权值大小", "是否连通"], "answer": 1, "analysis": "边有向则为有向图，无向则为无向图。"}, {"type": "single", "section": 11, "stem": "无向图中任意两顶点间都有路径，称为（ ）。", "options": ["连通图", "强连通图", "完全图", "生成树"], "answer": 0, "analysis": "无向图中任意两顶点间都有路径为连通图。"}, {"type": "single", "section": 11, "stem": "无向图的极大连通子图称为（ ）。", "options": ["连通分量", "生成树", "生成森林", "强连通分量"], "answer": 0, "analysis": "无向图的极大连通子图是连通分量。"}, {"type": "single", "section": 11, "stem": "有向图的“强连通图/强连通分量”对应无向图的（ ）。", "options": ["连通图/连通分量", "生成树/生成森林", "完全图/子图", "环/链"], "answer": 0, "analysis": "强连通图/强连通分量是有向图的对应概念。"}, {"type": "single", "section": 11, "stem": "连通图的极小连通子图，含全部顶点但只有 n−1 条边，称为（ ）。", "options": ["生成森林", "生成树", "连通分量", "强连通分量"], "answer": 1, "analysis": "生成树是连通图的极小连通子图，含全部顶点、n−1 条边。"}, {"type": "single", "section": 11, "stem": "非连通图各连通分量的生成树集合称为（ ）。", "options": ["生成树", "生成森林", "连通分量", "完全图"], "answer": 1, "analysis": "非连通图各分量生成树集合是生成森林。"}, {"type": "single", "section": 11, "stem": "图的深度优先搜索（DFS）的特点是（ ）。", "options": ["逐层扩展", "沿一条路走到底，回溯后再访未访问邻接点", "只访问队头", "随机访问"], "answer": 1, "analysis": "DFS 沿一条路走到底再回溯，类似栈。"}, {"type": "single", "section": 11, "stem": "图的广度优先搜索（BFS）的特点是（ ）。", "options": ["沿一条路走到底", "先访问所有邻接点再逐层扩展", "只访问根", "不回溯"], "answer": 1, "analysis": "BFS 先访问邻接点再逐层扩展，类似队列。"}, {"type": "single", "section": 11, "stem": "DFS 类似于（ ）的思想，BFS 类似于（ ）的思想。", "options": ["队列，栈", "栈，队列", "树，图", "数组，链表"], "answer": 1, "analysis": "DFS 类似栈，BFS 类似队列。"}, {"type": "single", "section": 11, "stem": "带权图中权最小的生成树称为（ ）。", "options": ["最小生成树", "最大生成树", "生成森林", "最短路径树"], "answer": 0, "analysis": "最小生成树是带权图中权最小的生成树。"}, {"type": "single", "section": 11, "stem": "普里姆（Prim）算法构造最小生成树的思想是（ ）。", "options": ["按边权从小到大选 n−1 条边", "以某顶点为起点，逐步找最小权值的边加入", "随机选边", "只选最长边"], "answer": 1, "analysis": "Prim 以顶点为起点逐步加入最小权值边。"}, {"type": "single", "section": 11, "stem": "克鲁斯卡尔（Kruskal）算法构造最小生成树的思想是（ ）。", "options": ["以顶点为起点逐步加边", "按边权从小到大选 n−1 条边且不构成回路", "只选最短的一条边", "随机选顶点"], "answer": 1, "analysis": "Kruskal 按边权从小到大选 n−1 条边且不成环。"}, {"type": "single", "section": 11, "stem": "拓扑排序用于（ ）。", "options": ["有向无环图（DAG）", "任意图", "无向图", "只有环的图"], "answer": 0, "analysis": "拓扑排序用于有向无环图（DAG）。"}, {"type": "single", "section": 11, "stem": "拓扑排序可以由集合上的（ ）得到全序，用于判断活动能否顺利完成。", "options": ["偏序", "全序", "无序", "环序"], "answer": 0, "analysis": "拓扑排序由偏序得到全序；无环才可拓扑排序。"}, {"type": "single", "section": 11, "stem": "若一个有向图存在环，则（ ）。", "options": ["可以拓扑排序", "不能进行拓扑排序", "一定是强连通图", "一定是树"], "answer": 1, "analysis": "有环则不能拓扑排序。"}, {"type": "single", "section": 11, "stem": "连通图一定（ ）。", "options": ["有 n−1 条边", "是树", "包含一棵生成树", "是完全图"], "answer": 2, "analysis": "连通图包含一棵生成树（极小连通子图）。"}, {"type": "single", "section": 11, "stem": "最小生成树中边的数量为（ ）。", "options": ["n", "n−1", "n+1", "2n"], "answer": 1, "analysis": "生成树/最小生成树有 n−1 条边（n 为顶点数）。"}, {"type": "single", "section": 11, "stem": "下列关于图遍历的说法，错误的是（ ）。", "options": ["DFS 深度优先", "BFS 广度优先", "DFS 类似队列", "DFS 走到底再回溯"], "answer": 2, "analysis": "DFS 类似栈而非队列。"}, {"type": "single", "section": 11, "stem": "图的“顶点”对应树中的（ ）。", "options": ["边", "结点", "子树", "森林"], "answer": 1, "analysis": "图的顶点即结点。"}, {"type": "multi", "section": 11, "stem": "图的基本概念包括（ ）。", "options": ["顶点", "边", "有向图", "无向图"], "answer": [0, 1, 2, 3], "analysis": "图由顶点和边组成；边有向为有向图、无向为无向图。"}, {"type": "multi", "section": 11, "stem": "关于生成树与生成森林，下列说法正确的有（ ）。", "options": ["生成树是连通图的极小连通子图", "生成树含全部顶点、n−1 条边", "非连通图各分量生成树集合是生成森林", "生成树一定含环"], "answer": [0, 1, 2], "analysis": "生成树极小连通、含全顶点n-1边、无环；非连通各分量生成树构成森林。"}, {"type": "multi", "section": 11, "stem": "最小生成树的构造算法包括（ ）。", "options": ["普里姆 Prim", "克鲁斯卡尔 Kruskal", "Prim（顶点起逐步加最小边）", "Kruskal（边权从小到大选 n−1 条不成环）"], "answer": [0, 1, 2, 3], "analysis": "Prim 与 Kruskal 是两种最小生成树算法。"}, {"type": "multi", "section": 11, "stem": "关于图的遍历，下列说法正确的有（ ）。", "options": ["DFS 深度优先、类似栈", "BFS 广度优先、类似队列", "DFS 走到底再回溯", "BFS 逐层扩展"], "answer": [0, 1, 2, 3], "analysis": "DFS 深优先似栈走到底回溯；BFS 广优先似队列逐层扩展。"}, {"type": "multi", "section": 11, "stem": "关于拓扑排序，下列说法正确的有（ ）。", "options": ["用于有向无环图 DAG", "由偏序得到全序", "无环才可拓扑排序", "有环也可以拓扑排序"], "answer": [0, 1, 2], "analysis": "拓扑排序用于 DAG、由偏序得全序，有环则不能。"}, {"type": "single", "section": 11, "stem": "图由顶点和边组成。", "options": ["正确", "错误"], "answer": 0, "analysis": "图由顶点和边组成。"}, {"type": "single", "section": 11, "stem": "无向图中任意两顶点间都有路径，称为连通图。", "options": ["正确", "错误"], "answer": 0, "analysis": "无向图任意两顶点有路径即连通图。"}, {"type": "single", "section": 11, "stem": "生成树包含连通图的全部顶点，但只有 n−1 条边。", "options": ["正确", "错误"], "answer": 0, "analysis": "生成树是极小连通子图，含全顶点、n-1 边。"}, {"type": "single", "section": 11, "stem": "拓扑排序可以用于含有环的有向图。", "options": ["正确", "错误"], "answer": 1, "analysis": "拓扑排序要求无环（DAG），有环不能拓扑排序。"}, {"type": "single", "section": 11, "stem": "克鲁斯卡尔算法按边权从小到大选 n−1 条边且不构成回路。", "options": ["正确", "错误"], "answer": 0, "analysis": "Kruskal 按边权从小到大选 n−1 条且不成环。"}, {"type": "single", "section": 12, "stem": "顺序查找是从一端开始（ ）。", "options": ["随机跳着找", "逐个比较，直到找到或扫描结束", "只比较中间元素", "先排序再找"], "answer": 1, "analysis": "顺序查找逐个比较，直到找到或扫描结束。"}, {"type": "single", "section": 12, "stem": "顺序查找对表是否有序的要求是（ ）。", "options": ["必须有序", "可以无序", "必须严格递增", "必须严格递减"], "answer": 1, "analysis": "顺序查找对表无要求，可无序。"}, {"type": "single", "section": 12, "stem": "顺序查找的时间复杂度为（ ）。", "options": ["O(1)", "O(n)", "O(log n)", "O(n²)"], "answer": 1, "analysis": "顺序查找时间复杂度 O(n)。"}, {"type": "single", "section": 12, "stem": "二分查找（折半查找）要求表必须（ ）。", "options": ["无序", "有序", "元素是字符", "长度是素数"], "answer": 1, "analysis": "二分查找表必须有序。"}, {"type": "single", "section": 12, "stem": "二分查找每次取（ ）进行比较。", "options": ["第一个元素", "中间元素", "最后一个元素", "随机元素"], "answer": 1, "analysis": "二分取中间元素比较。"}, {"type": "single", "section": 12, "stem": "二分查找的时间复杂度为（ ）。", "options": ["O(n)", "O(log n)", "O(1)", "O(n²)"], "answer": 1, "analysis": "二分查找时间复杂度 O(log n)。"}, {"type": "single", "section": 12, "stem": "在 [7,12,28,37,54,65] 中查 53，第一次与（ ）比较。", "options": ["7", "37（中间）", "54", "65"], "answer": 1, "analysis": "表有序，中间元素 37 先比。"}, {"type": "single", "section": 12, "stem": "在 [7,12,28,37,54,65] 中查 53，第一次与 37 比较后应在（ ）继续。", "options": ["前半区", "后半区", "停止", "重新开始"], "answer": 1, "analysis": "53>37，在后半区继续。"}, {"type": "single", "section": 12, "stem": "二分查找效率（ ）顺序查找。", "options": ["低于", "远高于", "等于", "无法比较"], "answer": 1, "analysis": "二分 O(log n) 远高于顺序 O(n)。"}, {"type": "single", "section": 12, "stem": "索引查找的基本过程是（ ）。", "options": ["先查索引表，再在对应块内查找", "只查整个表", "先排序再逐个比", "随机访问"], "answer": 0, "analysis": "索引查找先查索引表，再在对应块内查找。"}, {"type": "single", "section": 12, "stem": "下列关于顺序查找与二分查找的说法，正确的是（ ）。", "options": ["顺序查找必须有序", "二分查找可无序", "二分查找必须有序且效率更高", "两者效率相同"], "answer": 2, "analysis": "二分查找须有序且效率更高；顺序可无序。"}, {"type": "single", "section": 12, "stem": "在 [7,12,28,37,54,65] 中查 53，与 54 比较是在第（ ）次。", "options": ["1", "2", "3", "4"], "answer": 1, "analysis": "第1次与37比，第2次与后半区中间54比。"}, {"type": "multi", "section": 12, "stem": "顺序查找的特点包括（ ）。", "options": ["从一端开始逐个比较", "对表可无序", "时间复杂度 O(n)", "表必须有序"], "answer": [0, 1, 2], "analysis": "顺序查找逐个比较、可无序、O(n)；不要求有序。"}, {"type": "multi", "section": 12, "stem": "二分查找（折半查找）的特点包括（ ）。", "options": ["表必须有序", "取中间元素比较", "时间复杂度 O(log n)", "对表可无序"], "answer": [0, 1, 2], "analysis": "二分查找须有序、取中间比、O(log n)。"}, {"type": "multi", "section": 12, "stem": "下列关于查找算法的说法，正确的有（ ）。", "options": ["二分查找效率高于顺序查找", "二分查找前提是数据有序", "顺序查找对表无要求", "索引查找先查索引再块内查"], "answer": [0, 1, 2, 3], "analysis": "二分高于顺序且须有序；顺序无要求；索引先索引后块内。"}, {"type": "single", "section": 12, "stem": "顺序查找要求被查找的表必须是有序的。", "options": ["正确", "错误"], "answer": 1, "analysis": "顺序查找对表无要求，可无序。"}, {"type": "single", "section": 12, "stem": "二分查找（折半查找）要求表必须有序，时间复杂度为 O(log n)。", "options": ["正确", "错误"], "answer": 0, "analysis": "二分查找须有序，O(log n)。"}, {"type": "single", "section": 12, "stem": "在 [7,12,28,37,54,65] 中查 53，先与 37 比较，再与 54 比较，第 2 次比较即成功。", "options": ["正确", "错误"], "answer": 0, "analysis": "题中示例：先与37比，再与54比，第2次成功。"}, {"type": "single", "section": 12, "stem": "二分查找的时间复杂度高于顺序查找。", "options": ["正确", "错误"], "answer": 1, "analysis": "二分 O(log n) 低于顺序 O(n)，效率更高。"}, {"type": "single", "section": 12, "stem": "索引查找是先查索引表，再在相应块内查找以提高速度。", "options": ["正确", "错误"], "answer": 0, "analysis": "索引查找先查索引表再块内查找。"}, {"type": "single", "section": 13, "stem": "排序是将一组数据按（ ）递增或递减排列。", "options": ["随机顺序", "关键字", "字母表", "文件大小"], "answer": 1, "analysis": "排序按关键字递增或递减排列。"}, {"type": "single", "section": 13, "stem": "“把元素逐个插入已排好序的部分”是（ ）排序。", "options": ["选择", "插入", "冒泡", "快速"], "answer": 1, "analysis": "插入排序逐个插入已排序部分。"}, {"type": "single", "section": 13, "stem": "“每趟选最小（大）元素放到前面”是（ ）排序。", "options": ["插入", "选择", "冒泡", "快速"], "answer": 1, "analysis": "选择排序每趟选最小/大元素放前面。"}, {"type": "single", "section": 13, "stem": "“相邻元素比较交换，大数沉底”是（ ）排序。", "options": ["冒泡", "选择", "插入", "快速"], "answer": 0, "analysis": "冒泡排序相邻比较交换，大数沉底。"}, {"type": "single", "section": 13, "stem": "“选基准，分区，递归”是（ ）排序。", "options": ["冒泡", "选择", "插入", "快速"], "answer": 3, "analysis": "快速排序选基准、分区、递归。"}, {"type": "single", "section": 13, "stem": "排序的“稳定性”是指（ ）。", "options": ["排序速度快", "相等元素相对次序不变", "占用空间小", "比较次数少"], "answer": 1, "analysis": "稳定性指相等元素相对次序不变。"}, {"type": "single", "section": 13, "stem": "冒泡、选择、插入排序的时间复杂度一般为（ ）。", "options": ["O(n)", "O(n²)", "O(log n)", "O(n log n)"], "answer": 1, "analysis": "冒泡/选择/插入为 O(n²)。"}, {"type": "single", "section": 13, "stem": "快速排序平均时间复杂度为（ ）。", "options": ["O(n²)", "O(n log n)", "O(n)", "O(1)"], "answer": 1, "analysis": "快速排序平均 O(n log n)。"}, {"type": "single", "section": 13, "stem": "冒泡排序每趟把（ ）元素“冒”到末尾。", "options": ["最小", "最大", "中间", "随机"], "answer": 1, "analysis": "冒泡每趟把最大元素沉底（冒到末尾）。"}, {"type": "single", "section": 13, "stem": "冒泡排序的空间复杂度很低，通常只需（ ）个辅助空间。", "options": ["n", "1", "log n", "n²"], "answer": 1, "analysis": "冒泡只需 1 个辅助空间。"}, {"type": "single", "section": 13, "stem": "下列关于快速排序的说法，正确的是（ ）。", "options": ["平均最快的比较排序之一", "一定是 O(n²)", "不能递归", "不稳定且慢"], "answer": 0, "analysis": "快速排序是平均最快的比较排序之一。"}, {"type": "single", "section": 13, "stem": "下列排序算法中，时间复杂度为 O(n²) 的有（ ）。", "options": ["冒泡、选择、插入", "快速排序", "二分查找", "拓扑排序"], "answer": 0, "analysis": "冒泡/选择/插入为 O(n²)；快速为 O(n log n)。"}, {"type": "single", "section": 13, "stem": "稳定性主要用于衡量（ ）。", "options": ["排序是否稳定（相等元素次序）", "算法是否难写", "是否需要递归", "空间占用"], "answer": 0, "analysis": "稳定性衡量相等元素相对次序是否保持。"}, {"type": "single", "section": 13, "stem": "“选基准分区递归”描述的是（ ）。", "options": ["冒泡排序", "快速排序", "选择排序", "插入排序"], "answer": 1, "analysis": "选基准分区递归是快速排序。"}, {"type": "single", "section": 13, "stem": "相邻元素比较并交换，使大数逐趟下沉，这是（ ）的核心思想。", "options": ["选择排序", "冒泡排序", "插入排序", "归并排序"], "answer": 1, "analysis": "这是冒泡排序核心思想。"}, {"type": "multi", "section": 13, "stem": "下列排序算法中，一般时间复杂度为 O(n²) 的有（ ）。", "options": ["冒泡排序", "选择排序", "插入排序", "快速排序"], "answer": [0, 1, 2], "analysis": "冒泡/选择/插入为 O(n²)；快速为 O(n log n)。"}, {"type": "multi", "section": 13, "stem": "关于排序的稳定性与复杂度，下列说法正确的有（ ）。", "options": ["稳定性指相等元素相对次序不变", "冒泡/选择/插入为 O(n²)", "快速排序平均 O(n log n)", "冒泡只需 1 个辅助空间"], "answer": [0, 1, 2, 3], "analysis": "稳定性定义、各类复杂度与空间开销如述。"}, {"type": "multi", "section": 13, "stem": "下列排序算法的核心思想正确的有（ ）。", "options": ["插入：逐个插入已排序部分", "选择：每趟选最小放前面", "冒泡：相邻比较交换大数沉底", "快速：选基准分区递归"], "answer": [0, 1, 2, 3], "analysis": "四种排序核心思想如述。"}, {"type": "single", "section": 13, "stem": "排序是按关键字将一组数据递增或递减排列。", "options": ["正确", "错误"], "answer": 0, "analysis": "排序按关键字递增/递减排列。"}, {"type": "single", "section": 13, "stem": "冒泡排序每趟把最大元素“冒”到末尾（沉底）。", "options": ["正确", "错误"], "answer": 0, "analysis": "冒泡每趟把最大元素沉底。"}, {"type": "single", "section": 13, "stem": "快速排序的平均时间复杂度是 O(n²)。", "options": ["正确", "错误"], "answer": 1, "analysis": "快速排序平均 O(n log n)。"}, {"type": "single", "section": 13, "stem": "排序的“稳定性”是指相等元素的相对次序在排序后保持不变。", "options": ["正确", "错误"], "answer": 0, "analysis": "稳定性即相等元素相对次序不变。"}, {"type": "single", "section": 13, "stem": "冒泡排序一般需要 O(n²) 的时间复杂度。", "options": ["正确", "错误"], "answer": 0, "analysis": "冒泡/选择/插入一般为 O(n²)。"}, {"type": "single", "section": 14, "stem": "落后的软件生产方式无法满足快速增长的软件需求，导致一系列严重问题，这种现象称为（ ）。", "options": ["软件危机", "软件工程", "敏捷开发", "生命周期"], "answer": 0, "analysis": "软件危机是落后生产方式导致开发维护出现严重问题的现象。"}, {"type": "single", "section": 14, "stem": "软件工程的出现是为了应对（ ）。", "options": ["硬件危机", "软件危机", "网络危机", "数据危机"], "answer": 1, "analysis": "软件工程的出现正是为应对软件危机。"}, {"type": "single", "section": 14, "stem": "软件工程是将（ ）的方法应用于软件的开发、运行和维护。", "options": ["随意的", "系统性的、规范化的、可定量的", "纯艺术的", "不可重复的"], "answer": 1, "analysis": "软件工程用系统化、规范化、可定量的方法。"}, {"type": "single", "section": 14, "stem": "软件生命周期不包括下列哪个时期？（ ）", "options": ["软件定义时期", "软件开发时期", "运行维护时期", "硬件制造时期"], "answer": 3, "analysis": "生命周期含定义、开发、维护三时期；无硬件制造。"}, {"type": "single", "section": 14, "stem": "软件定义时期不包括（ ）。", "options": ["问题定义", "可行性研究", "需求分析", "编码和单元测试"], "answer": 3, "analysis": "编码和单元测试属于开发时期。"}, {"type": "single", "section": 14, "stem": "需求分析属于软件生命周期的（ ）。", "options": ["定义时期", "开发时期", "维护时期", "设计时期"], "answer": 0, "analysis": "需求分析是定义时期的最后阶段。"}, {"type": "single", "section": 14, "stem": "下列（ ）属于软件开发时期的活动。", "options": ["问题定义", "可行性研究", "编码和单元测试", "需求分析"], "answer": 2, "analysis": "编码和单元测试属于开发时期。"}, {"type": "single", "section": 14, "stem": "需求分析阶段产出的文档是（ ）。", "options": ["可行性研究报告", "软件需求规格说明书", "用户手册", "测试报告"], "answer": 1, "analysis": "需求分析产出软件需求规格说明书。"}, {"type": "single", "section": 14, "stem": "软件测试阶段包含（ ）。", "options": ["集成测试与验收测试", "问题定义", "可行性研究", "需求分析"], "answer": 0, "analysis": "测试含集成测试与验收测试。"}, {"type": "single", "section": 14, "stem": "UML 是指（ ）。", "options": ["统一建模语言", "统一开发语言", "用户建模语言", "通用机器语言"], "answer": 0, "analysis": "UML 是统一建模语言。"}, {"type": "single", "section": 14, "stem": "下列（ ）属于 UML 常用图。", "options": ["用例图", "类图", "状态图", "以上全是"], "answer": 3, "analysis": "UML 常用图含用例图、类图、状态图等九种。"}, {"type": "single", "section": 14, "stem": "用于可视化、构造、文档化系统的标准建模语言是（ ）。", "options": ["UML", "HTML", "SQL", "XML"], "answer": 0, "analysis": "UML 是面向对象的标准建模语言。"}, {"type": "single", "section": 14, "stem": "敏捷开发以（ ）为核心，采用迭代、循序渐进方式。", "options": ["文档驱动", "用户需求进化", "严格瀑布", "固定计划"], "answer": 1, "analysis": "敏捷开发以用户需求进化为核心。"}, {"type": "single", "section": 14, "stem": "敏捷开发把项目切分为多个（ ）的小子项目。", "options": ["不可测试", "可测试、可运行", "超大", "无定义"], "answer": 1, "analysis": "敏捷把项目切分为可测试、可运行的小子项目。"}, {"type": "single", "section": 14, "stem": "软件危机的典型表现不包括（ ）。", "options": ["进度延误", "成本失控", "质量低下", "开发速度极快且零出错"], "answer": 3, "analysis": "软件危机表现为进度延误、成本失控、质量低下。"}, {"type": "single", "section": 14, "stem": "软件工程的目标之一是（ ）地生产可靠软件。", "options": ["经济", "随意", "不计成本", "无法控制"], "answer": 0, "analysis": "软件工程以经济地生产可靠软件为目标。"}, {"type": "single", "section": 14, "stem": "软件生命周期中，维护时期的工作是（ ）。", "options": ["运行维护", "需求分析", "总体设计", "可行性研究"], "answer": 0, "analysis": "维护时期即运行维护。"}, {"type": "single", "section": 14, "stem": "下列 UML 图中，用于描述系统功能与外部参与者关系的是（ ）。", "options": ["类图", "用例图", "部署图", "构件图"], "answer": 1, "analysis": "用例图描述功能与参与者关系。"}, {"type": "single", "section": 14, "stem": "下列 UML 图中，描述类之间静态结构的是（ ）。", "options": ["类图", "活动图", "状态图", "序列图"], "answer": 0, "analysis": "类图描述类的静态结构。"}, {"type": "single", "section": 14, "stem": "软件工程与软件危机的关系是（ ）。", "options": ["软件工程导致软件危机", "软件工程为应对软件危机而产生", "两者无关", "软件危机消灭了软件工程"], "answer": 1, "analysis": "软件工程为应对软件危机而产生。"}, {"type": "multi", "section": 14, "stem": "软件危机的表现包括（ ）。", "options": ["进度延误", "成本失控", "质量低下", "需求多变难满足"], "answer": [0, 1, 2, 3], "analysis": "软件危机表现为进度延误、成本失控、质量低下、需求难满足等。"}, {"type": "multi", "section": 14, "stem": "软件生命周期的三个时期包括（ ）。", "options": ["软件定义时期", "软件开发时期", "运行维护时期", "硬件设计时期"], "answer": [0, 1, 2], "analysis": "生命周期含定义、开发、维护三时期。"}, {"type": "multi", "section": 14, "stem": "关于需求分析阶段，下列说法正确的有（ ）。", "options": ["是定义时期的最后阶段", "回答“系统必须做什么”", "产出软件需求规格说明书", "为开发提供依据"], "answer": [0, 1, 2, 3], "analysis": "需求分析属定义期最后阶段、回答做什么、产出规格说明书、为开发提供依据。"}, {"type": "multi", "section": 14, "stem": "UML 常用图包括（ ）。", "options": ["用例图", "类图", "活动图", "部署图"], "answer": [0, 1, 2, 3], "analysis": "UML 含用例图、类图、对象图、状态图、活动图、序列图、协作图、构件图、部署图。"}, {"type": "multi", "section": 14, "stem": "关于敏捷开发，下列说法正确的有（ ）。", "options": ["以用户需求进化为核心", "采用迭代、循序渐进方式", "把项目切分为可测试小子项目", "强调严格不可变更的计划"], "answer": [0, 1, 2], "analysis": "敏捷以需求进化为核心、迭代循序渐进、切分可运行小子项目。"}, {"type": "single", "section": 14, "stem": "软件工程的出现是为了应对软件危机。", "options": ["正确", "错误"], "answer": 0, "analysis": "软件工程为应对软件危机而产生。"}, {"type": "single", "section": 14, "stem": "软件生命周期由软件定义、软件开发、运行维护三个时期组成。", "options": ["正确", "错误"], "answer": 0, "analysis": "三时期：定义、开发、维护。"}, {"type": "single", "section": 14, "stem": "需求分析阶段产出软件需求规格说明书。", "options": ["正确", "错误"], "answer": 0, "analysis": "需求分析产出规格说明书。"}, {"type": "single", "section": 14, "stem": "UML 是统一建模语言，用于面向对象系统建模。", "options": ["正确", "错误"], "answer": 0, "analysis": "UML 是统一建模语言。"}, {"type": "single", "section": 14, "stem": "敏捷开发强调一次性完成全部需求，不采用迭代。", "options": ["正确", "错误"], "answer": 1, "analysis": "敏捷以用户需求进化为核心，采用迭代循序渐进。"}, {"type": "single", "section": 15, "stem": "需求分析是软件（ ）时期的最后阶段。", "options": ["定义", "开发", "维护", "设计"], "answer": 0, "analysis": "需求分析是定义时期的最后阶段。"}, {"type": "single", "section": 15, "stem": "需求分析阶段的任务是准确回答（ ）。", "options": ["系统如何编码", "系统必须做什么", "系统由谁维护", "系统卖多少钱"], "answer": 1, "analysis": "需求分析回答“系统必须做什么”。"}, {"type": "single", "section": 15, "stem": "需求分析阶段产出的文档是（ ）。", "options": ["可行性研究报告", "软件需求规格说明书", "测试计划", "用户手册"], "answer": 1, "analysis": "产出软件需求规格说明书。"}, {"type": "single", "section": 15, "stem": "下列（ ）属于对系统的综合要求。", "options": ["功能需求", "性能需求", "可靠性需求", "以上都是"], "answer": 3, "analysis": "综合要求含功能、性能、可靠性、出错处理、接口、设计约束等。"}, {"type": "single", "section": 15, "stem": "系统必须提供的服务属于（ ）。", "options": ["功能需求", "性能需求", "可靠性需求", "接口需求"], "answer": 0, "analysis": "功能需求是系统必须提供的服务。"}, {"type": "single", "section": 15, "stem": "响应时间、吞吐量等属于（ ）。", "options": ["功能需求", "性能需求", "可靠性需求", "设计约束"], "answer": 1, "analysis": "响应时间、吞吐量属性能需求。"}, {"type": "single", "section": 15, "stem": "需求分析应建立的三种模型是（ ）。", "options": ["数据模型、功能模型、行为模型", "物理模型、逻辑模型、概念模型", "类模型、对象模型、组件模型", "以上都不是"], "answer": 0, "analysis": "准则：建立数据模型、功能模型、行为模型。"}, {"type": "single", "section": 15, "stem": "可行性研究的目的是用最小代价、最短时间确定问题（ ）。", "options": ["如何解决", "是否值得解决", "由谁解决", "何时上市"], "answer": 1, "analysis": "可行性研究确定问题是否值得解决。"}, {"type": "single", "section": 15, "stem": "可行性研究通常不从下列哪方面进行？（ ）", "options": ["技术可行性", "经济可行性", "操作可行性", "艺术可行性"], "answer": 3, "analysis": "三方面：技术、经济、操作可行性。"}, {"type": "single", "section": 15, "stem": "技术可行性研究的是（ ）。", "options": ["现有技术能否实现", "效益是否超成本", "用户组织内是否行得通", "法律是否允许"], "answer": 0, "analysis": "技术可行性看现有技术能否实现。"}, {"type": "single", "section": 15, "stem": "经济可行性研究的是（ ）。", "options": ["现有技术能否实现", "效益是否超过开发成本", "用户是否接受", "法律是否允许"], "answer": 1, "analysis": "经济可行性看效益是否超过成本。"}, {"type": "single", "section": 15, "stem": "操作可行性研究的是（ ）。", "options": ["现有技术能否实现", "效益是否超成本", "操作方式在用户组织内是否行得通", "法律是否允许"], "answer": 2, "analysis": "操作可行性看操作方式在用户组织内是否行得通。"}, {"type": "single", "section": 15, "stem": "必要时可行性研究还需考虑（ ）。", "options": ["法律与社会效益", "硬件颜色", "编程语言选择", "显示器尺寸"], "answer": 0, "analysis": "必要时考虑法律、社会效益等。"}, {"type": "single", "section": 15, "stem": "可行性研究成本通常仅占预期总成本的（ ）。", "options": ["50%~60%", "5%~10%", "90% 以上", "0%"], "answer": 1, "analysis": "可行性研究成本约占预期总成本 5%~10%。"}, {"type": "single", "section": 15, "stem": "需求分析属于（ ）阶段，可行性研究也属于该时期。", "options": ["定义时期", "开发时期", "维护时期", "测试时期"], "answer": 0, "analysis": "需求分析与可行性研究都在定义时期。"}, {"type": "single", "section": 15, "stem": "“系统必须做什么”由（ ）阶段回答。", "options": ["可行性研究", "需求分析", "总体设计", "编码"], "answer": 1, "analysis": "需求分析回答“系统必须做什么”。"}, {"type": "single", "section": 15, "stem": "下列需求中，描述“系统出错时应如何处理”的是（ ）。", "options": ["功能需求", "性能需求", "出错处理需求", "接口需求"], "answer": 2, "analysis": "出错处理需求描述系统出错时的处理。"}, {"type": "single", "section": 15, "stem": "下列需求中，描述“系统与用户/硬件/软件/通信的接口”的是（ ）。", "options": ["功能需求", "性能需求", "接口需求", "设计约束"], "answer": 2, "analysis": "接口需求描述各类接口。"}, {"type": "single", "section": 15, "stem": "需求分析的准则要求建立行为模型，行为模型常用（ ）描述。", "options": ["数据流图", "状态转换图", "ER 图", "网络图"], "answer": 1, "analysis": "行为模型常用状态转换图等描述。"}, {"type": "single", "section": 15, "stem": "可行性研究在生命周期中位于（ ）之前。", "options": ["需求分析", "问题定义", "编码", "总体设计"], "answer": 0, "analysis": "定义时期顺序：问题定义→可行性研究→需求分析。"}, {"type": "multi", "section": 15, "stem": "需求分析阶段对系统的综合要求包括（ ）。", "options": ["功能需求", "性能需求", "可靠性/可用性需求", "接口需求"], "answer": [0, 1, 2, 3], "analysis": "综合要求含功能、性能、可靠性/可用性、出错处理、接口、设计约束、逆向需求。"}, {"type": "multi", "section": 15, "stem": "可行性研究从三方面研究问题是否值得解决，包括（ ）。", "options": ["技术可行性", "经济可行性", "操作可行性", "艺术可行性"], "answer": [0, 1, 2], "analysis": "三方面：技术、经济、操作可行性。"}, {"type": "multi", "section": 15, "stem": "下列需求类型中，属于对系统综合要求的有（ ）。", "options": ["功能需求（必须提供的服务）", "性能需求（响应时间等）", "可靠性需求", "设计约束"], "answer": [0, 1, 2, 3], "analysis": "这些都属于需求分析的综合要求。"}, {"type": "multi", "section": 15, "stem": "关于需求分析，下列说法正确的有（ ）。", "options": ["是定义时期最后阶段", "回答“系统必须做什么”", "产出软件需求规格说明书", "建立数据/功能/行为模型"], "answer": [0, 1, 2, 3], "analysis": "需求分析是定义期最后阶段、回答做什么、产出规格说明书、建三模型。"}, {"type": "multi", "section": 15, "stem": "关于可行性研究，下列说法正确的有（ ）。", "options": ["成本通常占预期总成本 5%~10%", "目的是确定是否值得解决", "位于需求分析之前", "只研究技术即可"], "answer": [0, 1, 2], "analysis": "可行性研究成本低(5%~10%)、确定是否值得、位于需求分析前；需综合技术/经济/操作。"}, {"type": "single", "section": 15, "stem": "需求分析回答“系统必须做什么”，并产出软件需求规格说明书。", "options": ["正确", "错误"], "answer": 0, "analysis": "需求分析回答做什么、产出规格说明书。"}, {"type": "single", "section": 15, "stem": "可行性研究的目的是用最小代价确定问题是否值得解决。", "options": ["正确", "错误"], "answer": 0, "analysis": "可行性研究确定问题是否值得解决。"}, {"type": "single", "section": 15, "stem": "技术可行性研究的是现有技术能否实现该系统。", "options": ["正确", "错误"], "answer": 0, "analysis": "技术可行性看现有技术能否实现。"}, {"type": "single", "section": 15, "stem": "需求分析与可行性研究都属于软件定义时期。", "options": ["正确", "错误"], "answer": 0, "analysis": "二者都在定义时期。"}, {"type": "single", "section": 15, "stem": "可行性研究成本通常占预期总成本的 50% 以上。", "options": ["正确", "错误"], "answer": 1, "analysis": "可行性研究成本约占 5%~10%。"}, {"type": "single", "section": 16, "stem": "总体设计（概要设计）要回答的问题是（ ）。", "options": ["系统必须做什么", "系统应如何实现", "程序如何调试", "用户是谁"], "answer": 1, "analysis": "总体设计回答“系统应如何实现”。"}, {"type": "single", "section": 16, "stem": "总体设计划分物理元素并设计（ ）。", "options": ["硬件型号", "软件结构（模块组成及关系）", "网络拓扑", "数据库内容"], "answer": 1, "analysis": "总体设计设计软件结构（模块组成及关系）。"}, {"type": "single", "section": 16, "stem": "把程序划分为独立命名、可独立访问的模块，这是（ ）原理。", "options": ["模块化", "抽象", "信息隐藏", "逐步求精"], "answer": 0, "analysis": "模块化把程序划分为独立模块。"}, {"type": "single", "section": 16, "stem": "抽出事物本质特性、暂不考虑细节，这是（ ）原理。", "options": ["模块化", "抽象", "信息隐藏", "局部化"], "answer": 1, "analysis": "抽象是抽出本质特性、暂不考虑细节。"}, {"type": "single", "section": 16, "stem": "先解决主要问题、推迟细节，这是（ ）原理。", "options": ["模块化", "抽象", "逐步求精", "信息隐藏"], "answer": 2, "analysis": "逐步求精先解决主要问题、推迟细节。"}, {"type": "single", "section": 16, "stem": "模块内部信息对不需者不可访问，相关元素物理靠近，这是（ ）与（ ）。", "options": ["模块化与抽象", "抽象与逐步求精", "信息隐藏与局部化", "耦合与内聚"], "answer": 2, "analysis": "信息隐藏与局部化。"}, {"type": "single", "section": 16, "stem": "衡量模块间依赖紧密程度的是（ ）。", "options": ["内聚", "耦合", "抽象", "模块化"], "answer": 1, "analysis": "耦合衡量模块间依赖紧密程度。"}, {"type": "single", "section": 16, "stem": "衡量模块内部结合紧密程度的是（ ）。", "options": ["耦合", "内聚", "模块化", "抽象"], "answer": 1, "analysis": "内聚衡量模块内部结合紧密程度。"}, {"type": "single", "section": 16, "stem": "下列耦合中，程度最低（最好）的是（ ）。", "options": ["内容耦合", "公共耦合", "数据耦合", "控制耦合"], "answer": 2, "analysis": "耦合由低到高：非直接<数据<标记<控制<特征<公共<内容；数据耦合最低（最好）。"}, {"type": "single", "section": 16, "stem": "下列耦合中，程度最高（最差）的是（ ）。", "options": ["数据耦合", "标记耦合", "控制耦合", "内容耦合"], "answer": 3, "analysis": "内容耦合是耦合程度最高的（最差）。"}, {"type": "single", "section": 16, "stem": "下列内聚中，程度最高（最好）的是（ ）。", "options": ["偶然内聚", "逻辑内聚", "功能内聚", "过程内聚"], "answer": 2, "analysis": "内聚由低到高：偶然<逻辑<时间<过程<通信<顺序<功能；功能内聚最高。"}, {"type": "single", "section": 16, "stem": "下列内聚中，程度最低（最差）的是（ ）。", "options": ["功能内聚", "顺序内聚", "通信内聚", "偶然内聚"], "answer": 3, "analysis": "偶然内聚是最低（最差）的内聚。"}, {"type": "single", "section": 16, "stem": "设计时应尽量使用（ ），不用（ ）。", "options": ["内容耦合，数据耦合", "数据耦合，内容耦合", "控制耦合，数据耦合", "公共耦合，标记耦合"], "answer": 1, "analysis": "应尽量用数据耦合，不用内容耦合。"}, {"type": "single", "section": 16, "stem": "内聚的原则是（ ）。", "options": ["越低越好", "越高越好（功能内聚最高）", "无所谓", "与耦合相反"], "answer": 1, "analysis": "内聚越高越好，功能内聚最高。"}, {"type": "single", "section": 16, "stem": "模块独立程度由（ ）两个标准度量。", "options": ["抽象与模块化", "耦合与内聚", "信息与局部化", "逐步求精与抽象"], "answer": 1, "analysis": "模块独立程度由耦合与内聚度量。"}, {"type": "single", "section": 16, "stem": "“标记耦合”比“数据耦合”的耦合程度（ ）。", "options": ["更低", "更高", "相同", "无法比较"], "answer": 1, "analysis": "耦合由低到高：数据耦合<标记耦合。"}, {"type": "single", "section": 16, "stem": "“顺序内聚”比“通信内聚”的内聚程度（ ）。", "options": ["更低", "更高", "相同", "无法比较"], "answer": 1, "analysis": "内聚由低到高：通信<顺序<功能；顺序内聚更高。"}, {"type": "single", "section": 16, "stem": "详细设计（模块设计）的任务是把解法具体化，设计每个模块的（ ）。", "options": ["详细规格说明", "整个程序代码", "硬件清单", "用户手册"], "answer": 0, "analysis": "详细设计给出每个模块的详细规格说明，不是写程序。"}, {"type": "single", "section": 16, "stem": "下列（ ）是详细设计的常用工具。", "options": ["程序流程图", "N-S 图（盒图）", "PDL（过程设计语言）", "以上都是"], "answer": 3, "analysis": "详细设计工具含流程图、N-S 图、PDL。"}, {"type": "single", "section": 16, "stem": "N-S 图又被称为（ ）。", "options": ["盒图", "流程图", "状态图", "部署图"], "answer": 0, "analysis": "N-S 图又称盒图。"}, {"type": "single", "section": 16, "stem": "详细设计的结果为（ ）提供直接依据。", "options": ["需求分析", "编码", "可行性研究", "问题定义"], "answer": 1, "analysis": "详细设计结果为编码提供直接依据。"}, {"type": "multi", "section": 16, "stem": "总体设计的设计原理包括（ ）。", "options": ["模块化", "抽象", "逐步求精", "信息隐藏与局部化"], "answer": [0, 1, 2, 3], "analysis": "总体设计原理：模块化、抽象、逐步求精、信息隐藏与局部化。"}, {"type": "multi", "section": 16, "stem": "关于耦合（由低到高），下列说法正确的有（ ）。", "options": ["非直接耦合最低", "数据耦合较低（应尽量用）", "内容耦合最高（应避免）", "控制耦合高于数据耦合"], "answer": [0, 1, 2, 3], "analysis": "耦合由低到高：非直接<数据<标记<控制<特征<公共<内容。"}, {"type": "multi", "section": 16, "stem": "关于内聚（由低到高），下列说法正确的有（ ）。", "options": ["偶然内聚最低", "逻辑内聚较低", "功能内聚最高", "顺序内聚高于通信内聚"], "answer": [0, 1, 2, 3], "analysis": "内聚由低到高：偶然<逻辑<时间<过程<通信<顺序<功能。"}, {"type": "multi", "section": 16, "stem": "详细设计的常用工具有（ ）。", "options": ["程序流程图", "N-S 图（盒图）", "PDL（过程设计语言）", "用例图"], "answer": [0, 1, 2], "analysis": "详细设计工具：流程图、N-S 图、PDL；用例图属 UML 需求/分析阶段。"}, {"type": "multi", "section": 16, "stem": "关于模块独立与耦合内聚的关系，正确的有（ ）。", "options": ["模块独立程度由耦合与内聚度量", "应尽量用数据耦合", "应避免内容耦合", "内聚越高越好"], "answer": [0, 1, 2, 3], "analysis": "模块独立性由耦合与内聚度量；用数据耦合、避内容耦合、内聚越高越好。"}, {"type": "single", "section": 16, "stem": "总体设计（概要设计）回答“系统应如何实现”。", "options": ["正确", "错误"], "answer": 0, "analysis": "总体设计回答系统应如何实现。"}, {"type": "single", "section": 16, "stem": "耦合衡量模块内部结合紧密程度，内聚衡量模块间依赖程度。", "options": ["正确", "错误"], "answer": 1, "analysis": "耦合衡量模块间依赖、内聚衡量内部结合；说反了。"}, {"type": "single", "section": 16, "stem": "内容耦合是耦合程度最高（最差）的，功能内聚是内聚程度最高（最好）的。", "options": ["正确", "错误"], "answer": 0, "analysis": "内容耦合最差、功能内聚最好。"}, {"type": "single", "section": 16, "stem": "设计时应尽量使用数据耦合，避免使用内容耦合。", "options": ["正确", "错误"], "answer": 0, "analysis": "应尽量用数据耦合，不用内容耦合。"}, {"type": "single", "section": 16, "stem": "详细设计结果为编码提供直接依据，而不是写程序本身。", "options": ["正确", "错误"], "answer": 0, "analysis": "详细设计给出规格说明，为编码提供依据。"}, {"type": "single", "section": 17, "stem": "软件测试的根本目的是（ ）。", "options": ["证明程序无错", "发现错误", "增加功能", "提高速度"], "answer": 1, "analysis": "测试是为了发现错误。"}, {"type": "single", "section": 17, "stem": "按测试阶段划分，针对单个模块进行的测试是（ ）。", "options": ["单元测试", "集成测试", "验收测试", "系统测试"], "answer": 0, "analysis": "单元测试针对单个模块。"}, {"type": "single", "section": 17, "stem": "把模块按一定策略装配起来进行的测试是（ ）。", "options": ["单元测试", "集成测试", "验收测试", "黑盒测试"], "answer": 1, "analysis": "集成测试把模块装配并测试。"}, {"type": "single", "section": 17, "stem": "由用户按规格说明书进行的测试是（ ）。", "options": ["单元测试", "集成测试", "验收测试", "白盒测试"], "answer": 2, "analysis": "验收测试由用户按规格说明书进行。"}, {"type": "single", "section": 17, "stem": "不考虑程序内部结构与实现，只测功能是否符合要求的测试方法是（ ）。", "options": ["白盒测试", "黑盒测试", "单元测试", "集成测试"], "answer": 1, "analysis": "黑盒测试不考虑内部，只测功能。"}, {"type": "single", "section": 17, "stem": "基于程序内部逻辑（如语句覆盖、路径覆盖）的测试方法是（ ）。", "options": ["黑盒测试", "白盒测试", "验收测试", "集成测试"], "answer": 1, "analysis": "白盒测试基于内部逻辑。"}, {"type": "single", "section": 17, "stem": "下列（ ）属于黑盒测试技术。", "options": ["等价类划分", "边界值分析", "语句覆盖", "以上前两项都是"], "answer": 3, "analysis": "等价类划分、边界值属于黑盒测试。"}, {"type": "single", "section": 17, "stem": "下列（ ）属于白盒测试技术。", "options": ["等价类划分", "边界值分析", "语句覆盖、路径覆盖", "功能验证"], "answer": 2, "analysis": "语句覆盖、路径覆盖属白盒测试。"}, {"type": "single", "section": 17, "stem": "关于软件测试，正确的说法是（ ）。", "options": ["测试能证明程序没有错误", "测试只能证明存在错误，不能证明没有错误", "通过测试就无 bug", "测试可完全替代调试"], "answer": 1, "analysis": "测试只能证明存在错误，不能证明没有错误。"}, {"type": "single", "section": 17, "stem": "为改正使用中发现的错误而进行的维护是（ ）。", "options": ["适应性维护", "完善性维护", "改正性维护", "预防性维护"], "answer": 2, "analysis": "改正性维护改正在使用中发现的错误。"}, {"type": "single", "section": 17, "stem": "使软件适应信息技术或管理变化而进行的维护是（ ）。", "options": ["改正性维护", "适应性维护", "完善性维护", "预防性维护"], "answer": 1, "analysis": "适应性维护使软件适应变化。"}, {"type": "single", "section": 17, "stem": "为扩充功能、改善性能而进行的维护是（ ），其工作量（ ）。", "options": ["完善性维护，最大", "改正性维护，最大", "预防性维护，最大", "适应性维护，最小"], "answer": 0, "analysis": "完善性维护扩充功能改善性能，工作量最大（约 50%~60%）。"}, {"type": "single", "section": 17, "stem": "主动增加功能以适应未来变化的维护是（ ）。", "options": ["改正性维护", "适应性维护", "完善性维护", "预防性维护"], "answer": 3, "analysis": "预防性维护主动增加功能以适应未来。"}, {"type": "single", "section": 17, "stem": "各类维护中工作量比重最大的是（ ）。", "options": ["改正性维护（约 17%~21%）", "适应性维护（约 18%~25%）", "完善性维护（约 50%~60%）", "预防性维护（约 4%）"], "answer": 2, "analysis": "完善性维护约占 50%~60%，比重最大。"}, {"type": "single", "section": 17, "stem": "改正性维护所占比例约为（ ）。", "options": ["4%", "17%~21%", "50%~60%", "90%"], "answer": 1, "analysis": "改正性维护约占 17%~21%。"}, {"type": "single", "section": 17, "stem": "预防性维护所占比例约为（ ）。", "options": ["4%", "17%~21%", "50%~60%", "90%"], "answer": 0, "analysis": "预防性维护约占 4%。"}, {"type": "single", "section": 17, "stem": "决定软件可维护性的基本因素不包括（ ）。", "options": ["可理解性", "可测试性", "可修改性", "不可移植性（负面）"], "answer": 3, "analysis": "可维护性因素：可理解性、可测试性、可修改性、可移植性、可重用性。"}, {"type": "single", "section": 17, "stem": "下列（ ）属于决定可维护性的因素。", "options": ["可理解性", "可测试性", "可重用性", "以上都是"], "answer": 3, "analysis": "可理解性、可测试性、可修改性、可移植性、可重用性都影响可维护性。"}, {"type": "single", "section": 17, "stem": "软件维护使系统持久满足需要，其四类活动中（ ）比重最大。", "options": ["改正性维护", "适应性维护", "完善性维护", "预防性维护"], "answer": 2, "analysis": "完善性维护工作量最大。"}, {"type": "single", "section": 17, "stem": "白盒测试也称（ ）。", "options": ["功能测试", "结构测试", "黑箱测试", "用户测试"], "answer": 1, "analysis": "白盒测试又称结构测试。"}, {"type": "multi", "section": 17, "stem": "按阶段划分的软件测试包括（ ）。", "options": ["单元测试", "集成测试", "验收测试", "黑盒测试"], "answer": [0, 1, 2], "analysis": "按阶段：单元、集成、验收测试；黑盒是按方法划分。"}, {"type": "multi", "section": 17, "stem": "按方法划分的软件测试包括（ ）。", "options": ["黑盒测试", "白盒测试", "单元测试", "集成测试"], "answer": [0, 1], "analysis": "按方法：黑盒测试、白盒测试；单元/集成是按阶段。"}, {"type": "multi", "section": 17, "stem": "下列维护类型与含义对应正确的有（ ）。", "options": ["改正性：改正使用中发现错误", "适应性：适应技术/管理变化", "完善性：扩充功能改善性能", "预防性：主动适应未来"], "answer": [0, 1, 2, 3], "analysis": "四类维护含义如述。"}, {"type": "multi", "section": 17, "stem": "关于软件测试的说法，正确的有（ ）。", "options": ["测试目的是发现错误", "黑盒测试只测功能", "白盒测试基于内部逻辑", "测试只能证明存在错误"], "answer": [0, 1, 2, 3], "analysis": "测试目的发现错误；黑盒测功能、白盒基于逻辑；只能证明存在错误。"}, {"type": "multi", "section": 17, "stem": "决定软件可维护性的基本因素包括（ ）。", "options": ["可理解性", "可测试性", "可修改性", "可重用性"], "answer": [0, 1, 2, 3], "analysis": "可维护性因素：可理解性、可测试性、可修改性、可移植性、可重用性。"}, {"type": "single", "section": 17, "stem": "软件测试的根本目的是发现程序中的错误。", "options": ["正确", "错误"], "answer": 0, "analysis": "测试为发现错误。"}, {"type": "single", "section": 17, "stem": "黑盒测试不考虑程序内部结构与实现，只测功能。", "options": ["正确", "错误"], "answer": 0, "analysis": "黑盒测试不考虑内部、只测功能。"}, {"type": "single", "section": 17, "stem": "通过充分的软件测试可以证明程序完全没有错误。", "options": ["正确", "错误"], "answer": 1, "analysis": "测试只能证明存在错误，不能证明没有错误。"}, {"type": "single", "section": 17, "stem": "完善性维护在各类维护中工作量比重最大（约 50%~60%）。", "options": ["正确", "错误"], "answer": 0, "analysis": "完善性维护约占 50%~60%，最大。"}, {"type": "single", "section": 17, "stem": "白盒测试基于程序内部逻辑，常用语句覆盖、路径覆盖等技术。", "options": ["正确", "错误"], "answer": 0, "analysis": "白盒测试基于内部逻辑。"}]};
+
+// ============ 应用状态 ============
+const STATE = {
+  currentSection: 0,
+  currentTab: 'read',
+  currentQuizIndex: 0,
+  quizAnswers: {},       // {qIndex: selectedOptionIndex}
+  quizSubmitted: {},     // {qIndex: true}
+  doneSections: new Set(),
+  bookmarks: new Set(),
+  errorQuestions: new Set(),
+  openChapters: new Set(['第一章 程序设计语言']),
+  theme: 'light',
+  searchQuery: ''
+};
+
+// ============ 初始化 ============
+function init() {
+  loadState();
+  renderSidebar();
+  renderContent();
+  updateProgress();
+  updateErrorCount();
+}
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('infotech_algo_kb_state') || '{}');
+    if (saved.doneSections) STATE.doneSections = new Set(saved.doneSections);
+    if (saved.bookmarks) STATE.bookmarks = new Set(saved.bookmarks);
+    if (saved.errorQuestions) STATE.errorQuestions = new Set(saved.errorQuestions);
+    if (saved.openChapters) STATE.openChapters = new Set(saved.openChapters);
+    if (saved.theme) STATE.theme = saved.theme;
+    if (saved.quizAnswers) STATE.quizAnswers = saved.quizAnswers;
+    if (saved.quizSubmitted) STATE.quizSubmitted = saved.quizSubmitted;
+  } catch(e) {}
+  applyTheme();
+}
+
+function saveState() {
+  localStorage.setItem('infotech_algo_kb_state', JSON.stringify({
+    doneSections: [...STATE.doneSections],
+    bookmarks: [...STATE.bookmarks],
+    errorQuestions: [...STATE.errorQuestions],
+    openChapters: [...STATE.openChapters],
+    theme: STATE.theme,
+    quizAnswers: STATE.quizAnswers,
+    quizSubmitted: STATE.quizSubmitted
+  }));
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', STATE.theme);
+  document.getElementById('themeIcon').textContent = STATE.theme === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = STATE.theme === 'dark' ? '亮色模式' : '暗色模式';
+}
+
+// ============ 侧边栏 ============
+function getChapterGroups() {
+  // Group sections by chapter
+  const groups = {};
+  KB_DATA.sections.forEach((s, si) => {
+    const ch = s.chapter || '其他';
+    if (!groups[ch]) groups[ch] = [];
+    groups[ch].push({section: s, si: si});
+  });
+  return groups;
+}
+
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  let html = '';
+  const groups = getChapterGroups();
+  Object.keys(groups).forEach((chName) => {
+    const items = groups[chName];
+    const isOpen = STATE.openChapters.has(chName);
+    const chDone = items.filter(it => STATE.doneSections.has(it.si)).length;
+    html += '<div class="chapter-group">';
+    html += `<button class="chapter-title ${isOpen ? 'open' : ''}" onclick="toggleChapter('${chName.replace(/'/g, "\\'")}')">`;
+    html += `<span class="arrow">▶</span>${chName}`;
+    html += `<span class="count">${chDone}/${items.length}节</span>`;
+    html += '</button>';
+    html += `<div class="section-list ${isOpen ? 'open' : ''}" id="sectionList-${chName}">`;
+    items.forEach(({section, si}) => {
+      const isActive = si === STATE.currentSection;
+      const isDone = STATE.doneSections.has(si);
+      const quizCount = KB_DATA.quizzes.filter(q => q.section === si).length;
+      html += `<div class="section-row ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}" onclick="selectSection(${si})">`;
+      html += `<span class="check">${isDone ? '✓' : ''}</span>`;
+      html += `<span class="section-title">${section.title}</span>`;
+      html += `<button class="mini-quiz-btn" onclick="event.stopPropagation();selectSectionAndQuiz(${si})" title="本节练习(${quizCount}题)">📝${quizCount}</button>`;
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  nav.innerHTML = html;
+}
+
+function toggleChapter(chName) {
+  if (STATE.openChapters.has(chName)) {
+    STATE.openChapters.delete(chName);
+  } else {
+    STATE.openChapters.add(chName);
+  }
+  renderSidebar();
+}
+
+function selectSection(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'read';
+  // Auto-expand the chapter containing this section
+  const sec = KB_DATA.sections[si];
+  if (sec && sec.chapter) STATE.openChapters.add(sec.chapter);
+  switchTab('read');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function selectSectionAndQuiz(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'quiz';
+  const sec = KB_DATA.sections[si];
+  if (sec && sec.chapter) STATE.openChapters.add(sec.chapter);
+  // Find first quiz question index for this section
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === si);
+  if (firstQ >= 0) STATE.currentQuizIndex = firstQ;
+  switchTab('quiz');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ============ 标签页切换 ============
+function switchTab(tab) {
+  STATE.currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+  document.getElementById('readContent').style.display = tab === 'read' ? 'block' : 'none';
+  document.getElementById('quizContent').style.display = tab === 'quiz' ? 'block' : 'none';
+  document.getElementById('bookmarksContent').style.display = tab === 'bookmarks' ? 'block' : 'none';
+  document.getElementById('errorsContent').style.display = tab === 'errors' ? 'block' : 'none';
+  renderContent();
+  if (tab === 'read') document.getElementById('searchInput').value = STATE.searchQuery;
+}
+
+// ============ 内容渲染 ============
+function renderContent() {
+  if (STATE.currentTab === 'read' || STATE.currentTab === 'bookmarks' || STATE.currentTab === 'errors') {
+    renderReadContent();
+  }
+  if (STATE.currentTab === 'quiz') {
+    renderQuizContent();
+  }
+  document.getElementById('breadcrumbCurrent').textContent = (KB_DATA.sections[STATE.currentSection]?.chapter || '') +
+    (KB_DATA.sections[STATE.currentSection] ? ' › ' : '') + (KB_DATA.sections[STATE.currentSection]?.title || '第一章');
+}
+
+function renderReadContent() {
+  const container = document.getElementById('readContent');
+  const section = KB_DATA.sections[STATE.currentSection];
+  let cards = section.cards;
+
+  // Handle bookmarks tab
+  if (STATE.currentTab === 'bookmarks') {
+    const allCards = KB_DATA.sections.flatMap((s, si) => s.cards.map(c => ({...c, sectionIdx: si, sectionTitle: s.title})));
+    cards = allCards.filter(c => STATE.bookmarks.has(c.id));
+    if (cards.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+      container.style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'block';
+      document.getElementById('errorsContent').style.display = 'none';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'block';
+    document.getElementById('errorsContent').style.display = 'none';
+
+    let html = `<div class="section-header"><h2>⭐ 我的收藏</h2><div class="meta">共 ${cards.length} 个收藏</div></div>`;
+    cards.forEach(c => {
+      html += renderCard(c, true);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Handle errors tab
+  if (STATE.currentTab === 'errors') {
+    const errorQuizList = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+    if (errorQuizList.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">📝</div><h3>暂无错题</h3><p>做错的题目会自动收入错题本</p></div>';
+      document.getElementById('readContent').style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'none';
+      document.getElementById('errorsContent').style.display = 'block';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'none';
+    document.getElementById('errorsContent').style.display = 'block';
+
+    let html = `<div class="section-header"><h2>📝 错题本</h2><div class="meta">共 ${errorQuizList.length} 道错题</div></div>`;
+    errorQuizList.forEach((q, idx) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderErrorQuiz(q, qi, idx + 1);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Normal read mode
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'none';
+
+  let html = `<div class="section-header">`;
+  html += `<h2>${section.title}</h2>`;
+  html += `<div class="meta">`;
+  html += `<span>📄 ${section.cards.length} 个知识点</span>`;
+  html += `<span>📝 ${KB_DATA.quizzes.filter(q => q.section === STATE.currentSection).length} 道练习题</span>`;
+  html += `</div></div>`;
+
+  let filteredCards = cards;
+  if (STATE.searchQuery) {
+    const q = STATE.searchQuery.toLowerCase();
+    filteredCards = cards.filter(c => {
+      const text = c.title + c.html.replace(/<[^>]*>/g, '');
+      return text.toLowerCase().includes(q);
+    });
+    if (filteredCards.length === 0) {
+      html += '<div class="empty-state"><div class="icon">🔍</div><h3>未找到匹配的知识点</h3><p>试试其他关键词</p></div>';
+    }
+  }
+
+  filteredCards.forEach(c => {
+    html += renderCard(c);
+  });
+
+  html += `<div style="text-align:center;margin-top:24px">`;
+  html += `<button class="btn btn-primary" onclick="markSectionDone(${STATE.currentSection})" ${STATE.doneSections.has(STATE.currentSection) ? 'disabled' : ''}>`;
+  html += STATE.doneSections.has(STATE.currentSection) ? '✅ 已学完本节' : '✓ 标记本节为已学';
+  html += '</button>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderCard(card, showSection = false) {
+  let html = `<div class="knowledge-card" id="card-${card.id}">`;
+  html += `<h3><span class="icon">${card.icon}</span>${card.title}</h3>`;
+  if (showSection && card.sectionTitle) {
+    html += `<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">📂 ${card.sectionTitle}</div>`;
+  }
+  html += card.html;
+  if (card.tags) {
+    html += '<div class="tag-row">';
+    card.tags.forEach(t => {
+      html += `<span class="tag">${t}</span>`;
+    });
+    html += '</div>';
+  }
+  html += `<div class="card-actions">`;
+  html += `<button class="card-action-btn ${STATE.bookmarks.has(card.id) ? 'bookmarked':''}" onclick="toggleBookmark('${card.id}')">`;
+  html += STATE.bookmarks.has(card.id) ? '⭐ 已收藏' : '☆ 收藏';
+  html += '</button>';
+  html += '</div></div>';
+  return html;
+}
+
+function renderErrorQuiz(q, qi, num) {
+  const sectionTitle = KB_DATA.sections[q.section]?.title || '';
+  const labels = ['A','B','C','D'];
+  const isMulti = q.type === 'multi';
+  let html = `<div class="quiz-container">`;
+  html += `<div class="quiz-header"><span class="quiz-section-label">${sectionTitle}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += `<div class="quiz-options">`;
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if ((isMulti && q.answer.includes(oi)) || (!isMulti && oi === q.answer)) cls = 'correct';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += `<div class="quiz-actions">`;
+  html += `<button class="btn btn-outline" onclick="removeError(${qi})">✓ 已掌握，移除</button>`;
+  html += '</div></div>';
+  return html;
+}
+
+// ============ 练习模式 ============
+function renderQuizContent() {
+  const container = document.getElementById('quizContent');
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  const total = KB_DATA.quizzes.length;
+  const sectionTotal = sectionQuizzes.length;
+
+  // Show score summary if all questions in current section are answered
+  const allAnswered = sectionQuizzes.every((_, i) => {
+    const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+    return STATE.quizSubmitted[qi];
+  });
+
+  if (allAnswered) {
+    const correct = sectionQuizzes.filter((_, i) => {
+      const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+      return isCorrect(sectionQuizzes[i], STATE.quizAnswers[qi]);
+    }).length;
+    const pct = Math.round((correct / sectionTotal) * 100);
+
+    let html = '<div class="score-display">';
+    html += `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">${KB_DATA.sections[STATE.currentSection].title} · 练习成绩</div>`;
+    html += `<div class="score-number">${pct}%</div>`;
+    html += '<div class="stats-row">';
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--success)">${correct}</div><div class="stat-label">正确</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--danger)">${sectionTotal - correct}</div><div class="stat-label">错误</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value">${sectionTotal}</div><div class="stat-label">总计</div></div>`;
+    html += '</div>';
+    html += '<div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">';
+    html += '<button class="btn btn-primary" onclick="resetSectionQuiz()">🔄 重新练习</button>';
+    if (sectionQuizzes.some((_, i) => !isCorrect(sectionQuizzes[i], STATE.quizAnswers[KB_DATA.quizzes.indexOf(sectionQuizzes[i])]))) {
+      html += '<button class="btn btn-outline" onclick="reviewSectionErrors()">📝 回看本节错题</button>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // Show all questions with results
+    sectionQuizzes.forEach((q, si) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderQuizResult(q, qi, si + 1);
+    });
+
+    container.innerHTML = html;
+    return;
+  }
+
+  const q = sectionQuizzes[STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0])] || sectionQuizzes[0];
+  const qi = KB_DATA.quizzes.indexOf(q);
+  const localIdx = STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0]);
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const labels = ['A','B','C','D'];
+  const isMulti = q.type === 'multi';
+
+  let html = '<div class="section-header">';
+  html += `<h2>${KB_DATA.sections[STATE.currentSection].title} · 章节练习</h2>`;
+  html += `<div class="meta"><span>第 ${localIdx + 1}/${sectionTotal} 题</span></div>`;
+  html += '</div>';
+
+  html += '<div class="quiz-container">';
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}${q.type === 'multi' ? ' <span style="color:var(--accent);font-size:13px;font-weight:normal">（多选）</span>' : ''}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    const isRight = isMulti ? q.answer.includes(oi) : (oi === q.answer);
+    const isSel = isMulti ? (Array.isArray(selected) && selected.includes(oi)) : (oi === selected);
+    if (submitted) {
+      if (isRight) cls = 'correct';
+      else if (isSel && !isRight) cls = 'wrong';
+    } else if (isSel) {
+      cls = 'selected';
+    }
+    html += `<div class="quiz-option ${cls}" onclick="selectOption(${qi}, ${oi})">`;
+    html += `<span class="option-letter">${labels[oi]}</span>${opt}`;
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Analysis
+  html += `<div class="analysis-box ${submitted ? 'show' : ''}" id="analysis${qi}">${q.analysis}</div>`;
+
+  // Actions
+  html += '<div class="quiz-actions">';
+  if (!submitted) {
+    const hasAns = isMulti ? (Array.isArray(selected) && selected.length > 0) : (selected !== undefined);
+    html += `<button class="btn btn-primary" onclick="submitAnswer(${qi})" ${hasAns ? '' : 'disabled'}>确认提交</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="prevQuiz()">上一题</button>`;
+  html += `<button class="btn btn-outline" onclick="nextQuiz()">下一题</button>`;
+  if (STATE.errorQuestions.has(qi)) {
+    html += `<button class="btn btn-outline" style="color:var(--danger)" onclick="removeError(${qi})">从错题本移除</button>`;
+  }
+  html += '</div>';
+  html += '</div>';
+
+  // Dots navigation
+  html += '<div class="quiz-nav">';
+  sectionQuizzes.forEach((sq, idx) => {
+    const qi2 = KB_DATA.quizzes.indexOf(sq);
+    let dotCls = '';
+    if (idx === localIdx) dotCls += ' current';
+    if (STATE.quizSubmitted[qi2]) {
+      dotCls += isCorrect(sq, STATE.quizAnswers[qi2]) ? ' correct-dot' : ' wrong-dot';
+    }
+    html += `<button class="quiz-nav-dot ${dotCls}" onclick="goToQuestion(${qi2})">${idx + 1}</button>`;
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderQuizResult(q, qi, num) {
+  const labels = ['A','B','C','D'];
+  const isMulti = q.type === 'multi';
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const correct = submitted && isCorrect(q, selected);
+
+  let html = '<div class="quiz-container">';
+  html += `<div class="quiz-header"><span class="quiz-section-label" style="background:${correct ? 'var(--success-light)' : 'var(--danger-light)'};color:${correct ? 'var(--success)' : 'var(--danger)'}">${correct ? '✓ 正确' : '✗ 错误'}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    const isRight = isMulti ? q.answer.includes(oi) : (oi === q.answer);
+    const isSel = isMulti ? (Array.isArray(selected) && selected.includes(oi)) : (oi === selected);
+    if (isRight) cls = 'correct';
+    else if (isSel && !isRight) cls = 'wrong';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += '</div>';
+  return html;
+}
+
+// ============ 练习操作 ============
+function isCorrect(q, ans) {
+  if (q.type === 'multi') {
+    if (!Array.isArray(ans)) return false;
+    const a = [...ans].sort((x, y) => x - y);
+    const b = [...(q.answer || [])].sort((x, y) => x - y);
+    return a.length === b.length && a.every((v, i) => v === b[i]);
+  }
+  return ans === q.answer;
+}
+
+function selectOption(qi, oi) {
+  if (STATE.quizSubmitted[qi]) return;
+  const q = KB_DATA.quizzes[qi];
+  if (q.type === 'multi') {
+    if (!Array.isArray(STATE.quizAnswers[qi])) STATE.quizAnswers[qi] = [];
+    const arr = STATE.quizAnswers[qi];
+    const idx = arr.indexOf(oi);
+    if (idx >= 0) arr.splice(idx, 1);
+    else arr.push(oi);
+    arr.sort((a, b) => a - b);
+  } else {
+    STATE.quizAnswers[qi] = oi;
+  }
+  saveState();
+  renderQuizContent();
+}
+
+function submitAnswer(qi) {
+  const q = KB_DATA.quizzes[qi];
+  const ans = STATE.quizAnswers[qi];
+  if (q.type === 'multi') {
+    if (!Array.isArray(ans) || ans.length === 0) return;
+  } else {
+    if (ans === undefined) return;
+  }
+  STATE.quizSubmitted[qi] = true;
+  if (!isCorrect(q, ans)) {
+    STATE.errorQuestions.add(qi);
+  }
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function findLastSectionQuizIdx(sectionIdx) {
+  let last = -1;
+  for (let i = 0; i < KB_DATA.quizzes.length; i++) {
+    if (KB_DATA.quizzes[i].section === sectionIdx) last = i;
+  }
+  return last;
+}
+
+function prevQuiz() {
+  const sectionStart = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex > sectionStart) {
+    STATE.currentQuizIndex--;
+  }
+  renderQuizContent();
+}
+
+function nextQuiz() {
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex < sectionEnd) {
+    STATE.currentQuizIndex++;
+  }
+  renderQuizContent();
+}
+
+function goToQuestion(qi) {
+  STATE.currentQuizIndex = qi;
+  renderQuizContent();
+}
+
+function resetSectionQuiz() {
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  sectionQuizzes.forEach(q => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    delete STATE.quizAnswers[qi];
+    delete STATE.quizSubmitted[qi];
+     STATE.errorQuestions.delete(qi);
+  });
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  STATE.currentQuizIndex = firstQ >= 0 ? firstQ : 0;
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function reviewSectionErrors() {
+  // Switch to errors tab
+  STATE.currentTab = 'errors';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('errorsTab').classList.add('active');
+  document.getElementById('errorsTab').style.display = '';
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'block';
+  renderContent();
+}
+
+function removeError(qi) {
+  STATE.errorQuestions.delete(qi);
+  saveState();
+  updateErrorCount();
+  if (STATE.currentTab === 'errors') renderContent();
+  if (STATE.currentTab === 'quiz') renderQuizContent();
+}
+
+// ============ 收藏 ============
+function toggleBookmark(cardId) {
+  if (STATE.bookmarks.has(cardId)) {
+    STATE.bookmarks.delete(cardId);
+    showToast('已取消收藏');
+  } else {
+    STATE.bookmarks.add(cardId);
+    showToast('已加入收藏夹');
+  }
+  saveState();
+  renderContent();
+}
+
+function toggleBookmarks() {
+  const tabBtn = document.getElementById('bookmarksTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'bookmarks';
+  switchTab('bookmarks');
+  const allBookmarks = KB_DATA.sections.flatMap(s => s.cards).filter(c => STATE.bookmarks.has(c.id));
+  if (allBookmarks.length === 0) {
+    document.getElementById('bookmarksContent').innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+  }
+}
+
+function toggleErrors() {
+  const tabBtn = document.getElementById('errorsTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'errors';
+  switchTab('errors');
+}
+
+// ============ 节完成标记 ============
+function markSectionDone(si) {
+  STATE.doneSections.add(si);
+  saveState();
+  updateProgress();
+  renderSidebar();
+  renderContent();
+  setTimeout(() => showToast('✅ 已标记本节为已学'), 300);
+}
+
+function updateProgress() {
+  const total = KB_DATA.sections.length;
+  const done = STATE.doneSections.size;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function updateErrorCount() {
+  document.getElementById('errorCount').textContent = STATE.errorQuestions.size > 0 ? `(${STATE.errorQuestions.size})` : '';
+}
+
+// ============ 搜索 ============
+function onSearch() {
+  STATE.searchQuery = document.getElementById('searchInput').value.trim();
+  if (STATE.currentTab !== 'read') {
+    switchTab('read');
+  }
+  renderContent();
+}
+
+// ============ 主题 ============
+function toggleTheme() {
+  STATE.theme = STATE.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  saveState();
+}
+
+// ============ 错题导出 ============
+function exportErrorsCSV() {
+  const errors = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+  if (errors.length === 0) {
+    showToast('暂无错题可导出');
+    return;
+  }
+  const labels = ['A','B','C','D'];
+  let csv = '\uFEFF序号,题目,选项A,选项B,选项C,选项D,正确答案,你的答案,解析\n';
+  errors.forEach((q, idx) => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    const ans = STATE.quizAnswers[qi];
+    const yourAnswer = ans !== undefined ? (Array.isArray(ans) ? ans.map(i => labels[i]).join('') : labels[ans]) : '未答';
+    const correctAnswer = Array.isArray(q.answer) ? q.answer.map(i => labels[i]).join('') : labels[q.answer];
+    const stem = q.stem.replace(/"/g, '""');
+    const opts = q.options.map(o => o.replace(/"/g, '""'));
+    const analysis = q.analysis.replace(/<[^>]*>/g, '').replace(/"/g, '""');
+    csv += `${idx + 1},"${stem}","${opts[0] || ''}","${opts[1] || ''}","${opts[2] || ''}","${opts[3] || ''}","${correctAnswer}","${yourAnswer}","${analysis}"\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '信息技术_错题导出.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============ 移动端 ============
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ============ Toast ============
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.getElementById('toastContainer').appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+// ============ 启动 ============
+document.addEventListener('DOMContentLoaded', function() {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+});
+// 兜底：如果DOMContentLoaded已触发
+if (document.readyState !== 'loading') {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+}
+</script>
+</body>
+</html>

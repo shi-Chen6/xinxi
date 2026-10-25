@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>七年级信息科技 · 备考知识笔记（含教材完整版）</title>
+<style>
+:root {
+  --bg: #f5f0eb; --card-bg: #fff; --text: #2c3e50; --text-secondary: #5a6c7d;
+  --accent: #e67e22; --accent-light: #fdebd0; --border: #e8ded4;
+  --tag-bg: #fef5e7; --tag-text: #b9770e; --h3-color: #c0392b;
+  --table-stripe: #fef9f3; --table-header: #f5e6d3; --section-bg: #faf7f3;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06); --shadow-lg: 0 4px 24px rgba(0,0,0,0.08);
+  --highlight: #ffeb3b; --highlight-active: #ff9800;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system,"Microsoft YaHei","PingFang SC",sans-serif; background:var(--bg); color:var(--text); line-height:1.8; min-height:100vh; }
+
+.header { background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); color:#fff; padding:32px 24px 24px; text-align:center; box-shadow:var(--shadow-lg); }
+.header h1 { font-size:28px; font-weight:700; margin-bottom:6px; letter-spacing:2px; }
+.header .subtitle { font-size:14px; opacity:0.9; }
+.header .meta { margin-top:10px; font-size:13px; opacity:0.8; }
+.header .link-bar { margin-top:8px; }
+.header .link-bar a { color:#fff; opacity:0.85; font-size:13px; text-decoration:underline; }
+.header .link-bar a:hover { opacity:1; }
+
+/* Search */
+.search-bar { max-width:900px; margin:16px auto 0; padding:0 20px; }
+.search-box { display:flex; align-items:center; background:#fff; border-radius:24px; padding:8px 16px; box-shadow:var(--shadow); border:2px solid transparent; transition:border-color 0.2s; }
+.search-box:focus-within { border-color:var(--accent); }
+.search-box input { flex:1; border:none; outline:none; font-size:15px; padding:4px 8px; background:transparent; color:var(--text); }
+.search-box input::placeholder { color:#bbb; }
+.search-box .search-icon { color:var(--accent); font-size:18px; margin-right:4px; }
+.search-box .search-count { font-size:12px; color:var(--text-secondary); white-space:nowrap; margin-right:8px; display:none; }
+.search-box .search-nav { display:none; gap:2px; }
+.search-box .search-nav button { background:var(--accent-light); border:1px solid var(--accent); color:var(--accent); border-radius:4px; cursor:pointer; font-size:12px; padding:2px 8px; }
+.search-box .search-nav button:hover { background:var(--accent); color:#fff; }
+.search-results-panel { max-width:900px; margin:8px auto 0; padding:0 20px; display:none; }
+.search-results-list { background:#fff; border-radius:12px; box-shadow:var(--shadow); max-height:300px; overflow-y:auto; }
+.search-result-item { padding:10px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; }
+.search-result-item:hover { background:var(--accent-light); }
+.search-result-item:last-child { border-bottom:none; }
+.search-result-item .result-title { font-weight:600; font-size:14px; color:var(--accent); }
+.search-result-item .result-preview { font-size:13px; color:var(--text-secondary); margin-top:2px; }
+.search-result-item .result-preview mark { background:var(--highlight); padding:0 2px; border-radius:2px; }
+mark { background:var(--highlight); padding:0 2px; border-radius:2px; }
+mark.active { background:var(--highlight-active); color:#fff; }
+
+/* Tab Nav */
+.tab-nav { display:flex; flex-wrap:wrap; gap:6px; padding:16px 24px; background:var(--tag-bg); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; justify-content:center; }
+.tab-btn { padding:8px 16px; border:1px solid var(--border); border-radius:20px; background:#fff; color:var(--text-secondary); cursor:pointer; font-size:13px; font-weight:500; transition:all 0.2s; white-space:nowrap; }
+.tab-btn:hover { background:var(--accent-light); color:var(--accent); }
+.tab-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+.container { max-width:900px; margin:0 auto; padding:24px 20px 60px; }
+.module-intro { background:var(--card-bg); border-radius:12px; padding:24px; margin-bottom:20px; box-shadow:var(--shadow); border-left:4px solid var(--accent); }
+.module-intro h2 { font-size:22px; color:var(--accent); margin-bottom:6px; }
+.module-intro .mod-subtitle { font-size:14px; color:var(--text-secondary); margin-bottom:8px; }
+.module-intro p { font-size:14px; color:var(--text-secondary); margin:4px 0; }
+
+.lesson-card { background:var(--card-bg); border-radius:12px; margin-bottom:16px; box-shadow:var(--shadow); overflow:hidden; transition:box-shadow 0.2s; }
+.lesson-card:hover { box-shadow:var(--shadow-lg); }
+.lesson-header { padding:16px 20px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; user-select:none; background:#fefdfb; border-bottom:1px solid transparent; transition:border-color 0.2s; }
+.lesson-header.expanded { border-bottom-color:var(--border); }
+.lesson-header h3 { font-size:17px; font-weight:600; color:var(--text); }
+.lesson-header .arrow { font-size:12px; color:var(--text-secondary); transition:transform 0.25s; flex-shrink:0; margin-left:12px; }
+.lesson-header.expanded .arrow { transform:rotate(180deg); }
+.lesson-body { display:none; padding:20px; }
+.lesson-body.show { display:block; }
+.section-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.section-tab { padding:6px 14px; border-radius:16px; border:1px solid var(--border); background:#fff; cursor:pointer; font-size:13px; font-weight:500; transition:all 0.2s; color:var(--text-secondary); }
+.section-tab:hover { border-color:var(--accent); color:var(--accent); }
+.section-tab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.section-content { display:none; }
+.section-content.active { display:block; }
+.section-content h3 { font-size:16px; color:var(--h3-color); margin:16px 0 8px; padding-bottom:4px; border-bottom:2px solid var(--accent-light); display:inline-block; }
+.section-content h3:first-child { margin-top:0; }
+.section-content p { margin:6px 0; font-size:15px; }
+.section-content ul,.section-content ol { padding-left:24px; margin:8px 0; }
+.section-content li { margin:4px 0; font-size:15px; }
+.section-content strong { color:#c0392b; }
+.section-content em { color:#2980b9; font-style:normal; font-weight:500; }
+.kb-table { width:100%; border-collapse:collapse; margin:10px 0 16px; font-size:14px; border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.04); }
+.kb-table th { background:var(--table-header); padding:10px 12px; text-align:left; font-weight:600; color:#8b6914; font-size:13px; }
+.kb-table td { padding:8px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+.kb-table tr:nth-child(even) td { background:var(--table-stripe); }
+.kb-table tr:last-child td { border-bottom:none; }
+.qa-question { background:var(--section-bg); border-radius:8px; padding:12px 16px; margin:8px 0; }
+.qa-question p { margin:4px 0; }
+.qa-question p:first-child { font-weight:600; }
+.no-results { text-align:center; padding:20px; color:var(--text-secondary); font-size:14px; }
+
+
+/* ===== 手机端适配（≤640px） ===== */
+@media (max-width:640px){
+  .header{padding:24px 16px 18px}
+  .header h1{font-size:21px;letter-spacing:1px}
+  .header .subtitle,.header .meta{font-size:12px}
+  .search-bar{padding:0 12px;margin-top:12px}
+  .search-box{padding:6px 12px}
+  .tab-nav{padding:12px 10px;gap:4px}
+  .tab-btn{padding:7px 12px;font-size:12px}
+  .container{padding:16px 12px 50px}
+  .module-intro{padding:16px;margin-bottom:16px}
+  .module-intro h2{font-size:19px}
+  .lesson-header{padding:14px 16px}
+  .lesson-header h3{font-size:15px}
+  .lesson-header .arrow{margin-left:8px}
+  .lesson-body{padding:16px}
+  .section-tabs{gap:6px}
+  .section-tab{padding:6px 11px;font-size:12px}
+  .section-content h3{font-size:15px}
+  .section-content p,.section-content li{font-size:14px}
+  .kb-table{font-size:12px}
+  .kb-table th,.kb-table td{padding:6px 9px}
+  .quiz-link{font-size:11px;padding:2px 8px;margin-left:6px}
+}
+@media print {
+  .tab-nav,.search-bar { position:static; }
+  .lesson-body { display:block !important; }
+  .lesson-header { border-bottom-color:var(--border); }
+  .lesson-header .arrow { display:none; }
+}
+
+.quiz-link{display:inline-block;margin-left:8px;padding:2px 10px;background:var(--accent);color:#fff!important;border-radius:12px;font-size:12px;text-decoration:none;font-weight:500;transition:all .2s;vertical-align:middle}
+.quiz-link:hover{background:#d35400;transform:scale(1.05)}
+
+
+.quiz-link{display:inline-block;margin-left:8px;padding:2px 10px;background:var(--accent);color:#fff!important;border-radius:12px;font-size:12px;text-decoration:none;font-weight:500;transition:all .2s;vertical-align:middle}
+.quiz-link:hover{background:#d35400;transform:scale(1.05)}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📘 七年级信息科技 · 备考知识笔记</h1>
+  <div class="subtitle">义务教育信息科技课程 · 互联网应用与创新（含教材全一册内容）</div>
+  <div class="meta">6个模块 · 30课 · 知识点/考点/重难点/简答题 · 支持全文检索</div>
+  <div class="link-bar"><a href="七年级教材参考.html">📚 教材参考</a> · <a href="七年级刷题练习.html">📝 刷题练习</a></div>
+  <div class="search-bar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="搜索知识点、考点、关键词... (如: TCP/IP、分包、数字版权、路由...)" oninput="doSearch()" onkeydown="if(event.key==='Enter')navigateResult(1)">
+      <span class="search-count" id="searchCount"></span>
+      <span class="search-nav" id="searchNav">
+        <button onclick="navigateResult(-1)" title="上一个">▲</button>
+        <button onclick="navigateResult(1)" title="下一个">▼</button>
+        <button onclick="clearSearch()" title="清除">✕</button>
+      </span>
+    </div>
+    <div class="search-results-panel" id="searchPanel">
+      <div class="search-results-list" id="searchResults"></div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-nav" id="tabNav"></div>
+<div class="container" id="content"></div>
+
+<script>
+const MODULES = [{"id": "m1", "title": "第一模块：互联网基础", "subtitle": "第1-3课 · 探寻互联网新世界", "intro": "<p>互联网是二十世纪最伟大的发明之一。本模块将介绍互联网的诞生与发展，引导学生感受互联网演变过程中的<strong>创新</strong>，体会互联网带来的<strong>思想之变、技术之变和社会之变</strong>，了解我国在互联网建设方面取得的伟大成就。</p><p><strong>课标要求：</strong>了解互联网诞生与发展史，认识通信协议标准化和网状结构的重要性；知道互联网应用的特征；了解互联网对个人、行业和文化的影响。</p>", "lessons": [{"id": "L01", "title": "第1课 互联网发展靠创新", "knowledge": "\n<h3>一、计算机网络与互联网</h3>\n<p><strong>计算机网络</strong>是用通信线路把若干台计算机互相连接起来，遵照某些通信协议，用于实现<strong>信息交换和资源共享</strong>的系统。多个计算机网络相互连接就形成了<strong>互联网</strong>。</p>\n<h3>二、互联网发展四个阶段</h3>\n<table class=\"kb-table\">\n<tr><th>阶段</th><th>时期</th><th>核心特征</th></tr>\n<tr><td><strong>诞生阶段</strong></td><td>面向终端的联机系统</td><td>多个<em>不具备独立信息处理能力</em>的终端共享一台计算机（现在手机等终端已有独立处理器）</td></tr>\n<tr><td><strong>形成阶段</strong></td><td>20世纪60年代末</td><td>实现计算机之间的互联，互联网雏形——<em>阿帕网(ARPANET)</em>于1969年投入使用</td></tr>\n<tr><td><strong>互联阶段</strong></td><td>20世纪80年代</td><td>实现协议标准化，<em>TCP/IP</em>走上历史舞台（1983年阿帕网改用TCP/IP）</td></tr>\n<tr><td><strong>高速网络阶段</strong></td><td>20世纪90年代至今</td><td>作为\"信息高速公路\"，互联网在社会中应用日益普及</td></tr>\n</table>\n<h3>三、关键事件时间线</h3>\n<table class=\"kb-table\">\n<tr><th>年份</th><th>事件</th></tr>\n<tr><td>1969</td><td>阿帕网投入使用</td></tr>\n<tr><td>1971</td><td>电子邮件面世</td></tr>\n<tr><td>1974</td><td>IP面世</td></tr>\n<tr><td>1981</td><td>IPv4发布</td></tr>\n<tr><td>1983</td><td>阿帕网改用TCP/IP</td></tr>\n<tr><td>1989</td><td>万维网诞生</td></tr>\n<tr><td>1990</td><td>浏览器诞生</td></tr>\n<tr><td>2017</td><td>大规模启用IPv6</td></tr>\n</table>\n<h3>四、网状结构的优势</h3>\n<p>网状结构中，节点间有<strong>多条通信线路</strong>，当一条线路出现故障时，可切换到其他线路继续通信，<strong>有效减小单个节点或单条线路故障对网络整体通信的影响</strong>。因此互联网骨干网采用网状结构。</p>\n<h3>五、我国互联网发展里程碑</h3>\n<ul>\n<li><strong>1987年</strong>：建成我国第一个国际互联网电子邮件节点</li>\n<li><strong>1994年</strong>：实现与国际互联网全功能连接</li>\n<li><strong>1995年</strong>：开始向社会提供互联网接入服务</li>\n<li><strong>1997年</strong>：人民网上线，第一家中央重点新闻宣传网站</li>\n<li><strong>1998年</strong>：第一笔网上电子交易成功</li>\n<li><strong>2008年</strong>：网民规模达2.53亿，世界第一</li>\n<li><strong>2013年</strong>：成为全球最大网络零售市场</li>\n<li><strong>2023年</strong>：网民规模10.92亿，网上零售额15.42万亿</li>\n</ul>\n<h3>六、四大建设成就</h3>\n<table class=\"kb-table\">\n<tr><th>成就</th><th>详情</th></tr>\n<tr><td><strong>最大网络实体</strong></td><td>2008年网民规模世界第一，世界互联网企业前10强中我国占近半数</td></tr>\n<tr><td><strong>\"互联网+\"成果显著</strong></td><td>2012年理念出现，2015年写入政府工作报告；\"灯塔工厂\"62家全球第一</td></tr>\n<tr><td><strong>5G领跑</strong></td><td>经历\"1G空白、2G跟随、3G突破、4G并跑\"后实现\"5G领跑\"，基站337.7万个</td></tr>\n<tr><td><strong>北斗卫星导航系统</strong></td><td>自主建设、独立运行；\"中国的北斗、世界的北斗、一流的北斗\"</td></tr>\n</table>\n                ", "exam": "<ul><li><strong>互联网发展的四个阶段</strong>名称和核心特征（高频填空/选择）</li><li><strong>阿帕网(ARPANET)</strong>是互联网雏形，1969年投入使用</li><li><strong>TCP/IP协议标准化</strong>是互联阶段核心事件（1983年）</li><li><strong>网状结构优势</strong>：多路径、容错性强、减小单点故障影响</li><li>我国互联网发展<strong>关键年份</strong>（1987、1994、1995、2008）</li><li><strong>四大建设成就</strong>：最大网络实体、互联网+、5G领跑、北斗系统</li><li>\"灯塔工厂\"代表智能制造最高水平</li></ul>", "difficulty": "<h3>易混点：四个发展阶段对照</h3><table class=\"kb-table\"><tr><th>阶段</th><th>核心特征</th><th>记忆关键词</th></tr><tr><td>诞生</td><td>终端共享主机（终端无独立处理能力）</td><td>共享、终端</td></tr><tr><td>形成</td><td>计算机互联，阿帕网出现</td><td>互联、雏形</td></tr><tr><td>互联</td><td>TCP/IP标准化</td><td>标准化、协议</td></tr><tr><td>高速网络</td><td>信息高速公路，普及应用</td><td>普及、高速</td></tr></table><h3>5G发展路线记忆</h3><p><strong>空→跟→突→并→领</strong>：1G空白→2G跟随→3G突破→4G并跑→5G领跑</p>", "qa": "<p><strong>Q1：互联网经历了哪四个发展阶段？各阶段的主要特征是什么？</strong></p><p>答：诞生阶段（终端共享主机）、形成阶段（计算机互联，阿帕网1969年出现）、互联阶段（TCP/IP标准化，1983年）、高速网络阶段（信息高速公路，普及应用）。</p><p><strong>Q2：为什么互联网采用网状结构？</strong></p><p>答：网状结构中节点间有多条通信线路，当一条故障时可切换至其他线路，有效减小单点故障对整体通信的影响，使网络更健壮。</p><p><strong>Q3：我国互联网建设取得了哪些主要成就？</strong></p><p>答：①建成最大网络实体（网民10.92亿）；②\"互联网+\"成果显著（62家灯塔工厂全球第一）；③5G领跑全球；④建成北斗卫星导航系统。</p>"}, {"id": "L02", "title": "第2课 互联网应用新特征", "knowledge": "\n<h3>一、互联网应用的三大特征</h3>\n<table class=\"kb-table\">\n<tr><th>特征</th><th>说明</th></tr>\n<tr><td><strong>交互性强</strong></td><td>用户可主动参与，与系统双向互动</td></tr>\n<tr><td><strong>操作简单</strong></td><td>图形化界面替代字符界面，易于使用</td></tr>\n<tr><td><strong>图文声像并茂</strong></td><td>从纯文本发展为多媒体融合呈现</td></tr>\n</table>\n<h3>二、互联网应用的三次演变</h3>\n<table class=\"kb-table\">\n<tr><th>演变方向</th><th>早期</th><th>现在</th><th>技术推动</th></tr>\n<tr><td><strong>内容形式</strong></td><td>文本为主</td><td>图文声像并茂</td><td>硬件发展使设备能处理复杂数据</td></tr>\n<tr><td><strong>交互方式</strong></td><td>字符界面（输命令）</td><td>图形化界面（点击拖拽）</td><td>图形界面技术+触摸屏</td></tr>\n<tr><td><strong>功能特征</strong></td><td>单一应用</td><td>应用融合</td><td>信息传输技术进步</td></tr>\n</table>\n<p>中国第一封电子邮件（1987年9月）：\"Across the Great Wall we can reach every corner in the world（越过长城，走向世界）\"。</p>\n<h3>三、互联网应用四大类别</h3>\n<table class=\"kb-table\">\n<tr><th>类别</th><th>典型应用</th></tr>\n<tr><td>基础应用</td><td>即时通信、搜索引擎、网络新闻、社交应用</td></tr>\n<tr><td>商务交易</td><td>网上外卖、网络购物、旅行预订、网络支付</td></tr>\n<tr><td>公共服务</td><td>网约车、在线教育、在线医疗</td></tr>\n<tr><td>网络娱乐</td><td>网络音乐、网络视频、网络游戏</td></tr>\n</table>\n                ", "exam": "<ul><li><strong>互联网应用三大特征</strong>：交互性强、操作简单、图文声像并茂</li><li><strong>三次演变</strong>及其技术推动力</li><li>中国第一封电子邮件的时间和内容</li><li><strong>四大应用类别</strong>及典型代表</li></ul>", "difficulty": "<h3>演变三维度对比</h3><table class=\"kb-table\"><tr><th>维度</th><th>早期</th><th>现在</th><th>推动因素</th></tr><tr><td>内容</td><td>文本为主</td><td>图文声像并茂</td><td>硬件技术发展</td></tr><tr><td>交互</td><td>字符界面</td><td>图形化界面</td><td>GUI+触摸屏</td></tr><tr><td>功能</td><td>单一应用</td><td>应用融合</td><td>传输技术进步</td></tr></table>", "qa": "<p><strong>Q1：互联网应用具有哪三大特征？这些特征是如何形成的？</strong></p><p>答：交互性强、操作简单、图文声像并茂。这些特征依赖于硬件技术发展、图形界面普及和信息传输技术进步等持续的创新才逐渐发展而成。</p><p><strong>Q2：互联网应用经历了怎样的演变过程？</strong></p><p>答：①从文本到图文声像并茂（内容丰富化）；②从字符界面到图形化界面（操作简便化）；③从单一应用到应用融合（功能综合化）。</p>"}, {"id": "L03", "title": "第3课 互联网影响新体验", "knowledge": "\n<h3>一、\"互联网+\"六大领域（2015年写入政府工作报告）</h3>\n<table class=\"kb-table\">\n<tr><th>领域</th><th>典型应用</th></tr>\n<tr><td><strong>互联网+农业</strong></td><td>智能灌溉、精准种植、农产品回溯、农产品电商</td></tr>\n<tr><td><strong>互联网+工业</strong></td><td>\"5G+工业互联网\"、智能制造、\"灯塔工厂\"（智能化数字化自动化）</td></tr>\n<tr><td><strong>互联网+科研</strong></td><td>高海拔宇宙线观测站\"拉索\"、大型对撞机数据传输</td></tr>\n<tr><td><strong>互联网+教育</strong></td><td>翻转课堂、微课、慕课(MOOC)、终身教育体系</td></tr>\n<tr><td><strong>互联网+医疗</strong></td><td>远程咨询、远程诊疗、远程手术、互联网医院</td></tr>\n<tr><td><strong>互联网+交通</strong></td><td>交通引导、智能导航、智能公交</td></tr>\n</table>\n<h3>二、互联网+文化</h3>\n<p>互联网与文化有天然的亲和力和强大的融合力。中国文化正在迎来<strong>新发展、新平台、新生态</strong>。（如故宫博物院数字文物库让文物\"活\"起来）</p>\n<h3>三、互联网文化挑战</h3>\n<p>自媒体、短视频伴生<strong>庸俗、媚俗、低俗</strong>作品。国家出台《互联网文化管理暂行规定》《互联网直播服务管理规定》等加强监管。</p>\n                ", "exam": "<ul><li><strong>\"互联网+\"六大领域</strong>及典型应用（2015年写入政府工作报告）</li><li><strong>\"灯塔工厂\"</strong>代表智能制造最高水平：智能化、数字化、自动化</li><li>互联网+教育的新型方式：翻转课堂、微课、慕课</li><li>互联网对<strong>文化传承</strong>的影响及\"三俗\"问题</li></ul>", "difficulty": "<h3>各\"互联网+\"领域关键词速记</h3><table class=\"kb-table\"><tr><th>领域</th><th>关键词</th></tr><tr><td>农业</td><td>灌溉、种植、回溯</td></tr><tr><td>工业</td><td>5G+工业互联网、灯塔工厂</td></tr><tr><td>科研</td><td>拉索观测站、对撞机</td></tr><tr><td>教育</td><td>翻转课堂、慕课、终身学习</td></tr><tr><td>医疗</td><td>远程诊疗/手术、互联网医院</td></tr><tr><td>交通</td><td>导航、智能公交</td></tr></table>", "qa": "<p><strong>Q1：简述\"互联网+\"对教育的影响。</strong></p><p>答：构建网络化、数字化、个性化、终身化教育体系，出现翻转课堂、微课、慕课等新型学习方式，实现\"人人皆学、处处能学、时时可学\"。</p><p><strong>Q2：互联网+文化面临哪些挑战？</strong></p><p>答：自媒体、短视频伴生庸俗、媚俗、低俗作品。国家出台了《互联网文化管理暂行规定》等政策法规加强监管。</p>"}]}, {"id": "m2", "title": "第二模块：网络协议与传输", "subtitle": "第4-10课 · 直播网络我来建", "intro": "<p>本模块引导学生了解网络通信的基本原理，包括分包传输、网络协议分层、IP地址与域名、路由服务、可靠传输等核心概念，最终综合所学搭建小型直播网络。</p><p><strong>课标要求：</strong>初步了解互联网协议，知道网络中数据的编码、传输和呈现的原理；能设计和搭建简单的小型视频直播网络。</p>", "lessons": [{"id": "L04", "title": "第4课 数据分包灵活传", "knowledge": "<h3>一、存储转发思想</h3><p>计算机网络进行数据传输时采用<strong>\"接力传\"</strong>思想，称为<strong>存储转发</strong>：节点先将数据<strong>存储在本地</strong>，再<strong>转发出去</strong>。类似于古代邮驿的接力传递。</p><h3>二、分包传输策略</h3><p>互联网传输数据时，先将数据分成<strong>一个个小的数据包</strong>，每个数据包可根据拥堵情况<strong>沿不同路径</strong>到达接收者。接收者收到后<strong>重新组装</strong>。这解决了两个问题：①大文件超出节点存储能力；②局部出错需重传全部数据。</p><h3>三、分包传输三步曲</h3><p><strong>分包 → 传输 → 组装</strong>。每个数据包需要<strong>编号</strong>，否则接收者无法正确组装。</p><h3>四、网络协议的引入</h3><p>不同设备需要遵循同样的规范（网络协议），对数据包的<strong>产生、传输、接收</strong>等全过程做出规定。</p>", "exam": "<ul><li><strong>存储转发的定义</strong>：先存储→再转发，逐跳接力</li><li><strong>分包传输策略</strong>的核心思想及三步曲</li><li>分包解决的两大问题：大文件传输和局部错误重传</li><li>网络协议要对全过程做出规定</li></ul>", "difficulty": "<h3>存储转发 vs 分包传输</h3><table class=\"kb-table\"><tr><th>概念</th><th>核心思想</th></tr><tr><td>存储转发</td><td>逐跳接力：收到→存储→转发→下一跳</td></tr><tr><td>分包传输</td><td>化整为零：大文件→小数据包→多路径→组装</td></tr></table><p><strong>难点：</strong>分包策略需编号机制确保组装顺序，需网络协议统一规范。</p>", "qa": "<p><strong>Q1：什么是存储转发？</strong></p><p>答：存储转发是计算机网络传输数据的基本方式。节点先将数据存储在本地，再转发给下一个节点，如同接力赛逐跳传输。</p><p><strong>Q2：为什么要采用分包传输策略？</strong></p><p>答：①大文件可能超出节点存储能力；②不分包则局部错误需重传全部数据。分包后每个包独立传输，可走不同路径，出错只重传单个包。</p>"}, {"id": "L05", "title": "第5课 网络协议分层设", "knowledge": "<h3>一、网络协议</h3><p>计算机之间通信需要<strong>共同遵守的规范</strong>。网页、电子邮件、视频等都被转化为<strong>1和0组成的二进制数</strong>传输，通信双方需<strong>事先约定</strong>编码规则。</p><h3>二、分层思想</h3><p>把复杂的通信问题<strong>分到不同层中</strong>，每层解决相对简单的问题，层层相叠，从而解决复杂的网络通信问题。</p><h3>三、TCP/IP四层结构（必考）</h3><table class=\"kb-table\"><tr><th>层次（从上到下）</th><th>功能</th><th>主要协议</th></tr><tr><td><strong>应用层</strong></td><td>负责如何使用数据</td><td>HTTP、HTTPS、FTP</td></tr><tr><td><strong>传输层</strong></td><td>负责数据完整性及可靠性</td><td>TCP、UDP</td></tr><tr><td><strong>网络层</strong></td><td>负责处理数据包</td><td>IP</td></tr><tr><td><strong>网络接口层</strong></td><td>负责实际传输二进制数据</td><td>以太网等通信接口</td></tr></table>", "exam": "<ul><li><strong>网络协议的定义</strong></li><li><strong>分层思想</strong>的意义：化复杂为简单</li><li><strong>TCP/IP四层结构</strong>（名称、功能、协议）——<strong>必考</strong></li><li>TCP/IP是互联网的<strong>基础协议</strong></li></ul>", "difficulty": "<h3>TCP/IP四层记忆法</h3><p><strong>应传网接</strong>（应用层→传输层→网络层→网络接口层）</p><p>类比快递：应用层（寄什么）→传输层（确保完好）→网络层（打包贴单）→网络接口层（运输）</p>", "qa": "<p><strong>Q1：简述TCP/IP的四层结构及各层功能。</strong></p><p>答：①应用层——负责如何使用数据（HTTP、HTTPS、FTP）；②传输层——负责数据完整性及可靠性（TCP、UDP）；③网络层——负责处理数据包（IP）；④网络接口层——负责实际传输二进制数据。</p><p><strong>Q2：什么是分层思想？</strong></p><p>答：把复杂的通信问题分到不同层中，每层解决相对简单的问题，层层相叠，从而解决复杂的网络通信问题。</p>"}, {"id": "L06", "title": "第6课 数字身份辨设备", "knowledge": "<h3>一、IP地址</h3><p>为区分网络中设备而设置的<strong>数字形式标识</strong>。计算机网络中的每台设备都需要一个唯一的IP地址。</p><h3>二、IPv4地址</h3><ul><li>由<strong>\".\"隔开的4个十进制数</strong>表示——\"点分十进制\"法</li><li>32位二进制数，每段范围<strong>0～255</strong></li><li>例：192.168.10.4 → 11000000 10101000 00001010 00000100</li></ul><h3>三、公用地址 vs 私有地址</h3><table class=\"kb-table\"><tr><th>类型</th><th>使用范围</th><th>分配方式</th></tr><tr><td><strong>公用地址</strong></td><td>互联网中使用</td><td>专门机构统一分配</td></tr><tr><td><strong>私有地址</strong></td><td>单位、家庭内部网</td><td>组网人员自行分配</td></tr></table><h3>四、IP地址结构</h3><p><strong>IP地址 = 网络号 + 主机号</strong></p><h3>五、IPv4→IPv6</h3><ul><li>IPv4：32位，2^32个地址，<strong>已枯竭</strong></li><li>IPv6：<strong>128位</strong>，约<strong>3.4×10^38</strong>个地址</li><li>我国已建成<strong>全球最大规模IPv6网络</strong></li></ul>", "exam": "<ul><li><strong>IP地址的定义和作用</strong></li><li><strong>IPv4表示方法</strong>：点分十进制，4段0~255，32位</li><li>公用地址 vs 私有地址的区别</li><li>IP地址=网络号+主机号</li><li>IPv6的必要性：IPv4地址枯竭</li><li>IPv6地址128位，我国IPv6建设成就</li></ul>", "difficulty": "<h3>IPv4 vs IPv6对比</h3><table class=\"kb-table\"><tr><th>对比项</th><th>IPv4</th><th>IPv6</th></tr><tr><td>地址长度</td><td>32位</td><td>128位</td></tr><tr><td>数量</td><td>约43亿</td><td>约3.4×10^38</td></tr><tr><td>现状</td><td>已枯竭</td><td>大规模部署中</td></tr></table>", "qa": "<p><strong>Q1：什么是IP地址？IPv4地址如何表示？</strong></p><p>答：IP地址是为区分网络中设备而设置的数字标识。IPv4采用\"点分十进制\"法，由\".\"隔开的4个十进制数表示，每段0~255，是32位二进制数。</p><p><strong>Q2：为什么要从IPv4升级到IPv6？</strong></p><p>答：IPv4只有约43亿个地址，已枯竭。IPv6地址128位，可提供约3.4×10^38个地址，足以给每台设备分配独立IP地址。</p>"}, {"id": "L07", "title": "第7课 域名解析换编码", "knowledge": "<h3>一、域名</h3><p>按规则给互联网中计算机起的<strong>字符型名字</strong>。例：www.moe.gov.cn——cn（中国/根域名）← gov（政府）← moe（教育部）← www（服务器名），<strong>自右向左依次缩小</strong>范围。</p><h3>二、域名解析</h3><p>把<strong>域名转换成IP地址</strong>的过程。由<strong>域名服务器(DNS)</strong>提供此服务，多个域名服务器<strong>分层协同</strong>工作。</p><h3>三、根服务器</h3><p>位于域名解析系统<strong>最顶端</strong>。IPv4体系：全球13台（美国10台、欧洲2台、日本1台）。我国\"雪人计划\"部署<strong>25台IPv6根服务器</strong>，<strong>4台在我国</strong>。</p><h3>四、DNS欺骗</h3><p>在域名解析过程中，把用户要访问的IP地址<strong>替换成特定IP</strong>，使用户访问假冒网站。这不是\"攻破\"网站，而是<strong>冒名顶替</strong>。IPv6支持更安全的域名解析服务。</p>", "exam": "<ul><li><strong>域名结构</strong>：自右向左范围缩小</li><li><strong>域名解析</strong>的定义和DNS的作用</li><li>域名解析<strong>分层协同</strong>机制</li><li><strong>根服务器</strong>及\"雪人计划\"（25台IPv6根服务器，4台在我国）</li><li><strong>DNS欺骗</strong>原理与危害</li></ul>", "difficulty": "<h3>域名结构解析示例</h3><p>www.moe.gov.cn → 从右到左：cn（中国）→ gov（政府）→ moe（教育部）→ www（服务器名）</p><p><strong>DNS欺骗 ≠ 网站被攻破</strong>：DNS欺骗是冒名顶替，不是攻破网站本身。</p>", "qa": "<p><strong>Q1：什么是域名？域名和IP地址有什么关系？</strong></p><p>答：域名是按规则给计算机起的字符型名字。域名需要通过域名解析(DNS)转换成IP地址才能进行网络通信。</p><p><strong>Q2：什么是DNS欺骗？</strong></p><p>答：DNS欺骗是在域名解析过程中把用户要访问的IP地址替换成特定IP地址，使用户访问假冒网站，从而窃取信息。</p>"}, {"id": "L08", "title": "第8课 路由路径靠算法", "knowledge": "<h3>一、路由服务</h3><p><strong>路由</strong>：路（道路）+ 由（从哪来到哪去）。路由器收到IP数据包后根据<strong>目的地IP地址</strong>计算下一跳位置，逐步送达目的地。</p><h3>二、路由表与路径选择</h3><p>路由器依据<strong>路由表</strong>工作。有多条路径时，根据<strong>权重</strong>选择更优路径。</p><h3>三、tracert命令</h3><p>追踪通信路径，显示经过的路由器。部分设备出于安全考虑拒绝回应，显示为<strong>星号(*)</strong>。</p><h3>四、域名解析 vs 路由服务</h3><p><strong>\"域名解析服务器决定数据去哪，路由服务决定数据如何去\"</strong></p><h3>五、路由服务自主可控</h3><p>路由器硬件生产、软件开发、算法设计各层面<strong>自主可控</strong>，关系<strong>国家网络安全</strong>。路由器已被列为<strong>网络关键设备</strong>。</p>", "exam": "<ul><li><strong>路由服务的定义</strong>和路由器作用</li><li>路由表的概念和路径选择机制</li><li>tracert命令功能</li><li>域名解析 vs 路由服务的区别</li><li>路由服务自主可控的重要性</li></ul>", "difficulty": "<h3>域名解析 vs 路由服务对比</h3><table class=\"kb-table\"><tr><th>对比</th><th>域名解析(DNS)</th><th>路由服务</th></tr><tr><td>作用</td><td>决定\"去哪\"</td><td>决定\"如何去\"</td></tr><tr><td>输入→输出</td><td>域名→IP地址</td><td>IP数据包→下一跳</td></tr><tr><td>载体</td><td>域名服务器</td><td>路由器+路由表</td></tr></table>", "qa": "<p><strong>Q1：什么是路由服务？</strong></p><p>答：路由服务由路由器协同实现，路由器收到IP数据包后根据目的地IP地址计算下一跳位置，逐步送达目的地。</p><p><strong>Q2：为什么路由服务自主可控很重要？</strong></p><p>答：控制了路由服务就控制了网络传输过程。路由器硬件、软件、算法自主可控关系国家网络安全，路由器已被列为网络关键设备。</p>"}, {"id": "L09", "title": "第9课 数据传输有新意", "knowledge": "<h3>一、端口</h3><p>计算机同时运行多个互联网应用时，通过<strong>端口(0～65535)</strong>区分不同应用的数据。</p><h3>二、TCP vs UDP（必考）</h3><table class=\"kb-table\"><tr><th>对比项</th><th>TCP</th><th>UDP</th></tr><tr><td>传输方式</td><td><strong>可靠传输</strong></td><td><strong>不可靠传输</strong></td></tr><tr><td>连接方式</td><td>面向连接（需三次握手）</td><td>面向无连接</td></tr><tr><td>适用场景</td><td>文件传输等要求准确</td><td>视频直播等要求快速</td></tr><tr><td>出错处理</td><td>重传出错数据包</td><td>不重传（数据已变）</td></tr></table><h3>三、三次握手</h3><p>SYN → SYN+ACK → ACK，确保通信双方已建立连接，是TCP可靠传输的前提。</p><h3>四、滑动窗口机制</h3><p>给数据包标序号并记录状态，出错重传；网络堵塞时<strong>降低发送频率</strong>缓解拥堵。</p>", "exam": "<ul><li><strong>端口的作用</strong></li><li><strong>TCP vs UDP</strong>核心区别——<strong>必考</strong></li><li><strong>三次握手</strong>过程</li><li>TCP面向连接 vs UDP面向无连接</li><li>可靠传输 vs 不可靠传输适用场景</li></ul>", "difficulty": "<h3>TCP vs UDP 场景判断</h3><table class=\"kb-table\"><tr><th>场景</th><th>选TCP还是UDP</th><th>原因</th></tr><tr><td>传输文件</td><td>TCP</td><td>必须准确，一个包出错全部不能用</td></tr><tr><td>视频直播</td><td>UDP</td><td>要求快速，数据已变，重发无意义</td></tr><tr><td>浏览网页</td><td>TCP</td><td>需要稳定可靠传输</td></tr></table>", "qa": "<p><strong>Q1：TCP和UDP有什么区别？分别适用于什么场景？</strong></p><p>答：TCP可靠传输、面向连接（需三次握手），适用于文件传输等准确性要求高的场景；UDP不可靠传输、面向无连接，适用于视频直播等实时性要求高的场景。</p>"}, {"id": "L10", "title": "第10课 综合所学建网络", "knowledge": "<h3>一、组建直播网络的设备</h3><p>摄像头（视频拍摄）、计算机（直播服务器）、路由器（连接设备）、观看设备。</p><h3>二、有线 vs 无线连接</h3><table class=\"kb-table\"><tr><th>方式</th><th>优点</th><th>缺点</th></tr><tr><td>有线连接</td><td>更加稳定</td><td>布线烦琐</td></tr><tr><td>无线连接</td><td>相对便捷</td><td>稳定性稍差</td></tr></table><h3>三、静态IP vs 动态IP</h3><ul><li><strong>动态IP</strong>：连接路由器后自动获得，每次可能不同</li><li><strong>静态IP</strong>：手工设置，服务器等需被其他设备访问时使用</li></ul><h3>四、密码设置原则</h3><p>长度足够；大小写字母+数字+特殊符号；外人难猜自己易记；<strong>定期更换</strong>。</p><h3>五、ping命令</h3><p>检测网络连通性。ping通即能与目标进行基本网络通信。</p><h3>六、《未成年人保护法》</h3><p><strong>未满十六周岁</strong>不得提供网络直播发布者账号注册服务。</p>", "exam": "<ul><li>搭建小型网络的<strong>基本硬件</strong></li><li>有线 vs 无线的优缺点</li><li>静态IP vs 动态IP的选择</li><li><strong>密码设置原则</strong></li><li>ping命令检测连通性</li><li>直播账号的<strong>法律年龄限制</strong></li></ul>", "difficulty": "<h3>静态IP vs 动态IP选择</h3><p><strong>服务器</strong>等需被其他设备访问→用<strong>静态IP</strong>；<strong>普通设备</strong>不对外服务→用<strong>动态IP</strong></p>", "qa": "<p><strong>Q1：搭建具有直播功能的小型网络需要哪些设备？</strong></p><p>答：摄像头、计算机（直播服务器）、路由器、观看设备等。</p><p><strong>Q2：什么情况用静态IP，什么情况用动态IP？</strong></p><p>答：服务器等需被其他设备访问用静态IP（手工设置）；普通计算机自动获取动态IP即可。</p>"}]}, {"id": "m3", "title": "第三模块：网络组建与应用", "subtitle": "第11-15课 · 便捷的互联网服务", "intro": "<p>本模块介绍典型的互联网服务（文件传送、电子邮件、万维网），深入万维网的结构特征与工作模式，了解HTTP/HTTPS协议和搜索引擎原理，并通过实验巩固网络命令使用。</p><p><strong>课标要求：</strong>通过在线活动分析互联网应用特征；使用互联网搜索、遴选、管理数据；初步了解互联网协议和数据传输原理。</p>", "lessons": [{"id": "L11", "title": "第11课 互联网服务应用广", "knowledge": "<h3>一、典型互联网服务</h3><table class=\"kb-table\"><tr><th>服务</th><th>说明</th></tr><tr><td><strong>文件传送(FTP)</strong></td><td>通过网络传输各种文件</td></tr><tr><td><strong>电子邮件</strong></td><td>地址格式：用户名@服务商域名；SMTP发邮件、POPv3收邮件</td></tr><tr><td><strong>万维网(WWW)</strong></td><td>通过浏览器访问，应用最广泛的互联网服务</td></tr></table><h3>二、万维网≠互联网</h3><p>互联网是<strong>基础设施</strong>，万维网只是互联网上的<strong>一种服务</strong>（但已成为应用最广泛的服务）。1994年中科院高能物理研究所建成我国第一台万维网服务器。</p><h3>三、万维网优势</h3><p>只需浏览器不需安装软件；图文声像并茂；几乎所有网络活动都可基于万维网进行。</p>", "exam": "<ul><li><strong>三种典型互联网服务</strong>（FTP、电子邮件、万维网）</li><li>电子邮件协议：SMTP（发）、POPv3（收）</li><li><strong>万维网≠互联网</strong>的关系</li><li>我国第一台万维网服务器：1994年中科院高能所</li></ul>", "difficulty": "<h3>万维网 vs 互联网</h3><table class=\"kb-table\"><tr><th>概念</th><th>定义</th><th>关系</th></tr><tr><td>互联网</td><td>连接全球计算机的网络</td><td>基础设施</td></tr><tr><td>万维网</td><td>基于互联网的信息服务</td><td>互联网上的服务之一</td></tr></table>", "qa": "<p><strong>Q1：万维网和互联网是什么关系？</strong></p><p>答：互联网是万维网的基础设施；万维网只是互联网上的一种服务。二者经常被混为一谈但实为不同概念。</p><p><strong>Q2：收发电子邮件涉及哪两种协议？</strong></p><p>答：SMTP（简单邮件传送协议）发送邮件；POPv3（第3版邮局协议）接收邮件。</p>"}, {"id": "L12", "title": "第12课 万维网服务大揭秘", "knowledge": "<h3>一、万维网结构</h3><p><strong>分布式服务</strong>——无统一中央服务器，由许多服务器共同提供。资源通过<strong>超链接</strong>以<strong>网状结构</strong>组织。</p><h3>二、B/S结构与C/S结构</h3><p>万维网采用<strong>\"浏览器-服务器\"(B/S)结构</strong>，是<strong>\"客户端-服务器\"(C/S)结构</strong>的特例。属于<strong>\"请求-响应\"</strong>式服务。</p><h3>三、浏览网页四步流程</h3><ol><li><strong>用户发起请求</strong>：浏览器依据网址向服务器发起请求</li><li><strong>服务器响应</strong>：资源存在返回资源，否则报错</li><li><strong>浏览器接收响应</strong>：状态码200展示网页</li><li><strong>人机交互</strong>：点击超链接→再次发起请求</li></ol><h3>四、URL组成</h3><p>统一资源定位符一般包括<strong>协议、域名、端口、路径、参数</strong>等。</p>", "exam": "<ul><li>万维网<strong>分布式结构</strong>和网状组织</li><li>B/S结构与C/S结构的关系</li><li><strong>\"请求-响应\"</strong>模式</li><li>浏览网页<strong>四步流程</strong></li><li>URL组成</li></ul>", "difficulty": "<h3>C/S vs B/S</h3><table class=\"kb-table\"><tr><th>对比</th><th>C/S</th><th>B/S</th></tr><tr><td>客户端</td><td>需安装专门软件</td><td>只需浏览器</td></tr><tr><td>关系</td><td colspan=\"2\">B/S是C/S的特例</td></tr></table>", "qa": "<p><strong>Q1：简述万维网的\"请求-响应\"工作流程。</strong></p><p>答：①用户输入网址，浏览器发起请求；②服务器处理请求返回资源或报错；③浏览器接收响应，状态码200展示网页；④用户点击超链接继续交互。</p>"}, {"id": "L13", "title": "第13课 万维网安全新协议", "knowledge": "<h3>一、HTTP基于TCP</h3><p>HTTP是万维网服务的基础，工作在<strong>TCP</strong>之上。因为浏览网页、下载文件等需要<strong>稳定可靠</strong>的数据传输。</p><h3>二、明文传输风险</h3><p>HTTP以<strong>明文方式</strong>传输数据，账号密码等易被窃取或篡改。</p><h3>三、HTTPS</h3><p>采用<strong>数据加密技术</strong>，对内容加密处理后再传输。各大网站纷纷以HTTPS取代HTTP。</p><h3>四、HTTP vs HTTPS</h3><table class=\"kb-table\"><tr><th>对比</th><th>HTTP</th><th>HTTPS</th></tr><tr><td>传输方式</td><td>明文</td><td>加密</td></tr><tr><td>安全性</td><td>低</td><td>高</td></tr><tr><td>数据包</td><td>可读</td><td>加密不可读</td></tr></table><p><strong>重要澄清：</strong>HTTPS只对传输过程加密，不能解决所有安全问题。网站被攻破、设备中毒等仍可能导致安全问题。</p>", "exam": "<ul><li>HTTP基于<strong>TCP</strong>（可靠传输）</li><li>明文传输的安全风险</li><li><strong>HTTPS加密</strong>机制</li><li>HTTP vs HTTPS核心区别</li><li>HTTPS≠绝对安全</li></ul>", "difficulty": "<h3>HTTPS安全边界</h3><p>HTTPS仅加密<strong>传输过程</strong>，网站本身安全、用户设备安全等问题超出HTTPS保护范围。</p>", "qa": "<p><strong>Q1：HTTP和HTTPS有什么区别？</strong></p><p>答：HTTP明文传输不安全；HTTPS采用数据加密技术对内容加密后再传输，更加安全。</p><p><strong>Q2：为什么HTTP要基于TCP？</strong></p><p>答：浏览网页、下载文件需要稳定可靠的数据传输，TCP提供可靠传输保障。</p>"}, {"id": "L14", "title": "第14课 互联网搜索新发展", "knowledge": "<h3>一、搜索引擎工作流程</h3><p><strong>获取信息 → 网页数据 → 建立索引 → 网页索引 → 网页排序 → 展示结果</strong></p><h3>二、\"以空间换时间\"思想</h3><p>搜索引擎<strong>提前保存海量信息</strong>（耗费大量存储空间），换取<strong>快速响应</strong>查询需求。</p><h3>三、网络爬虫</h3><p>自动获取网页的程序，替代人工操作，极大提升数据获取效率。</p><h3>四、网页排序</h3><p>基本依据：<strong>关键词出现次数</strong>，次数越多越靠前。还可结合其他指标使排序更精准。</p>", "exam": "<ul><li>搜索引擎<strong>五步工作流程</strong>（常考排序题）</li><li>\"以空间换时间\"核心思想</li><li>网络爬虫作用</li><li>网页排序基本依据</li></ul>", "difficulty": "<h3>流程排序：D→A→B→C→E</h3><p>获取信息(D)→网页数据(A)→建立索引(B)→网页索引(C)→网页排序(E)</p>", "qa": "<p><strong>Q1：简述搜索引擎的工作原理。</strong></p><p>答：提前获取保存海量网页数据→建立索引→用户搜索时快速匹配→对结果排序→展示。核心思想是\"以空间换时间\"。</p>"}, {"id": "L15", "title": "第15课 互联网实验齐发现", "knowledge": "<h3>一、四个常用网络命令</h3><table class=\"kb-table\"><tr><th>命令</th><th>功能</th></tr><tr><td><strong>ipconfig</strong></td><td>显示TCP/IP配置（IP地址、网关、DNS等）</td></tr><tr><td><strong>ping</strong></td><td>测试连通性，获取域名对应IP地址</td></tr><tr><td><strong>tracert</strong></td><td>跟踪通信路径，显示经过的路由器</td></tr><tr><td><strong>netstat</strong></td><td>显示网络连接情况</td></tr></table><h3>二、数据封装过程</h3><p>数据从上到下依次在不同层流动。每层接到上层数据后<strong>加上含有本层控制信息的头部</strong>，形成TCP包、IP包等，再交给下一层。IP包数据体=TCP包总量，TCP包数据体=HTTP总量——体现<strong>分层封装</strong>。</p><h3>三、数据包结构</h3><p><strong>数据包 = 头部（控制信息） + 数据体</strong></p>", "exam": "<ul><li><strong>四个命令</strong>及功能——<strong>必考</strong></li><li>ipconfig查看配置；ping测试连通性+域名解析</li><li>tracert追踪路径；netstat查看连接</li><li><strong>数据封装</strong>：每层加头部</li></ul>", "difficulty": "<h3>四个命令快速区分</h3><table class=\"kb-table\"><tr><th>需求</th><th>命令</th></tr><tr><td>查看本机IP</td><td>ipconfig</td></tr><tr><td>测试连通</td><td>ping</td></tr><tr><td>追踪路径</td><td>tracert</td></tr><tr><td>查看连接</td><td>netstat</td></tr></table>", "qa": "<p><strong>Q1：简述四个常用网络命令及其功能。</strong></p><p>答：①ipconfig——查看IP地址等配置；②ping——测试连通性，获取域名对应IP；③tracert——追踪经过的路由器；④netstat——查看连接状态。</p>"}]}, {"id": "m4", "title": "第四模块：网页设计与制作", "subtitle": "第16-20课 · 校园活动线上展", "intro": "<p>本模块从网页与HTML代码的关系入手，学习HTML标签、CSS样式、Markdown语言和协同制作，最终完成网站组建与发布。</p><p><strong>课标要求：</strong>了解常用互联网应用中数据的构成，使用适当的数字化工具对网页进行编辑和发布；根据任务要求与合作伙伴协作设计和创作作品。</p>", "lessons": [{"id": "L16", "title": "第16课 探秘网页与代码", "knowledge": "<h3>一、HTML</h3><p><strong>超文本标记语言</strong>，用于描述网页。浏览器获得代码后按代码要求显示文字、图像等。</p><h3>二、标签类型</h3><ul><li><strong>双标签</strong>：成对出现，如&lt;HTML&gt;&lt;/HTML&gt;、&lt;head&gt;&lt;/head&gt;、&lt;body&gt;&lt;/body&gt;</li><li><strong>单标签</strong>：如&lt;img&gt;、&lt;br&gt;</li></ul><h3>三、常用标签</h3><table class=\"kb-table\"><tr><th>标签</th><th>作用</th></tr><tr><td>&lt;head&gt;&lt;/head&gt;</td><td>设置文档头部</td></tr><tr><td>&lt;title&gt;&lt;/title&gt;</td><td>设置网页标题</td></tr><tr><td>&lt;body&gt;&lt;/body&gt;</td><td>设置文档主体</td></tr><tr><td>&lt;h1&gt;~&lt;h6&gt;</td><td>设置标题（1级最大）</td></tr><tr><td>&lt;p&gt;&lt;/p&gt;</td><td>设置段落</td></tr><tr><td>&lt;img src=\"...\"&gt;</td><td>设置图像</td></tr><tr><td>&lt;a href=\"...\"&gt;&lt;/a&gt;</td><td>设置超链接</td></tr></table><h3>四、图像显示方式</h3><p>①文件路径（需要图像文件）；②数据编码（不需要图像文件，代码中包含图像数据）。</p>", "exam": "<ul><li><strong>HTML定义</strong>：超文本标记语言</li><li><strong>双标签 vs 单标签</strong></li><li><strong>常用标签</strong>及作用——<strong>必考</strong></li><li>浏览器将HTML代码转换为图文并茂的网页</li></ul>", "difficulty": "<h3>双标签 vs 单标签</h3><p>双标签：成对出现&lt;tag&gt;内容&lt;/tag&gt;；单标签：单独出现如&lt;img src=\"...\"&gt;</p>", "qa": "<p><strong>Q1：什么是HTML？列举至少5个常用标签及其作用。</strong></p><p>答：HTML是超文本标记语言。常用标签：&lt;head&gt;文档头部、&lt;title&gt;网页标题、&lt;body&gt;主体、&lt;h1&gt;一级标题、&lt;p&gt;段落、&lt;img&gt;图像、&lt;a&gt;超链接。</p>"}, {"id": "L17", "title": "第17课 制作网页展活动", "knowledge": "<h3>一、网站制作六步流程</h3><ol><li><strong>确定主题</strong></li><li><strong>搜集素材</strong>（围绕主题收集资源，经过挑选去伪）</li><li><strong>确定结构</strong>（主页、导航、布局、风格）</li><li><strong>制作网页</strong>（用工具或编写HTML/AI生成）</li><li><strong>美化网页</strong></li><li><strong>发布网站</strong></li></ol><h3>二、网站基础</h3><ul><li>网站一般由<strong>多个网页</strong>组成，围绕同一主题</li><li>默认显示的第一个网页叫<strong>主页</strong></li></ul><h3>三、AI辅助</h3><p>可使用在线人工智能模型根据需求自动生成网页代码。</p>", "exam": "<ul><li>网站制作<strong>六步流程</strong></li><li><strong>主页</strong>的定义</li><li>网站由多个网页组成</li></ul>", "difficulty": "<p><strong>流程排序：</strong>确定主题→搜集素材→确定结构→制作网页→美化网页→发布网站</p>", "qa": "<p><strong>Q1：简述制作网站的基本流程。</strong></p><p>答：①确定主题；②搜集素材；③确定结构；④制作网页；⑤美化网页；⑥发布网站。</p>"}, {"id": "L18", "title": "第18课 美化网页方法多", "knowledge": "<h3>一、HTML vs CSS</h3><p>HTML像\"建筑师\"搭建结构，CSS（串联样式表/级联样式表）像\"装潢设计师\"美化外观。</p><h3>二、CSS基本语法</h3><p><strong>选择器 { 属性: 值; }</strong> 例：p { font-size: 14px; color: #606266; }</p><h3>三、常用CSS属性</h3><table class=\"kb-table\"><tr><th>属性</th><th>作用</th></tr><tr><td>color</td><td>设置文本颜色</td></tr><tr><td>font-family</td><td>设置字体</td></tr><tr><td>font-size</td><td>设置文本大小</td></tr><tr><td>background-color</td><td>设置背景颜色</td></tr><tr><td>text-align</td><td>文本对齐(left/right/center)</td></tr><tr><td>text-indent</td><td>首行缩进(如2em)</td></tr></table><h3>四、内部样式</h3><p>在&lt;head&gt;中用&lt;style&gt;标签定义CSS。</p>", "exam": "<ul><li><strong>CSS定义</strong>和作用</li><li>CSS基本语法：选择器{属性:值;}</li><li>HTML vs CSS角色定位</li><li>常用CSS属性</li></ul>", "difficulty": "<h3>HTML美化 vs CSS美化</h3><table class=\"kb-table\"><tr><th>对比</th><th>HTML属性</th><th>CSS</th></tr><tr><td>效果</td><td>有限</td><td>丰富</td></tr><tr><td>操作</td><td>烦琐</td><td>集中管理高效</td></tr></table>", "qa": "<p><strong>Q1：什么是CSS？CSS的基本语法是怎样的？</strong></p><p>答：CSS（串联样式表）描述网页外观和格式。基本语法：选择器 { 属性: 值; }。</p>"}, {"id": "L19", "title": "第19课 多人协同效率高", "knowledge": "<h3>一、多人协同优势</h3><ul><li>实时协作提高效率</li><li>分工负责提高质量</li><li>实时反馈便于修改</li><li>相互学习丰富技能</li></ul><h3>二、Markdown语言</h3><p>HTML标签繁多、多人编辑易冲突。Markdown<strong>语法简洁</strong>，适合多人协同场景。</p><h3>三、Markdown常用语法</h3><table class=\"kb-table\"><tr><th>效果</th><th>HTML</th><th>Markdown</th></tr><tr><td>一级标题</td><td>&lt;h1&gt;文字&lt;/h1&gt;</td><td># 文字</td></tr><tr><td>二级标题</td><td>&lt;h2&gt;文字&lt;/h2&gt;</td><td>## 文字</td></tr><tr><td>粗体</td><td>&lt;strong&gt;文字&lt;/strong&gt;</td><td>**文字**</td></tr><tr><td>斜体</td><td>&lt;em&gt;文字&lt;/em&gt;</td><td>*文字*</td></tr><tr><td>图片</td><td>&lt;img src=\"地址\"&gt;</td><td>![描述](地址)</td></tr></table>", "exam": "<ul><li><strong>多人协同四大优势</strong></li><li><strong>Markdown特点</strong>：简洁、适合协同</li><li>HTML vs Markdown语法对比</li></ul>", "difficulty": "<h3>为什么Markdown更适合多人协同？</h3><p>HTML标签多且分散，多人同时编辑容易<strong>冲突和错位</strong>。Markdown语法简洁，标记集中不分散。</p>", "qa": "<p><strong>Q1：Markdown语言有什么特点？为什么适合多人协同？</strong></p><p>答：Markdown语法简洁、标记直观，相比HTML标签多且分散，多人协同编辑时不易出现标签冲突和错位。</p>"}, {"id": "L20", "title": "第20课 组建网站跟我做", "knowledge": "<h3>一、网站结构</h3><p>完整网站包括<strong>主页</strong>和与之相连的其他网页。通过<strong>超链接</strong>实现页面跳转。</p><h3>二、超链接代码</h3><table class=\"kb-table\"><tr><th>类型</th><th>代码</th></tr><tr><td>文本超链接</td><td>&lt;a href=\"链接地址\"&gt;显示文字&lt;/a&gt;</td></tr><tr><td>图像超链接</td><td>&lt;a href=\"链接地址\"&gt;&lt;img src=\"图像地址\"&gt;&lt;/a&gt;</td></tr></table><h3>三、网站评测五要素</h3><p>文字准确、图像恰当、链接正确、布局合理、内容健康积极向上。</p><h3>四、《未成年人网络保护条例》</h3><p>为未成年人提供信息发布、即时通信等服务，应要求提供<strong>真实身份信息</strong>。</p>", "exam": "<ul><li><strong>&lt;a&gt;标签</strong>用法（href属性）</li><li>文本超链接 vs 图像超链接</li><li>网站评测五个要素</li><li>未成年人网络保护条例</li></ul>", "difficulty": "<p><strong>超链接要点：</strong>&lt;a href=\"目标地址\"&gt;显示内容&lt;/a&gt;，href是链接地址属性。图像超链接=&lt;img&gt;嵌套在&lt;a&gt;内部。</p>", "qa": "<p><strong>Q1：如何用HTML设置超链接？</strong></p><p>答：使用&lt;a&gt;标签：&lt;a href=\"链接地址\"&gt;显示文字或图像&lt;/a&gt;。</p>"}]}, {"id": "m5", "title": "第五模块：互联网创新应用", "subtitle": "第21-26课 · 创新改变生活", "intro": "<p>本模块介绍移动互联网的发展、在线学习变革、在线生活创新、在线交流新气象、云服务和短视频创作等内容，感受互联网带来的创新应用。</p><p><strong>课标要求：</strong>在\"互联网+\"情境中体验在线学习、生活和交流的新模式；了解云存储、云计算的原理；认识到互联网带来的新媒体、新社交、新资源的影响。</p>", "lessons": [{"id": "L21", "title": "第21课 移动互联新发展", "knowledge": "<h3>一、移动通信发展</h3><table class=\"kb-table\"><tr><th>代际</th><th>特征</th></tr><tr><td>1G</td><td>语音业务</td></tr><tr><td>2G</td><td>语音+短信+简单网络</td></tr><tr><td>3G</td><td>智能手机出现，移动互联网快速发展</td></tr><tr><td>4G</td><td>高速移动网络</td></tr><tr><td><strong>5G</strong></td><td><strong>高速、低时延、容量大</strong></td></tr></table><p>我国发展路线：<strong>1G空白→2G跟随→3G突破→4G并跑→5G领跑</strong></p><h3>二、5G三大特点</h3><p><strong>高速</strong>（1GB一两秒）、<strong>低时延</strong>（自动驾驶前景）、<strong>容量大</strong>（每km²支持100万设备）。</p><h3>三、新媒体与自媒体</h3><ul><li><strong>新媒体</strong>：利用新技术对传统媒体的质变，数字化/互动性/超文本/虚拟性/网络化/模拟性</li><li><strong>自媒体</strong>：公众个人或团队独立运作，\"人人是通信员，个个是传播者\"</li></ul>", "exam": "<ul><li>1G到5G发展历程</li><li><strong>5G三大特点</strong>及我国发展路线</li><li>新媒体六大特点</li><li>自媒体核心理念</li></ul>", "difficulty": "<h3>新媒体 vs 自媒体</h3><table class=\"kb-table\"><tr><th>概念</th><th>定义</th><th>特征</th></tr><tr><td>新媒体</td><td>新技术对传统媒体质变</td><td>数字化、互动性、超文本</td></tr><tr><td>自媒体</td><td>公众个人/团队独立运作</td><td>\"人人是通信员，个个是传播者\"</td></tr></table>", "qa": "<p><strong>Q1：5G有哪些主要特点？</strong></p><p>答：①高速——1GB文件一两秒传完；②低时延——数据交换及时，自动驾驶前景；③容量大——每km²支持100万设备同时在线。</p>"}, {"id": "L22", "title": "第22课 在线学习新变革", "knowledge": "<h3>一、在线学习三大变革</h3><ul><li><strong>突破时空和人数限制</strong></li><li><strong>提供海量数字资源</strong>（数量大、类型多、更新快）</li><li><strong>个性化学习成为可能</strong>（平台根据学习行为推送内容）</li></ul><h3>二、数字学习资源类型</h3><table class=\"kb-table\"><tr><th>类型</th><th>举例</th></tr><tr><td>课程平台</td><td>网上课程、视频讲座、作业考试</td></tr><tr><td>虚拟实验</td><td>模拟器、互动游戏</td></tr><tr><td>在线数据库</td><td>学术论文、期刊</td></tr><tr><td>在线博物馆</td><td>虚拟游览、数字收藏</td></tr></table><h3>三、我国成就</h3><p>国家中小学智慧教育平台资源4.4万条，<strong>世界第一大教育教学资源库</strong>。中小学互联网接入率<strong>100%</strong>。</p><h3>四、在线学习挑战</h3><p>网络保障不足、优质资源不足、教师信息技术能力不足、<strong>师生互动和情感交流不足</strong>。</p>", "exam": "<ul><li><strong>在线学习三大变革</strong></li><li>数字资源特点：数量大、类型多、更新快</li><li>个性化学习实现方式</li><li>我国教育资源库成就</li><li>在线学习问题和挑战</li></ul>", "difficulty": "<h3>线下 vs 在线学习对比</h3><table class=\"kb-table\"><tr><th>维度</th><th>线下</th><th>在线</th></tr><tr><td>空间</td><td>固定地点</td><td>随时随地</td></tr><tr><td>时间</td><td>固定时间</td><td>灵活安排</td></tr><tr><td>资源</td><td>有限</td><td>海量丰富</td></tr><tr><td>个性化</td><td>困难</td><td>可实现</td></tr></table>", "qa": "<p><strong>Q1：在线学习带来了哪些变革？</strong></p><p>答：①突破时间、空间和人数限制；②提供海量数字资源；③量身定制的个性化学习成为可能。</p>"}, {"id": "L23", "title": "第23课 在线生活创意多", "knowledge": "<h3>一、互联网创新两种方式</h3><ul><li><strong>打通数据节点形成创新服务</strong>：各环节接入网络，数据互联互通（如物流快递实时调度）</li><li><strong>为老技术找到新场景</strong>：二维码从汽车工业配件标识→支付入口→扫码支付</li></ul><h3>二、创新带来的挑战</h3><p>取代工作岗位、创新失败风险、违法应用涌现、数字鸿沟、网络安全等。</p>", "exam": "<ul><li>互联网创新<strong>两种方式</strong>及典型案例</li><li>二维码从工业到支付的转变</li><li>创新的社会挑战</li></ul>", "difficulty": "<p><strong>创新方式辨析：</strong>打通数据节点=整合现有资源；老技术新场景=已有技术找新用途。物流是前者，二维码支付是后者。</p>", "qa": "<p><strong>Q1：互联网激发创新有哪几种方式？举例说明。</strong></p><p>答：①打通数据节点形成创新服务（物流快递实时调度）；②为老技术找到新场景（二维码从工业标识变支付入口）。</p>"}, {"id": "L24", "title": "第24课 在线交流新气象", "knowledge": "<h3>一、在线交流特点</h3><p>打破时空限制，<strong>跨时空、更广泛、更多样</strong>。</p><h3>二、数字形象维护</h3><ul><li>保持真实性</li><li>保持礼貌言辞</li><li>精心选择发布内容</li><li>保护个人信息安全</li><li>积极参与有意义的讨论</li></ul><h3>三、信息茧房</h3><p>人们倾向接收符合自己兴趣观点的信息，形成<strong>封闭的、自我强化的信息循环</strong>。</p><h3>四、新问题</h3><p>个人信息泄露、AI虚拟人物干预社交、回音室效应、过滤气泡等。</p>", "exam": "<ul><li>在线交流特点：跨时空、更广泛、更多样</li><li><strong>数字形象</strong>概念和维护方法</li><li><strong>信息茧房</strong>定义</li><li>新问题：回音室效应、过滤气泡</li></ul>", "difficulty": "<h3>信息茧房 vs 回音室效应 vs 过滤气泡</h3><p><strong>信息茧房</strong>：主动选择性接收；<strong>回音室效应</strong>：封闭群体中观点被反复强化；<strong>过滤气泡</strong>：算法推送导致信息单一化。</p>", "qa": "<p><strong>Q1：什么是信息茧房？</strong></p><p>答：信息茧房指人们倾向于接收符合自己兴趣和观点的信息，形成封闭的、自我强化的信息循环。</p><p><strong>Q2：如何维护良好数字形象？</strong></p><p>答：保持真实性、礼貌言辞、精选内容、保护隐私、积极参与有意义的讨论。</p>"}, {"id": "L25", "title": "第25课 网络创新云服务", "knowledge": "<h3>一、\"云\"的概念</h3><p>在互联网支持下的<strong>全新计算模式</strong>。资源所在地称<strong>云端</strong>，使用资源的设备称<strong>云终端</strong>。</p><h3>二、云计算</h3><p>准备好数据传给云→云用大量运算设备计算→反馈结果。可<strong>节省时间</strong>，完成<strong>本地无法完成</strong>的复杂计算。</p><h3>三、云存储</h3><p>多种存储设备整合协同提供存储服务。网盘、云盘是典型代表。可在任何时间、任何地方存取。</p><h3>四、数字摘要与秒传</h3><p>用<strong>摘要算法</strong>根据文件内容生成一串字符（数字摘要）。云盘比对后若已有相同文件，只需建链接不需上传——<strong>秒传原理</strong>。</p><h3>五、数据加密备份</h3><p>重要数据应先<strong>加密</strong>再上传到云端。可用压缩软件加密压缩后上传。</p>", "exam": "<ul><li>\"云\"的定义</li><li>云端 vs 云终端</li><li>云计算原理和优势</li><li>云存储特点和典型应用</li><li><strong>数字摘要</strong>实现秒传原理</li><li>数据加密备份重要性</li></ul>", "difficulty": "<h3>云计算 vs 云存储 vs 本地</h3><table class=\"kb-table\"><tr><th>模式</th><th>特点</th></tr><tr><td>本地</td><td>受限于本机性能</td></tr><tr><td>云计算</td><td>云端大量设备突破限制</td></tr><tr><td>云存储</td><td>随时随地存取，不需维护设备</td></tr></table>", "qa": "<p><strong>Q1：云盘为什么能\"秒传\"大文件？</strong></p><p>答：云盘利用摘要算法生成文件数字摘要，若系统中已有相同文件，只需建链接不需真正上传。</p>"}, {"id": "L26", "title": "第26课 创意展示我家乡", "knowledge": "<h3>一、短视频制作流程</h3><ol><li><strong>定主题</strong></li><li><strong>选场景</strong></li><li><strong>写文案</strong>（可用AI辅助）</li><li><strong>备素材</strong>（网络获取+AI生成+云存储共享）</li><li><strong>视频剪辑</strong>（处理过渡、背景音乐、片头片尾）</li><li><strong>发布分享</strong>（选择平台发布）</li></ol><h3>二、互联网的帮助</h3><p>AI辅助创作文案和素材、网络获取素材、云存储海量共享空间。</p>", "exam": "<ul><li>短视频制作六个步骤</li><li>互联网创新应用对创作的帮助</li></ul>", "difficulty": "", "qa": "<p><strong>Q1：简述短视频制作的基本流程。</strong></p><p>答：定主题→选场景→写文案→备素材→视频剪辑→发布分享。</p>"}]}, {"id": "m6", "title": "第六模块：共同守护互联网", "subtitle": "第27-30课 · 网络安全与责任", "intro": "<p>本模块聚焦网络安全主题，涵盖个人信息防泄露、数字版权保护、企业信息社会责任和网络生态建设，培养学生安全防护意识和社会责任感。</p><p><strong>课标要求：</strong>使用互联网时能利用用户标识、密码和身份验证等措施做好基本防护；会使用加密软件对重要数据加密保护；了解自主可控对国家安全的重要意义。</p>", "lessons": [{"id": "L27", "title": "第27课 个人信息防泄露", "knowledge": "<h3>一、各类应用涉及的个人信息</h3><table class=\"kb-table\"><tr><th>应用</th><th>涉及信息</th></tr><tr><td>网络购物</td><td>手机号、姓名、地址、购买记录</td></tr><tr><td>学习应用</td><td>姓名、学校、手机号、学习记录</td></tr><tr><td>即时通信</td><td>手机号、姓名、位置、联系人、聊天记录</td></tr><tr><td>地图导航</td><td>位置、出发地、目的地、导航记录</td></tr><tr><td>健康服务</td><td>心跳、睡眠情况</td></tr></table><h3>二、三大泄露途径</h3><ul><li><strong>免费公共Wi-Fi</strong>：认证页面、木马程序获取信息</li><li><strong>照片原图</strong>：含手机型号、拍摄时间、地理位置</li><li><strong>恶意二维码</strong>：指向需提供个人信息的钓鱼网站</li></ul><h3>三、保护措施</h3><p>强密码+定期更换、谨慎使用公共Wi-Fi、定期更新系统和杀毒软件、定期备份数据。发现泄露后第一时间<strong>暂停账号并改密码</strong>。</p><h3>四、《个人信息保护法》核心条款</h3><p>第七条（公开透明）、第八条（信息质量）、第九条（安全措施）、第十条（<strong>不得非法收集买卖提供</strong>）。</p><h3>五、AI带来的困扰</h3><p>AI训练需要大量含个人信息的数据；AI分析个人偏好可能泄露信息；AI涉及行为监控和数据追踪。</p>", "exam": "<ul><li>各类应用涉及的个人信息类型</li><li><strong>三种泄露途径</strong>及防范</li><li>个人信息保护具体方法</li><li>《个人信息保护法》核心条款</li><li>AI带来的新困扰</li></ul>", "difficulty": "<h3>密码安全判断(高频)</h3><p>✓好朋友也不告知；✓长度+大小写+数字+符号；✓对己有意义但外人难猜<br>✗记在本子上；✗所有应用同一密码</p>", "qa": "<p><strong>Q1：个人信息泄露有哪些常见途径？</strong></p><p>答：①公共Wi-Fi通过认证页面或木马获取信息；②照片原图含位置等隐私；③恶意二维码指向钓鱼网站。</p><p><strong>Q2：《个人信息保护法》规定了哪些基本原则？</strong></p><p>答：公开透明（第七条）、保证信息质量（第八条）、采取安全措施（第九条）、不得非法收集买卖提供（第十条）。</p>"}, {"id": "L28", "title": "第28课 数字版权要保护", "knowledge": "<h3>一、数字版权定义</h3><p>作品作者及权利人在<strong>数字化复制、传播</strong>方面依法享有的<strong>精神权利和经济权利</strong>的总称。软件、数字资源也同样受法律保护。</p><h3>二、四种保护技术</h3><ul><li><strong>限制质量</strong>：降低复制品质量</li><li><strong>限制内容</strong>：限制可访问范围</li><li><strong>加上水印</strong>：嵌入版权标识</li><li><strong>限制时长</strong>：限时观看</li></ul><h3>三、法律法规</h3><p>《中华人民共和国著作权法》《著作权法实施条例》《计算机软件著作权登记办法》等。<strong>创新是引领发展的第一动力，保护知识产权就是保护创新。</strong></p><h3>四、AI新挑战</h3><p>生成式AI可写文章、生成图像和音乐，给版权保护造成困扰。《生成式人工智能服务管理暂行办法》2023年8月15日起施行。</p>", "exam": "<ul><li><strong>数字版权定义</strong></li><li><strong>四种保护技术</strong></li><li>\"保护知识产权就是保护创新\"</li><li>著作权法等法律法规</li><li>AI生成内容与版权保护</li></ul>", "difficulty": "<h3>四种保护技术示例</h3><table class=\"kb-table\"><tr><th>技术</th><th>示例</th></tr><tr><td>限制质量</td><td>预览低分辨率</td></tr><tr><td>限制内容</td><td>仅展示部分章节</td></tr><tr><td>加水印</td><td>图片角落版权标识</td></tr><tr><td>限制时长</td><td>视频试看前几分钟</td></tr></table>", "qa": "<p><strong>Q1：什么是数字版权？</strong></p><p>答：数字版权是作品作者及权利人在数字化复制、传播方面依法享有的精神权利和经济权利的总称。</p><p><strong>Q2：保护数字版权常用哪些技术？</strong></p><p>答：限制质量、限制内容、加上水印、限制时长等。</p>"}, {"id": "L29", "title": "第29课 企业责任勇担当", "knowledge": "<h3>一、互联网企业五大信息社会责任</h3><ul><li><strong>保护个人信息</strong>：制定严格保护政策</li><li><strong>尊重知识产权</strong>：维护自身产权，不侵犯他人</li><li><strong>维护文明与道德</strong>：建立内容审核机制</li><li><strong>保障网络安全</strong>：防止数据泄露</li><li><strong>勇于创新</strong>：创新是发展的原动力</li></ul><h3>二、过度收集信息的危害</h3><p>形成用户画像→用户在企业面前<strong>变得透明</strong>→国家社会经济情况可被挖掘。违反则受<strong>法律严惩</strong>。</p><h3>三、关键信息基础设施</h3><p>金融、能源、电力、通信、交通等领域的关键信息基础设施是<strong>网络安全重中之重</strong>。</p><h3>四、自主可控</h3><p>我国在芯片、通信技术、下一代互联网、数据库软件等领域实现了或正在实现自主可控。</p>", "exam": "<ul><li>互联网企业<strong>五大信息社会责任</strong></li><li>过度收集信息危害</li><li><strong>关键信息基础设施</strong>范畴</li><li>自主可控领域和意义</li></ul>", "difficulty": "<h3>五大责任速记</h3><p><strong>保信息、尊产权、维道德、护安全、勇创新</strong></p>", "qa": "<p><strong>Q1：互联网企业应承担哪些信息社会责任？</strong></p><p>答：①保护个人信息；②尊重知识产权；③维护文明道德；④保障网络安全；⑤勇于创新。</p>"}, {"id": "L30", "title": "第30课 网络生态建设好", "knowledge": "<h3>一、网络暴力</h3><p>通过语言、图像、视频等形式<strong>侮辱、诽谤、威胁、恐吓、人肉搜索</strong>他人。需从<strong>法律、教育、平台管理</strong>多方面综合治理。</p><h3>二、网络谣言</h3><p>不法分子捏造传播谣言扰乱社会秩序。应对：向<strong>老师和家长求证</strong>→向平台投诉举报→通过<strong>网络违法犯罪举报网站(cyberpolice.mps.gov.cn)</strong>反映。</p><h3>三、网络水军</h3><p>被雇佣的网络写手，伪装普通网民发布<strong>大量有倾向性的文章和评论</strong>，影响公众价值判断。治理需打击利益链、强化平台责任。</p><h3>四、\"清朗\"系列专项行动</h3><p>中央网信办会同相关部委部署，集中整治<strong>网络违法违规问题</strong>，遏制网络乱象滋生蔓延。</p>", "exam": "<ul><li><strong>网络暴力</strong>定义和表现形式</li><li><strong>网络谣言</strong>应对措施</li><li><strong>网络水军</strong>定义和危害</li><li>\"清朗\"行动目标意义</li></ul>", "difficulty": "<h3>三大乱象对比</h3><table class=\"kb-table\"><tr><th>乱象</th><th>核心</th><th>应对</th></tr><tr><td>网络暴力</td><td>侮辱诽谤威胁</td><td>多方综合治理</td></tr><tr><td>网络谣言</td><td>捏造传播虚假</td><td>求证→举报→反映</td></tr><tr><td>网络水军</td><td>雇佣写手伪装舆论</td><td>打击利益链、强化平台</td></tr></table>", "qa": "<p><strong>Q1：遇到网络谣言应该怎么办？</strong></p><p>答：①先向老师和家长求证；②向互联网应用管理者投诉举报；③通过《网络举报》应用或网络违法犯罪举报网站反映。</p>"}]}];
+
+let searchHighlights = [];
+let currentHighlight = -1;
+let allTextCache = {};
+
+function renderAll() {
+  const tabNav = document.getElementById('tabNav');
+  const content = document.getElementById('content');
+  MODULES.forEach((mod, mi) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (mi===0?' active':'');
+    btn.textContent = mod.title.replace('第','').replace('模块','');
+    btn.onclick = () => switchModule(mi);
+    tabNav.appendChild(btn);
+    const panel = document.createElement('div');
+    panel.className = 'module-panel';
+    panel.id = 'mod-' + mi;
+    panel.style.display = mi===0?'block':'none';
+    panel.innerHTML = '<div class="module-intro"><h2>' + mod.title + '</h2><div class="mod-subtitle">' + mod.subtitle + '</div>' + (mod.intro||'') + '</div>';
+    mod.lessons.forEach((lesson, li) => {
+      const key = mi + '-' + li;
+      const card = document.createElement('div');
+      card.className = 'lesson-card';
+      card.id = 'card-' + key;
+      card.innerHTML = `
+        <div class="lesson-header" data-key="${key}">
+          <h3>${lesson.title} <a href="七年级刷题练习.html#lesson=${lesson.id}" class="quiz-link" onclick="event.stopPropagation()" title="跳转到本课刷题">📝 刷题</a></h3>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="lesson-body" id="body-${key}">
+          <div class="section-tabs">
+            <button class="section-tab active" data-sec="0">📖 知识点梳理</button>
+            <button class="section-tab" data-sec="1">🎯 考点聚焦</button>
+            <button class="section-tab" data-sec="2">⚡ 重难点突破</button>
+            <button class="section-tab" data-sec="3">📝 简答题备考</button>
+          </div>
+          <div class="section-content active">${lesson.knowledge}</div>
+          <div class="section-content">${lesson.exam}</div>
+          <div class="section-content">${lesson.difficulty}</div>
+          <div class="section-content"><div class="qa-question">${lesson.qa}</div></div>
+        </div>`;
+      // Attach event listeners (avoid string interpolation issues)
+      card.querySelector('.lesson-header').addEventListener('click', () => toggleLesson(key));
+      card.querySelectorAll('.section-tab').forEach((tab, si) => {
+        tab.addEventListener('click', (e) => switchSection(e, key, si));
+      });
+      panel.appendChild(card);
+    });
+    content.appendChild(panel);
+  });
+  buildTextCache();
+}
+
+function buildTextCache() {
+  MODULES.forEach((mod, mi) => {
+    mod.lessons.forEach((lesson, li) => {
+      const key = mi+'-'+li;
+      allTextCache[key] = stripTags(lesson.knowledge+lesson.exam+lesson.difficulty+lesson.qa).toLowerCase();
+    });
+  });
+}
+
+function switchModule(idx) {
+  document.querySelectorAll('.module-panel').forEach((p,i) => p.style.display = i===idx?'block':'none');
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleLesson(id) {
+  const body = document.getElementById('body-'+id);
+  const header = document.getElementById('card-'+id).querySelector('.lesson-header');
+  body.classList.toggle('show');
+  header.classList.toggle('expanded');
+}
+
+function switchSection(e, lessonId, idx) {
+  e.stopPropagation();
+  const body = document.getElementById('body-'+lessonId);
+  body.querySelectorAll('.section-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  body.querySelectorAll('.section-content').forEach((c,i) => c.classList.toggle('active', i===idx));
+}
+
+// ----- SEARCH -----
+function doSearch() {
+  clearHighlights();
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const panel = document.getElementById('searchPanel');
+  const results = document.getElementById('searchResults');
+  const count = document.getElementById('searchCount');
+  const nav = document.getElementById('searchNav');
+  results.innerHTML = '';
+  if (q.length < 2) { panel.style.display='none'; count.style.display='none'; nav.style.display='none'; return; }
+  let found = [];
+  MODULES.forEach((mod, mi) => {
+    mod.lessons.forEach((lesson, li) => {
+      const key = mi+'-'+li;
+      const sections = [
+        {name:'知识点梳理', html:lesson.knowledge},
+        {name:'考点聚焦', html:lesson.exam},
+        {name:'重难点突破', html:lesson.difficulty},
+        {name:'简答题备考', html:lesson.qa}
+      ];
+      sections.forEach((sec, si) => {
+        const text = stripTags(sec.html).toLowerCase();
+        const idx = text.indexOf(q);
+        if (idx >= 0) {
+          const start = Math.max(0, idx-30);
+          const end = Math.min(text.length, idx+q.length+60);
+          let preview = text.substring(start, end);
+          if (start>0) preview = '...' + preview;
+          if (end<text.length) preview += '...';
+          found.push({
+            key, mi, li, si, secName:sec.name, preview,
+            moduleName:mod.title, lessonName:lesson.title
+          });
+        }
+      });
+    });
+  });
+  if (found.length === 0) {
+    results.innerHTML = '<div class="no-results">未找到匹配内容，请尝试其他关键词</div>';
+    panel.style.display = 'block';
+    count.style.display = 'block'; count.textContent = '0个结果';
+    nav.style.display = 'none';
+  } else {
+    found.forEach((f, fi) => {
+      const div = document.createElement('div');
+      div.className = 'search-result-item';
+      const previewHL = highlightPreview(f.preview, q);
+      div.innerHTML = '<div class="result-title">'+f.moduleName+' · '+f.lessonName+' · '+f.secName+'</div><div class="result-preview">'+previewHL+'</div>';
+      div.onclick = () => goToResult(f);
+      results.appendChild(div);
+    });
+    panel.style.display = 'block';
+    count.style.display = 'block'; count.textContent = found.length+'个结果';
+    nav.style.display = 'flex';
+    // Highlight all in currently visible content
+    highlightAll(q);
+  }
+  currentHighlight = -1; searchHighlights = [];
+}
+
+function goToResult(f) {
+  // Switch to module
+  switchModule(f.mi);
+  // Open lesson
+  const body = document.getElementById('body-'+f.key);
+  if (!body.classList.contains('show')) toggleLesson(f.key);
+  // Switch section
+  const tabs = body.querySelectorAll('.section-tab');
+  const contents = body.querySelectorAll('.section-content');
+  tabs.forEach((t,i) => t.classList.toggle('active', i===f.si));
+  contents.forEach((c,i) => c.classList.toggle('active', i===f.si));
+  // Scroll to card
+  setTimeout(() => {
+    document.getElementById('card-'+f.key).scrollIntoView({behavior:'smooth',block:'center'});
+  }, 100);
+  // Re-highlight
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  setTimeout(() => highlightAll(q), 300);
+}
+
+function highlightAll(q) {
+  clearHighlights();
+  if (q.length<2) return;
+  const lcQ = q.toLowerCase();
+  document.querySelectorAll('.section-content.active, .section-content.active *').forEach(el => {
+    if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) {
+      const txt = el.childNodes[0].textContent;
+      const lcTxt = txt.toLowerCase();
+      if (lcTxt.indexOf(lcQ) >= 0) {
+        el.innerHTML = highlightPreview(txt, q);
+        searchHighlights.push(...el.querySelectorAll('mark'));
+      }
+    }
+  });
+  currentHighlight = -1;
+}
+
+function highlightPreview(text, q) {
+  if (!q || q.length < 1) return text;
+  // Case-insensitive split-and-join (no regex needed)
+  const parts = [];
+  let remaining = text;
+  const lcQ = q.toLowerCase();
+  while (remaining.length > 0) {
+    const idx = remaining.toLowerCase().indexOf(lcQ);
+    if (idx < 0) {
+      parts.push(remaining);
+      break;
+    }
+    if (idx > 0) parts.push(remaining.substring(0, idx));
+    parts.push('<mark>'+remaining.substring(idx, idx+q.length)+'</mark>');
+    remaining = remaining.substring(idx+q.length);
+  }
+  return parts.join('');
+}
+
+function stripTags(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return (div.textContent || div.innerText || '').split(/ /).filter(function(x){return x.length>0}).join(' ');
+}
+
+function navigateResult(dir) {
+  const allMarks = document.querySelectorAll('.section-content.active mark');
+  if (allMarks.length === 0) return;
+  allMarks.forEach(m => m.classList.remove('active'));
+  currentHighlight += dir;
+  if (currentHighlight >= allMarks.length) currentHighlight = 0;
+  if (currentHighlight < 0) currentHighlight = allMarks.length - 1;
+  const mark = allMarks[currentHighlight];
+  mark.classList.add('active');
+  mark.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function clearHighlights() {
+  document.querySelectorAll('mark').forEach(m => {
+    const parent = m.parentNode;
+    parent.replaceChild(document.createTextNode(m.textContent), m);
+    parent.normalize();
+  });
+  searchHighlights = [];
+  currentHighlight = -1;
+}
+
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  clearHighlights();
+  document.getElementById('searchPanel').style.display = 'none';
+  document.getElementById('searchCount').style.display = 'none';
+  document.getElementById('searchNav').style.display = 'none';
+}
+
+renderAll();
+</script>
+</body>
+</html>

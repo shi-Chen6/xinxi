@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信息技术学科专业知识 · 知识库</title>
+<style>
+:root {
+  --bg: #f8f9fb;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #5a5d6e;
+  --text-muted: #9498a8;
+  --border: #e8eaef;
+  --accent: #4f46e5;
+  --accent-light: #eef0ff;
+  --success: #059669;
+  --success-light: #ecfdf5;
+  --warning: #d97706;
+  --warning-light: #fffbeb;
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --info: #2563eb;
+  --info-light: #eff6ff;
+  --tag-bg: #f1f5f9;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-sidebar: #1e293b;
+  --text: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #334155;
+  --accent: #818cf8;
+  --accent-light: #1e1b4b;
+  --tag-bg: #334155;
+  --shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.4;
+}
+
+.sidebar-header .subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+}
+
+.chapter-group {
+  margin-bottom: 4px;
+}
+
+.chapter-title {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: background var(--transition);
+}
+
+.chapter-title:hover { background: var(--accent-light); }
+.chapter-title .arrow {
+  font-size: 10px;
+  transition: transform var(--transition);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.chapter-title.open .arrow { transform: rotate(90deg); }
+.chapter-title .count {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.section-list {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+}
+
+.section-list.open { max-height: 500px; }
+
+.section-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px 8px 40px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.section-item:hover { background: var(--accent-light); color: var(--accent); }
+.section-item.active { color: var(--accent); font-weight: 600; background: var(--accent-light); }
+
+.section-item .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.section-item.done .check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-bar-wrap { margin-bottom: 4px; }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text-muted); margin-bottom: 6px;
+}
+.progress-bar {
+  height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease;
+}
+
+.sidebar-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: var(--radius-xs);
+  font-size: 12px; color: var(--text-secondary); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg-card);
+  transition: all var(--transition);
+  width: 100%;
+}
+
+.sidebar-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sidebar-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+
+.top-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 50;
+}
+
+.breadcrumb {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.breadcrumb span { color: var(--text); font-weight: 500; }
+
+.search-box {
+  margin-left: auto;
+  position: relative;
+}
+
+.search-box input {
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-size: 13px; width: 240px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.search-box input:focus { border-color: var(--accent); }
+.search-box .search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); font-size: 14px;
+}
+
+.content-area {
+  padding: 24px;
+  max-width: 900px;
+}
+
+.tab-bar {
+  display: flex; gap: 4px; margin-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  font-size: 14px; font-weight: 500; color: var(--text-muted);
+  border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn .badge {
+  font-size: 11px; background: var(--tag-bg); color: var(--text-secondary);
+  padding: 1px 8px; border-radius: 10px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 20px; font-weight: 700; color: var(--text);
+  margin-bottom: 4px;
+}
+
+.section-header .meta {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; gap: 16px;
+}
+
+.knowledge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--transition);
+}
+
+.knowledge-card:hover { box-shadow: var(--shadow-md); }
+
+.knowledge-card h3 {
+  font-size: 16px; font-weight: 600; color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.knowledge-card h3 .icon {
+  font-size: 18px;
+}
+
+.knowledge-card p {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.knowledge-card ul, .knowledge-card ol {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.knowledge-card li {
+  font-size: 14px; color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.knowledge-card .highlight {
+  background: var(--warning-light);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.knowledge-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.knowledge-table th, .knowledge-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.knowledge-table th {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.knowledge-table td { color: var(--text-secondary); }
+
+.tag-row {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 12px; background: var(--tag-bg);
+  color: var(--text-secondary);
+}
+
+.tag.accent { background: var(--accent-light); color: var(--accent); }
+.tag.success { background: var(--success-light); color: var(--success); }
+.tag.warning { background: var(--warning-light); color: var(--warning); }
+
+.card-actions {
+  display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.card-action-btn {
+  font-size: 12px; padding: 5px 12px;
+  border-radius: var(--radius-xs); cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 4px;
+}
+
+.card-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.card-action-btn.bookmarked { border-color: #f59e0b; color: #f59e0b; background: #fffbeb; }
+
+.quiz-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+
+.quiz-section-label {
+  font-size: 12px; color: var(--text-muted);
+  background: var(--tag-bg);
+  padding: 3px 10px; border-radius: 12px;
+}
+
+.quiz-question {
+  font-size: 15px; font-weight: 500; color: var(--text);
+  margin-bottom: 16px; line-height: 1.6;
+}
+
+.quiz-options {
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.quiz-option {
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 14px; color: var(--text-secondary);
+  background: var(--bg);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.quiz-option:hover { border-color: var(--accent); }
+.quiz-option.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.quiz-option.correct { border-color: var(--success); background: var(--success-light); color: var(--success); font-weight: 600; }
+.quiz-option.wrong { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.quiz-option .option-letter {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-weight: 600; font-size: 13px;
+  background: var(--tag-bg); color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.quiz-option.selected .option-letter { background: var(--accent); color: #fff; }
+.quiz-option.correct .option-letter { background: var(--success); color: #fff; }
+.quiz-option.wrong .option-letter { background: var(--danger); color: #fff; }
+
+.analysis-box {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--info-light);
+  border: 1px solid #93c5fd;
+  font-size: 13px; color: #1e40af;
+  line-height: 1.7;
+  display: none;
+}
+
+.analysis-box.show { display: block; }
+
+.analysis-box strong { color: #1e3a5f; }
+
+.quiz-actions {
+  display: flex; gap: 8px; margin-top: 12px;
+}
+
+.btn {
+  padding: 8px 16px; border-radius: var(--radius-xs);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: none; transition: all var(--transition);
+}
+
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
+
+.quiz-nav {
+  display: flex; justify-content: center; gap: 8px; margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.quiz-nav-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg);
+  font-size: 12px; cursor: pointer; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+
+.quiz-nav-dot:hover { border-color: var(--accent); }
+.quiz-nav-dot.current { border-color: var(--accent); background: var(--accent); color: #fff; font-weight: 600; }
+.quiz-nav-dot.correct-dot { border-color: var(--success); background: var(--success-light); }
+.quiz-nav-dot.wrong-dot { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state h3 { font-size: 16px; margin-bottom: 8px; color: var(--text); }
+.empty-state p { font-size: 13px; }
+
+.score-display {
+  text-align: center; padding: 40px 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.score-number {
+  font-size: 48px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stats-row {
+  display: flex; justify-content: center; gap: 32px;
+  margin: 16px 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value { font-size: 20px; font-weight: 600; color: var(--text); }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.bookmark-list-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.bookmark-list-item:hover { background: var(--bg); }
+
+.bookmark-list-item .title { font-size: 13px; color: var(--text); font-weight: 500; }
+.bookmark-list-item .meta { font-size: 11px; color: var(--text-muted); }
+
+.mobile-menu-btn {
+  display: none;
+  width: 36px; height: 36px; border: none; background: none;
+  font-size: 20px; cursor: pointer; color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .mobile-menu-btn { display: block; }
+  .search-box input { width: 160px; }
+  .content-area { padding: 16px; }
+}
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  padding: 10px 20px; background: var(--text); color: var(--bg);
+  border-radius: 20px; font-size: 13px; z-index: 1000;
+  animation: toastIn 0.3s ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>信息技术学科专业知识</h1>
+      <div class="subtitle">信息基础 · 知识库</div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+    <div class="sidebar-footer">
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>学习进度</span><span id="progressPercent">0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+      <button class="sidebar-btn" onclick="toggleBookmarks()" id="bookmarkBtn">
+        <span>⭐</span> 收藏夹
+      </button>
+      <button class="sidebar-btn" onclick="toggleErrors()" id="errorBtn">
+        <span>📝</span> 错题本 <span style="font-size:10px;color:var(--text-muted)" id="errorCount"></span>
+      </button>
+      <button class="sidebar-btn" onclick="exportErrorsCSV()">
+        <span>📥</span> 导出错题CSV
+      </button>
+      <button class="sidebar-btn" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">暗色模式</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="breadcrumb" id="breadcrumb">
+        首页 <span style="margin:0 4px;color:var(--text-muted)">›</span> <span id="breadcrumbCurrent">第一章</span>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜索知识点..." oninput="onSearch()">
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="read" onclick="switchTab('read')">
+          📖 知识阅读
+        </button>
+        <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">
+          📝 章节练习 <span class="badge" id="quizBadge">21题</span>
+        </button>
+        <button class="tab-btn" data-tab="bookmarks" onclick="switchTab('bookmarks')" style="display:none" id="bookmarksTab">
+          ⭐ 收藏夹
+        </button>
+        <button class="tab-btn" data-tab="errors" onclick="switchTab('errors')" style="display:none" id="errorsTab">
+          📝 错题本
+        </button>
+      </div>
+
+      <div id="readContent"></div>
+      <div id="quizContent" style="display:none"></div>
+      <div id="bookmarksContent" style="display:none"></div>
+      <div id="errorsContent" style="display:none"></div>
+    </div>
+  </main>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+// ============ 知识数据 ============
+const KB_DATA = {
+  title: "第一章 信息与信息技术",
+  sections: [
+    {
+      id: "s1",
+      title: "第一节 信息概述",
+      cards: [
+        {
+          id: "c1",
+          title: "信息的定义与表示",
+          icon: "📌",
+          html: `<p>信息是通过<strong>文字、数字、图像、图形、声音、视频</strong>等方式进行传播的<strong>内容</strong>。信息需要借助一定的<strong>载体</strong>，通过一定的<strong>途径</strong>才能实现传播。</p>
+<p><strong>载体</strong>（表现形式）：文字、图像、图形、声音、视频、动画等。</p>
+<p><strong>途径</strong>（传播渠道）：书报、电话、广播、电视、计算机网络等。</p>
+<p>关键区分：<span class="highlight">信息是内容，不是载体本身</span>。比如U盘是载体，U盘里的文件内容才是信息。</p>`,
+          tags: ["基础概念", "载体vs内容"]
+        },
+        {
+          id: "c2",
+          title: "信息的分类",
+          icon: "📂",
+          html: `<table class="knowledge-table">
+<tr><th>分类维度</th><th>类别</th><th>说明</th></tr>
+<tr><td rowspan="2"><strong>按稳定性</strong></td><td>静态信息</td><td>反映历史情况，具有相对稳定性，如历史数据</td></tr>
+<tr><td>动态信息</td><td>反映进程或发展变化，需随时更新</td></tr>
+<tr><td rowspan="3"><strong>按表现形式</strong></td><td>语法信息</td><td>与事物运动状态及变化方式相联系</td></tr>
+<tr><td>语义信息</td><td>与含义因素相联系</td></tr>
+<tr><td>语用信息</td><td>与效用相联系</td></tr>
+<tr><td rowspan="2"><strong>按交流方式</strong></td><td>实时信息交流</td><td>双方同时在线，如QQ、微信</td></tr>
+<tr><td>非实时信息交流</td><td>不需同时在线，如Email、微博、BBS</td></tr>
+</table>`,
+          tags: ["分类体系", "稳定性", "表现形式", "交流方式"]
+        },
+        {
+          id: "c3",
+          title: "信息的特征",
+          icon: "🔑",
+          html: `<p>信息具有以下<span class="highlight">8个基本特征</span>，是考试高频考点：</p>
+<ol>
+<li><strong>普遍性</strong>：信息不以人的意志为转移，无处不在、无时不有。</li>
+<li><strong>依附性</strong>（载体依附性）：信息必须依附于载体才能存在，也决定了信息可存储、可传递、可转换、可增值。</li>
+<li><strong>价值性</strong>：信息是有价值的资源，使用的人越多价值越大，且不会消耗。</li>
+<li><strong>时效性</strong>：信息有生命周期，价值随时间推移变化，需要不断更新。</li>
+<li><strong>传递性</strong>：无论在空间还是时间上，信息都具有可传递性。</li>
+<li><strong>共享性</strong>：可被多个接收者接收并多次使用。<span class="highlight">共享性是信息与物质、能量的根本区别</span>。</li>
+<li><strong>真伪性</strong>：信息有真假之分，衡量标准是客观反映现实的程度。</li>
+<li><strong>不完全性</strong>：受环境和理性限制，所掌握的信息不可能完整。</li>
+</ol>`,
+          tags: ["核心考点", "8个特征", "共享性=根本区别"]
+        },
+        {
+          id: "c4",
+          title: "信息论与控制论",
+          icon: "🧠",
+          html: `<p><strong>信息论</strong>由<span class="highlight">香农</span>提出，运用概率论与数理统计方法研究信息、信息熵、通信系统、数据传输、密码学、数据压缩等问题的应用数学学科。</p>
+<p><strong>控制论</strong>创始人<span class="highlight">维纳</span>提出："信息就是信息，不是物质也不是能量。"</p>
+<p><span class="highlight">信息、物质和能量</span>是构成世界的三大要素。</p>`,
+          tags: ["香农", "维纳", "三大要素"]
+        },
+        {
+          id: "c5",
+          title: "信息的表达、发布和存储",
+          icon: "📡",
+          html: `<table class="knowledge-table">
+<tr><th>方面</th><th>方式/渠道</th></tr>
+<tr><td><strong>表达方式</strong></td><td>语言、文字、图形、图像、声音、形体动作</td></tr>
+<tr><td><strong>发布方式</strong></td><td>Email、BBS、QQ、现场幻灯片演示、网站发布</td></tr>
+<tr><td><strong>存储方式</strong></td><td>U盘、硬盘、光盘、网盘存储</td></tr>
+<tr><td><strong>交流方式</strong></td><td>QQ、微信、博客</td></tr>
+</table>`,
+          tags: ["表达", "发布", "存储", "交流"]
+        },
+        {
+          id: "c6",
+          title: "信息集成的一般过程",
+          icon: "🔧",
+          html: `<p>信息集成是对各种信息的<span class="highlight">组织、规划和提炼</span>，一般过程为：</p>
+<ol>
+<li><strong>确定主题、设计目标</strong></li>
+<li><strong>规划内容结构、收集加工素材</strong></li>
+<li><strong>选择工具、实际制作</strong></li>
+<li><strong>收集反馈、评价修正</strong></li>
+</ol>
+<p><strong>信息集成工具</strong>分为三类：</p>
+<table class="knowledge-table">
+<tr><th>类型</th><th>组织方式</th><th>特点</th></tr>
+<tr><td>基于页面的工具</td><td>类似书本"页"</td><td>形象直观、简单易学，适合初学者</td></tr>
+<tr><td>基于图标的工具</td><td>图标依次连接在流程图中</td><td>可单独编辑各素材，灵活调整</td></tr>
+<tr><td>基于时间的工具</td><td>按时间顺序集成</td><td>操作复杂，需编程基础</td></tr>
+</table>`,
+          tags: ["信息集成", "四步过程", "三类工具"]
+        },
+        {
+          id: "c7",
+          title: "信息传输的一般过程",
+          icon: "📶",
+          html: `<p>信息传输模型：<span class="highlight">信息源 → 发送器（编码） → 信道（+噪声） → 接收器（解码） → 信宿</span></p>
+<table class="knowledge-table">
+<tr><th>组件</th><th>说明</th></tr>
+<tr><td>信息源</td><td>信号的产生物</td></tr>
+<tr><td>发送器</td><td>将消息信号变换为适合信道传输的信号</td></tr>
+<tr><td>信道</td><td>通信通道，有线（明线、电缆、光纤）或无线（大气）</td></tr>
+<tr><td>噪声</td><td>通信系统中固有的干扰，分内部噪声和外部噪声</td></tr>
+<tr><td>接收器</td><td>与发送器相反的变换，恢复原始信号</td></tr>
+<tr><td>信宿</td><td>信息接收者，传输信息的归宿点</td></tr>
+<tr><td>编码</td><td>将信息用数字或其他对象从一种形式转换为另一种形式</td></tr>
+<tr><td>解码</td><td>编码的逆过程</td></tr>
+</table>`,
+          tags: ["通信模型", "香农模型", "编码解码"]
+        }
+      ]
+    },
+    {
+      id: "s2",
+      title: "第二节 信息技术",
+      cards: [
+        {
+          id: "c8",
+          title: "信息技术的定义（三层含义）",
+          icon: "📌",
+          html: `<p>信息技术（IT）定义为与<strong>获取、加工、存储、传输、表示和应用信息</strong>有关的技术。从三个层面理解：</p>
+<table class="knowledge-table">
+<tr><th>层面</th><th>定义</th><th>强调</th></tr>
+<tr><td><strong>广义</strong></td><td>能充分利用与扩展人类信息器官功能的各种方法、工具与技能的总和</td><td>哲学上人与技术的关系</td></tr>
+<tr><td><strong>中义</strong></td><td>对信息进行采集、传输、存储、加工、表达的各种技术之和</td><td>功能与过程的一般理解</td></tr>
+<tr><td><strong>狭义</strong></td><td>利用计算机、网络、广播电视等硬件设备及软件工具与科学方法，对文图声像信息进行获取、加工、存储、传输与使用的技术之和</td><td>现代化与高科技含量</td></tr>
+</table>`,
+          tags: ["IT", "三层定义", "广义/中义/狭义"]
+        },
+        {
+          id: "c9",
+          title: "信息技术的内容（四基元）",
+          icon: "🏗️",
+          html: `<p>信息技术包括微电子技术、通信技术、计算机技术、感测技术等。<span class="highlight">微电子和光电子技术为基础，计算机技术为核心，通信技术为支柱。</span></p>
+<p>"四基元"与人体器官对应：</p>
+<table class="knowledge-table">
+<tr><th>技术</th><th>扩展器官</th><th>功能</th><th>举例</th></tr>
+<tr><td><strong>感测技术</strong></td><td>感觉器官</td><td>获取信息</td><td>传感器、感测信息处理</td></tr>
+<tr><td><strong>通信技术</strong></td><td>传导神经</td><td>传递信息</td><td>物联网、无线局域网</td></tr>
+<tr><td><strong>计算机技术</strong></td><td>思维器官</td><td>处理与存储信息</td><td>虚拟现实、云计算</td></tr>
+<tr><td><strong>控制技术</strong></td><td>效应器官</td><td>使用信息</td><td>预测恢复、神经网络控制</td></tr>
+</table>`,
+          tags: ["四基元", "核心-计算机", "支柱-通信", "基础-微电子"]
+        },
+        {
+          id: "c10",
+          title: "信息技术的五次革命",
+          icon: "📜",
+          html: `<table class="knowledge-table">
+<tr><th>次序</th><th>标志</th><th>说明</th></tr>
+<tr><td>第一次</td><td><strong>语言的使用</strong></td><td>人类从猿进化到人的重要标志</td></tr>
+<tr><td>第二次</td><td><strong>文字的创造</strong></td><td>第一次打破时间、空间的限制</td></tr>
+<tr><td>第三次</td><td><strong>印刷术的发明</strong></td><td>中国最早使用活字印刷</td></tr>
+<tr><td>第四次</td><td><strong>电报、电话、广播、电视的发明</strong></td><td>电磁波的发现，实现有线/无线通信</td></tr>
+<tr><td>第五次</td><td><strong>计算机和网络的应用</strong></td><td>1946年美国研制第一台电子计算机ENIAC，计算机联网实现数据通信与共享</td></tr>
+</table>
+<p><strong>发展趋势</strong>：智能化、网络化、综合化、数字化、高速度、大容量、个人化、多元化、虚拟化。</p>`,
+          tags: ["五次革命", "ENIAC-1946", "发展趋势"]
+        },
+        {
+          id: "c11",
+          title: "信息技术的管理",
+          icon: "📊",
+          html: `<p><strong>信息管理（IM）</strong>：以现代信息技术为手段，对信息资源进行<strong>计划、组织、领导、控制</strong>的社会活动。</p>
+<p>管理过程：<span class="highlight">信息收集 → 信息传输 → 信息加工 → 信息存储</span></p>
+<p><strong>不同主体管理目的</strong>：</p>
+<ul>
+<li>个人：提高工作和学习效率</li>
+<li>学校：提高教学效率和质量</li>
+<li>信息服务机构：满足公众信息需求</li>
+<li>企业：正确决策，提高生产效率</li>
+</ul>
+<p>管理方法：文件管理、电子表格管理、数据库管理、网络数据库管理。</p>`,
+          tags: ["信息管理", "IM"]
+        },
+        {
+          id: "c12",
+          title: "信息技术的应用与影响",
+          icon: "💡",
+          html: `<p><strong>典型应用</strong>：</p>
+<ul>
+<li><strong>数字地球</strong>：用数字化方法把地球活动存入计算机，在网络上流通</li>
+<li><strong>虚拟现实</strong>：计算机模拟三维虚拟世界，提供视/听/触觉模拟</li>
+<li><strong>智能代理</strong>：按用户参数搜集感兴趣信息，定时提供服务</li>
+<li><strong>电子警察</strong>：自动化检测交通违法，网络传回分析处罚</li>
+<li><strong>可视电话</strong>：利用电话线路实时传送语音和图像</li>
+</ul>
+<p><strong>影响</strong>：积极（推动社会进步、方便生活）与消极（黑客、病毒、垃圾信息）并存。</p>`,
+          tags: ["数字地球", "虚拟现实", "智能代理", "电子警察", "可视电话"]
+        }
+      ]
+    },
+    {
+      id: "s3",
+      title: "第三节 信息采集的来源与获取",
+      cards: [
+        {
+          id: "c13",
+          title: "信息的来源",
+          icon: "🔍",
+          html: `<p><strong>主要来源</strong>：</p>
+<ul>
+<li><strong>直接来源</strong>：通过人的感官与事物接触，在脑中留下印象</li>
+<li><strong>间接来源</strong>：用科学分析方法挖掘隐藏在表象背后的信息</li>
+</ul>
+<p><strong>来源的多样性（四类信息源）</strong>：</p>
+<table class="knowledge-table">
+<tr><th>类型</th><th>举例</th></tr>
+<tr><td>文献型信息源</td><td>书籍、报刊等记录知识的载体</td></tr>
+<tr><td>口头型信息源</td><td>同学、父母、朋友、老师</td></tr>
+<tr><td>电子型信息源</td><td>广播、电视、电话、因特网</td></tr>
+<tr><td>实物型信息源</td><td>运动会、动物园、公共场所及事件</td></tr>
+</table>`,
+          tags: ["直接/间接来源", "四类信息源"]
+        },
+        {
+          id: "c14",
+          title: "信息获取的途径与过程",
+          icon: "🛠️",
+          html: `<p><strong>获取途径</strong>（多渠道）：人力直接获取、设备获取、报纸杂志、书籍资料、广播电视、光盘等电子出版物、计算机网络、遥感遥测、手机扫码。</p>
+<p><strong>一般过程（6步）</strong>：</p>
+<ol>
+<li><strong>定位信息需求</strong>：需要什么信息（时间范围、地域范围、内容范围）</li>
+<li><strong>选择信息来源</strong>：哪里有这些信息</li>
+<li><strong>确定获取方法</strong>：现场观察法、问卷调查法、访谈法、检索法、阅读法、视听法等</li>
+<li><strong>保存信息</strong>：整理分类保存或输入计算机</li>
+<li><strong>评价信息</strong>：以信息需求为依据进行评价，<span class="highlight">评价贯穿整个获取过程</span></li>
+<li><strong>反馈信息</strong>：循环往复，信息需求不断发展</li>
+</ol>`,
+          tags: ["6步过程", "评价贯穿始终"]
+        },
+        {
+          id: "c15",
+          title: "信息价值的判断原则",
+          icon: "⚖️",
+          html: `<p>判断信息价值的<span class="highlight">五个原则</span>：</p>
+<table class="knowledge-table">
+<tr><th>原则</th><th>考察要点</th></tr>
+<tr><td><strong>准确性</strong></td><td>各要素是否真实可靠，出处是否可信</td></tr>
+<tr><td><strong>客观性</strong></td><td>信息提供者立场是否公正，有无偏见</td></tr>
+<tr><td><strong>权威性</strong></td><td>信息提供者的身份及资质</td></tr>
+<tr><td><strong>时效性</strong></td><td>信息提供时间，是否失效</td></tr>
+<tr><td><strong>适用性</strong></td><td>根据需求和目的选择重点（如法官断案重准确性；动态信息重时效性）</td></tr>
+</table>`,
+          tags: ["五原则", "准确性", "客观性", "权威性", "时效性", "适用性"]
+        }
+      ]
+    }
+  ],
+  quizzes: [
+    // Section 1 - 10 questions
+    {section:0, stem:"以下选项中属于信息的是（　）。", options:["一盏灯","一段录像","一张光盘","一台电视"], answer:1, analysis:"信息指人类社会传播的一切内容，一段录像属于信息内容。灯、光盘、电视都是信息的<span style='font-weight:600;color:#059669'>载体</span>，不是信息本身。"},
+    {section:0, stem:"下列不属于信息的是（　）。", options:["听到下课的铃声","播放的天气预报","看到的招生简章","存有资料的U盘"], answer:3, analysis:"信息是内容，铃声、天气预报、招生简章都是内容。U盘是信息的<span style='font-weight:600;color:#059669'>载体</span>，不是信息。"},
+    {section:0, stem:"校园广播的主要载体形式是（　）。", options:["声音","图片","文字","动画"], answer:0, analysis:"信息具有依附性，广播以声波形式传播，载体为<span style='font-weight:600;color:#059669'>声音</span>。"},
+    {section:0, stem:"下列关于信息的说法中，正确的是（　）。", options:["信息是具有价值的","信息是可以不依附于任何载体的","信息是永远有效的","信息是无法进行加工的"], answer:0, analysis:"信息是有价值的资源，使用的人越多价值越大且不会消耗。B错：信息必须依附于载体；C错：信息有时效性；D错：信息可以被加工处理。"},
+    {section:0, stem:"孙膑"增兵减灶灭庞涓"、诸葛亮"空城计"体现了信息具有（　）特征。", options:["依附性","真伪性","时效性","共享性"], answer:1, analysis:"增兵减灶和空城计都是利用虚假信息迷惑敌人，体现了信息的<span style='font-weight:600;color:#059669'>真伪性</span>。"},
+    {section:0, stem:""玉不琢不成器"，表达了信息的主要特征是（　）。", options:["传递性","共享性","时效性","可处理性"], answer:3, analysis:"玉经过雕琢价值提升，类比信息经过人的<span style='font-weight:600;color:#059669'>分析和处理</span>后价值得到提升，体现可处理性。"},
+    {section:0, stem:""一传十，十传百"体现了信息的（　）。", options:["真伪性","时效性","传递性","可处理性"], answer:2, analysis:"一传十十传百描述信息在空间中的传播，体现了信息的<span style='font-weight:600;color:#059669'>传递性</span>。"},
+    {section:0, stem:"小李通过电话方式告诉同事开会，这主要体现了信息的（　）。", options:["时效性","真伪性","依附性","传递性"], answer:2, analysis:"通过电话传递信息，体现<span style='font-weight:600;color:#059669'>载体依附性</span>。注意：打电话主要体现依附性（依附电话为载体），传递性虽然也相关，但依附性是更精确的考点。"},
+    {section:0, stem:"交通信息既可以通过信号灯显示，也可以通过交警的手势来传递；文字信息既可以印刷在书本上，也可以利用电脑来存储和浏览，这体现了信息的（　）特征。", options:["载体依附性","价值性","时效性","真伪性"], answer:0, analysis:"同一信息可以通过不同载体呈现，体现了信息必须依附于载体存在，即<span style='font-weight:600;color:#059669'>载体依附性</span>。"},
+    {section:0, stem:"下列关于QQ空间相册描述错误的是（　）。", options:["可以设置仅自己可见","可以指定可见的好友","可以公开，不能设置观看权限","可以设置好友可见"], answer:2, analysis:"QQ空间<span style='font-weight:600;color:#dc2626'>可以</span>设置观看权限，C选项说"不能设置"是错误的。"},
+    // Section 2 - 6 questions
+    {section:1, stem:"信息技术简称（　）。", options:["IT","IF","IE","IQ"], answer:0, analysis:"信息技术英文为Information Technology，简称<span style='font-weight:600;color:#059669'>IT</span>。"},
+    {section:1, stem:"现代信息技术的核心是（　）。", options:["计算机技术","通信技术","传感技术","微电子技术"], answer:0, analysis:"现代信息技术以微电子技术为基础，<span style='font-weight:600;color:#059669'>计算机技术为核心</span>，通信技术为支柱。"},
+    {section:1, stem:"信息技术中扩展了人类的感觉器官收集信息功能的是（　）。", options:["计算机技术","通信技术","感测技术","微电子技术"], answer:2, analysis:"感测技术扩展<span style='font-weight:600;color:#059669'>感觉器官</span>功能（获取信息）；通信技术扩展传导神经；计算机技术扩展思维器官；控制技术扩展效应器官。"},
+    {section:1, stem:"下列关于信息技术发展的叙述，不正确的是（　）。", options:["随着人工智能的发展，信息技术将朝着智能化方向发展","信息技术主要包括传感技术、通信技术、微电子技术和计算机技术","第五次信息技术革命的重要标志是手机的普及使用","大数据、物联网、云计算将成为信息技术发展的热点"], answer:2, analysis:"第五次信息技术革命的标志是<span style='font-weight:600;color:#dc2626'>计算机和网络的应用</span>，不是手机的普及使用。"},
+    {section:1, stem:"3D模拟仿真飞行器体现了信息技术（　）的发展趋势。", options:["多元化","网络化","智能化","虚拟化"], answer:3, analysis:"3D模拟仿真飞行器是一种虚拟技术的体现，对应<span style='font-weight:600;color:#059669'>虚拟化</span>趋势。"},
+    {section:1, stem:"下列不属于现代信息技术应用案例的是（　）。", options:["烽火告急","电子警察","可视电话","远程教育"], answer:0, analysis:"烽火告急是<span style='font-weight:600;color:#dc2626'>古代</span>信息传递技术，不属于现代信息技术。电子警察、可视电话、远程教育都是现代信息技术应用。"},
+    // Section 3 - 5 questions
+    {section:2, stem:"若根据获取信息的来源决定信息的可靠程度，下列属于最直接的信息来源是（　）。", options:["报刊杂志","查阅访谈记录","大型门户网站","亲自试验"], answer:3, analysis:"<span style='font-weight:600;color:#059669'>亲自试验</span>是直接利用自身感官感知信息，是最直接、最可靠的获取方式。"},
+    {section:2, stem:"下列关于信息来源的叙述，不正确的是（　）。", options:["信息源越广，收集的信息量越大","信息源越可靠，收集到的信息越真实可信","在收集信息时，信息源越少越好","尽量选择有代表性的信息源"], answer:2, analysis:"信息源的多寡与信息质量无直接关系，<span style='font-weight:600;color:#dc2626'>不是越少越好</span>，应选择有代表性的可靠信息源。"},
+    {section:2, stem:"获取图形、图像素材，下列方法中不能实现的是（　）。", options:["使用手机拍摄","在网上搜索后下载","使用QQ软件截图","使用ACDSee软件查看"], answer:3, analysis:"ACDSee软件只能<span style='font-weight:600;color:#dc2626'>查看</span>图片，不能获取图片。手机拍摄、网络下载、QQ截图都可以获取图像素材。"},
+    {section:2, stem:"小丽喜欢旅游，她经常通过手机将她旅游的照片等信息发布在微信"朋友圈"里，她利用手机拍照这一过程是（　）。", options:["信息采集","信息存储","信息处理","信息传递"], answer:0, analysis:"用手机拍照即收集信息，属于<span style='font-weight:600;color:#059669'>信息采集</span>过程。发布到朋友圈属于信息传递。"},
+    {section:2, stem:"计算机处理信息的工作过程为（　）。", options:["输出信息、处理与存储信息、收集信息","收集信息、处理与存储信息、输出信息","处理与存储信息、收集信息、输出信息","输出与处理信息、信息存储、收集信息"], answer:1, analysis:"计算机处理信息的正确顺序：<span style='font-weight:600;color:#059669'>收集信息 → 处理与存储信息 → 输出信息</span>。"}
+  ]
+};
+
+// ============ 应用状态 ============
+const STATE = {
+  currentSection: 0,
+  currentTab: 'read',
+  currentQuizIndex: 0,
+  quizAnswers: {},       // {qIndex: selectedOptionIndex}
+  quizSubmitted: {},     // {qIndex: true}
+  doneSections: new Set(),
+  bookmarks: new Set(),
+  errorQuestions: new Set(),
+  theme: 'light',
+  searchQuery: ''
+};
+
+// ============ 初始化 ============
+function init() {
+  loadState();
+  renderSidebar();
+  renderContent();
+  updateProgress();
+  updateErrorCount();
+}
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('infotech_kb_state') || '{}');
+    if (saved.doneSections) STATE.doneSections = new Set(saved.doneSections);
+    if (saved.bookmarks) STATE.bookmarks = new Set(saved.bookmarks);
+    if (saved.errorQuestions) STATE.errorQuestions = new Set(saved.errorQuestions);
+    if (saved.theme) STATE.theme = saved.theme;
+    if (saved.quizAnswers) STATE.quizAnswers = saved.quizAnswers;
+    if (saved.quizSubmitted) STATE.quizSubmitted = saved.quizSubmitted;
+  } catch(e) {}
+  applyTheme();
+}
+
+function saveState() {
+  localStorage.setItem('infotech_kb_state', JSON.stringify({
+    doneSections: [...STATE.doneSections],
+    bookmarks: [...STATE.bookmarks],
+    errorQuestions: [...STATE.errorQuestions],
+    theme: STATE.theme,
+    quizAnswers: STATE.quizAnswers,
+    quizSubmitted: STATE.quizSubmitted
+  }));
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', STATE.theme);
+  document.getElementById('themeIcon').textContent = STATE.theme === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = STATE.theme === 'dark' ? '亮色模式' : '暗色模式';
+}
+
+// ============ 侧边栏 ============
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  let html = '';
+  KB_DATA.sections.forEach((s, si) => {
+    const open = si === STATE.currentSection;
+    html += '<div class="chapter-group">';
+    html += `<button class="chapter-title ${open ? 'open' : ''}" onclick="toggleChapter(${si})">`;
+    html += `<span class="arrow">▶</span>${s.title}<span class="count">${s.cards.length}卡片</span>`;
+    html += '</button>';
+    html += `<div class="section-list ${open ? 'open' : ''}" id="sectionList${si}">`;
+    html += `<button class="section-item active" onclick="selectSection(${si})">`;
+    html += `<span class="check">${STATE.doneSections.has(si) ? '✓' : ''}</span>`;
+    html += `📖 阅读本节`;
+    html += '</button>';
+    html += `<button class="section-item" onclick="selectSectionAndQuiz(${si})">`;
+    html += `<span class="check"></span>📝 本节练习`;
+    html += '</button>';
+    html += '</div></div>';
+  });
+  nav.innerHTML = html;
+}
+
+function toggleChapter(si) {
+  STATE.currentSection = si;
+  renderSidebar();
+  renderContent();
+}
+
+function selectSection(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'read';
+  switchTab('read');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function selectSectionAndQuiz(si) {
+  STATE.currentSection = si;
+  STATE.currentTab = 'quiz';
+  // Find first quiz question index for this section
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === si);
+  if (firstQ >= 0) STATE.currentQuizIndex = firstQ;
+  switchTab('quiz');
+  renderSidebar();
+  renderContent();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ============ 标签页切换 ============
+function switchTab(tab) {
+  STATE.currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+  document.getElementById('readContent').style.display = tab === 'read' ? 'block' : 'none';
+  document.getElementById('quizContent').style.display = tab === 'quiz' ? 'block' : 'none';
+  document.getElementById('bookmarksContent').style.display = tab === 'bookmarks' ? 'block' : 'none';
+  document.getElementById('errorsContent').style.display = tab === 'errors' ? 'block' : 'none';
+  renderContent();
+  if (tab === 'read') document.getElementById('searchInput').value = STATE.searchQuery;
+}
+
+// ============ 内容渲染 ============
+function renderContent() {
+  if (STATE.currentTab === 'read' || STATE.currentTab === 'bookmarks' || STATE.currentTab === 'errors') {
+    renderReadContent();
+  }
+  if (STATE.currentTab === 'quiz') {
+    renderQuizContent();
+  }
+  document.getElementById('breadcrumbCurrent').textContent = KB_DATA.sections[STATE.currentSection]?.title || '第一章';
+}
+
+function renderReadContent() {
+  const container = document.getElementById('readContent');
+  const section = KB_DATA.sections[STATE.currentSection];
+  let cards = section.cards;
+
+  // Handle bookmarks tab
+  if (STATE.currentTab === 'bookmarks') {
+    const allCards = KB_DATA.sections.flatMap((s, si) => s.cards.map(c => ({...c, sectionIdx: si, sectionTitle: s.title})));
+    cards = allCards.filter(c => STATE.bookmarks.has(c.id));
+    if (cards.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+      container.style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'block';
+      document.getElementById('errorsContent').style.display = 'none';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'block';
+    document.getElementById('errorsContent').style.display = 'none';
+
+    let html = `<div class="section-header"><h2>⭐ 我的收藏</h2><div class="meta">共 ${cards.length} 个收藏</div></div>`;
+    cards.forEach(c => {
+      html += renderCard(c, true);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Handle errors tab
+  if (STATE.currentTab === 'errors') {
+    const errorQuizList = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+    if (errorQuizList.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">📝</div><h3>暂无错题</h3><p>做错的题目会自动收入错题本</p></div>';
+      document.getElementById('readContent').style.display = 'block';
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('bookmarksContent').style.display = 'none';
+      document.getElementById('errorsContent').style.display = 'block';
+      return;
+    }
+    document.getElementById('readContent').style.display = 'block';
+    document.getElementById('quizContent').style.display = 'none';
+    document.getElementById('bookmarksContent').style.display = 'none';
+    document.getElementById('errorsContent').style.display = 'block';
+
+    let html = `<div class="section-header"><h2>📝 错题本</h2><div class="meta">共 ${errorQuizList.length} 道错题</div></div>`;
+    errorQuizList.forEach((q, idx) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderErrorQuiz(q, qi, idx + 1);
+    });
+    container.innerHTML = html;
+    return;
+  }
+
+  // Normal read mode
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'none';
+
+  let html = `<div class="section-header">`;
+  html += `<h2>${section.title}</h2>`;
+  html += `<div class="meta">`;
+  html += `<span>📄 ${section.cards.length} 个知识点</span>`;
+  html += `<span>📝 ${KB_DATA.quizzes.filter(q => q.section === STATE.currentSection).length} 道练习题</span>`;
+  html += `</div></div>`;
+
+  let filteredCards = cards;
+  if (STATE.searchQuery) {
+    const q = STATE.searchQuery.toLowerCase();
+    filteredCards = cards.filter(c => {
+      const text = c.title + c.html.replace(/<[^>]*>/g, '');
+      return text.toLowerCase().includes(q);
+    });
+    if (filteredCards.length === 0) {
+      html += '<div class="empty-state"><div class="icon">🔍</div><h3>未找到匹配的知识点</h3><p>试试其他关键词</p></div>';
+    }
+  }
+
+  filteredCards.forEach(c => {
+    html += renderCard(c);
+  });
+
+  html += `<div style="text-align:center;margin-top:24px">`;
+  html += `<button class="btn btn-primary" onclick="markSectionDone(${STATE.currentSection})" ${STATE.doneSections.has(STATE.currentSection) ? 'disabled' : ''}>`;
+  html += STATE.doneSections.has(STATE.currentSection) ? '✅ 已学完本节' : '✓ 标记本节为已学';
+  html += '</button>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderCard(card, showSection = false) {
+  let html = `<div class="knowledge-card" id="card-${card.id}">`;
+  html += `<h3><span class="icon">${card.icon}</span>${card.title}</h3>`;
+  if (showSection && card.sectionTitle) {
+    html += `<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">📂 ${card.sectionTitle}</div>`;
+  }
+  html += card.html;
+  if (card.tags) {
+    html += '<div class="tag-row">';
+    card.tags.forEach(t => {
+      html += `<span class="tag">${t}</span>`;
+    });
+    html += '</div>';
+  }
+  html += `<div class="card-actions">`;
+  html += `<button class="card-action-btn ${STATE.bookmarks.has(card.id) ? 'bookmarked':''}" onclick="toggleBookmark('${card.id}')">`;
+  html += STATE.bookmarks.has(card.id) ? '⭐ 已收藏' : '☆ 收藏';
+  html += '</button>';
+  html += '</div></div>';
+  return html;
+}
+
+function renderErrorQuiz(q, qi, num) {
+  const sectionTitle = KB_DATA.sections[q.section]?.title || '';
+  const labels = ['A','B','C','D'];
+  let html = `<div class="quiz-container">`;
+  html += `<div class="quiz-header"><span class="quiz-section-label">${sectionTitle}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += `<div class="quiz-options">`;
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if (oi === q.answer) cls = 'correct';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += `<div class="quiz-actions">`;
+  html += `<button class="btn btn-outline" onclick="removeError(${qi})">✓ 已掌握，移除</button>`;
+  html += '</div></div>';
+  return html;
+}
+
+// ============ 练习模式 ============
+function renderQuizContent() {
+  const container = document.getElementById('quizContent');
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  const total = KB_DATA.quizzes.length;
+  const sectionTotal = sectionQuizzes.length;
+
+  // Show score summary if all questions in current section are answered
+  const allAnswered = sectionQuizzes.every((_, i) => {
+    const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+    return STATE.quizSubmitted[qi];
+  });
+
+  if (allAnswered) {
+    const correct = sectionQuizzes.filter((_, i) => {
+      const qi = KB_DATA.quizzes.indexOf(sectionQuizzes[i]);
+      return STATE.quizAnswers[qi] === sectionQuizzes[i].answer;
+    }).length;
+    const pct = Math.round((correct / sectionTotal) * 100);
+
+    let html = '<div class="score-display">';
+    html += `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">${KB_DATA.sections[STATE.currentSection].title} · 练习成绩</div>`;
+    html += `<div class="score-number">${pct}%</div>`;
+    html += '<div class="stats-row">';
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--success)">${correct}</div><div class="stat-label">正确</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value" style="color:var(--danger)">${sectionTotal - correct}</div><div class="stat-label">错误</div></div>`;
+    html += `<div class="stat-item"><div class="stat-value">${sectionTotal}</div><div class="stat-label">总计</div></div>`;
+    html += '</div>';
+    html += '<div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">';
+    html += '<button class="btn btn-primary" onclick="resetSectionQuiz()">🔄 重新练习</button>';
+    if (sectionQuizzes.some((_, i) => STATE.quizAnswers[KB_DATA.quizzes.indexOf(sectionQuizzes[i])] !== sectionQuizzes[i].answer)) {
+      html += '<button class="btn btn-outline" onclick="reviewSectionErrors()">📝 回看本节错题</button>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // Show all questions with results
+    sectionQuizzes.forEach((q, si) => {
+      const qi = KB_DATA.quizzes.indexOf(q);
+      html += renderQuizResult(q, qi, si + 1);
+    });
+
+    container.innerHTML = html;
+    return;
+  }
+
+  const q = sectionQuizzes[STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0])] || sectionQuizzes[0];
+  const qi = KB_DATA.quizzes.indexOf(q);
+  const localIdx = STATE.currentQuizIndex - KB_DATA.quizzes.indexOf(sectionQuizzes[0]);
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const labels = ['A','B','C','D'];
+
+  let html = '<div class="section-header">';
+  html += `<h2>${KB_DATA.sections[STATE.currentSection].title} · 章节练习</h2>`;
+  html += `<div class="meta"><span>第 ${localIdx + 1}/${sectionTotal} 题</span></div>`;
+  html += '</div>';
+
+  html += '<div class="quiz-container">';
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if (submitted) {
+      if (oi === q.answer) cls = 'correct';
+      else if (oi === selected && oi !== q.answer) cls = 'wrong';
+    } else if (oi === selected) {
+      cls = 'selected';
+    }
+    html += `<div class="quiz-option ${cls}" onclick="selectOption(${qi}, ${oi})">`;
+    html += `<span class="option-letter">${labels[oi]}</span>${opt}`;
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Analysis
+  html += `<div class="analysis-box ${submitted ? 'show' : ''}" id="analysis${qi}">${q.analysis}</div>`;
+
+  // Actions
+  html += '<div class="quiz-actions">';
+  if (!submitted) {
+    html += `<button class="btn btn-primary" onclick="submitAnswer(${qi})" ${selected === undefined ? 'disabled' : ''}>确认提交</button>`;
+  }
+  html += `<button class="btn btn-outline" onclick="prevQuiz()">上一题</button>`;
+  html += `<button class="btn btn-outline" onclick="nextQuiz()">下一题</button>`;
+  if (STATE.errorQuestions.has(qi)) {
+    html += `<button class="btn btn-outline" style="color:var(--danger)" onclick="removeError(${qi})">从错题本移除</button>`;
+  }
+  html += '</div>';
+  html += '</div>';
+
+  // Dots navigation
+  html += '<div class="quiz-nav">';
+  sectionQuizzes.forEach((sq, idx) => {
+    const qi2 = KB_DATA.quizzes.indexOf(sq);
+    let dotCls = '';
+    if (idx === localIdx) dotCls += ' current';
+    if (STATE.quizSubmitted[qi2]) {
+      dotCls += STATE.quizAnswers[qi2] === sq.answer ? ' correct-dot' : ' wrong-dot';
+    }
+    html += `<button class="quiz-nav-dot ${dotCls}" onclick="goToQuestion(${qi2})">${idx + 1}</button>`;
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderQuizResult(q, qi, num) {
+  const labels = ['A','B','C','D'];
+  const submitted = STATE.quizSubmitted[qi];
+  const selected = STATE.quizAnswers[qi];
+  const correct = submitted && selected === q.answer;
+
+  let html = '<div class="quiz-container">';
+  html += `<div class="quiz-header"><span class="quiz-section-label" style="background:${correct ? 'var(--success-light)' : 'var(--danger-light)'};color:${correct ? 'var(--success)' : 'var(--danger)'}">${correct ? '✓ 正确' : '✗ 错误'}</span><span style="font-size:12px;color:var(--text-muted)">#${num}</span></div>`;
+  html += `<div class="quiz-question">${qi + 1}. ${q.stem}</div>`;
+  html += '<div class="quiz-options">';
+  q.options.forEach((opt, oi) => {
+    let cls = '';
+    if (oi === q.answer) cls = 'correct';
+    else if (oi === selected && oi !== q.answer) cls = 'wrong';
+    html += `<div class="quiz-option ${cls}"><span class="option-letter">${labels[oi]}</span>${opt}</div>`;
+  });
+  html += '</div>';
+  html += `<div class="analysis-box show">${q.analysis}</div>`;
+  html += '</div>';
+  return html;
+}
+
+// ============ 练习操作 ============
+function selectOption(qi, oi) {
+  if (STATE.quizSubmitted[qi]) return;
+  STATE.quizAnswers[qi] = oi;
+  saveState();
+  renderQuizContent();
+}
+
+function submitAnswer(qi) {
+  if (STATE.quizAnswers[qi] === undefined) return;
+  STATE.quizSubmitted[qi] = true;
+  const q = KB_DATA.quizzes[qi];
+  if (STATE.quizAnswers[qi] !== q.answer) {
+    STATE.errorQuestions.add(qi);
+  }
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function findLastSectionQuizIdx(sectionIdx) {
+  let last = -1;
+  for (let i = 0; i < KB_DATA.quizzes.length; i++) {
+    if (KB_DATA.quizzes[i].section === sectionIdx) last = i;
+  }
+  return last;
+}
+
+function prevQuiz() {
+  const sectionStart = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex > sectionStart) {
+    STATE.currentQuizIndex--;
+  }
+  renderQuizContent();
+}
+
+function nextQuiz() {
+  const sectionEnd = findLastSectionQuizIdx(STATE.currentSection);
+  if (STATE.currentQuizIndex < sectionEnd) {
+    STATE.currentQuizIndex++;
+  }
+  renderQuizContent();
+}
+
+function goToQuestion(qi) {
+  STATE.currentQuizIndex = qi;
+  renderQuizContent();
+}
+
+function resetSectionQuiz() {
+  const sectionQuizzes = KB_DATA.quizzes.filter(q => q.section === STATE.currentSection);
+  sectionQuizzes.forEach(q => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    delete STATE.quizAnswers[qi];
+    delete STATE.quizSubmitted[qi];
+     STATE.errorQuestions.delete(qi);
+  });
+  const firstQ = KB_DATA.quizzes.findIndex(q => q.section === STATE.currentSection);
+  STATE.currentQuizIndex = firstQ >= 0 ? firstQ : 0;
+  saveState();
+  updateErrorCount();
+  renderQuizContent();
+}
+
+function reviewSectionErrors() {
+  // Switch to errors tab
+  STATE.currentTab = 'errors';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('errorsTab').classList.add('active');
+  document.getElementById('errorsTab').style.display = '';
+  document.getElementById('readContent').style.display = 'block';
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('bookmarksContent').style.display = 'none';
+  document.getElementById('errorsContent').style.display = 'block';
+  renderContent();
+}
+
+function removeError(qi) {
+  STATE.errorQuestions.delete(qi);
+  saveState();
+  updateErrorCount();
+  if (STATE.currentTab === 'errors') renderContent();
+  if (STATE.currentTab === 'quiz') renderQuizContent();
+}
+
+// ============ 收藏 ============
+function toggleBookmark(cardId) {
+  if (STATE.bookmarks.has(cardId)) {
+    STATE.bookmarks.delete(cardId);
+    showToast('已取消收藏');
+  } else {
+    STATE.bookmarks.add(cardId);
+    showToast('已加入收藏夹');
+  }
+  saveState();
+  renderContent();
+}
+
+function toggleBookmarks() {
+  const tabBtn = document.getElementById('bookmarksTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'bookmarks';
+  switchTab('bookmarks');
+  const allBookmarks = KB_DATA.sections.flatMap(s => s.cards).filter(c => STATE.bookmarks.has(c.id));
+  if (allBookmarks.length === 0) {
+    document.getElementById('bookmarksContent').innerHTML = '<div class="empty-state"><div class="icon">⭐</div><h3>暂无收藏</h3><p>点击知识卡片下方的"收藏"按钮来添加</p></div>';
+  }
+}
+
+function toggleErrors() {
+  const tabBtn = document.getElementById('errorsTab');
+  tabBtn.style.display = '';
+  STATE.currentTab = 'errors';
+  switchTab('errors');
+}
+
+// ============ 节完成标记 ============
+function markSectionDone(si) {
+  STATE.doneSections.add(si);
+  saveState();
+  updateProgress();
+  renderSidebar();
+  renderContent();
+  setTimeout(() => showToast('✅ 已标记本节为已学'), 300);
+}
+
+function updateProgress() {
+  const total = KB_DATA.sections.length;
+  const done = STATE.doneSections.size;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function updateErrorCount() {
+  document.getElementById('errorCount').textContent = STATE.errorQuestions.size > 0 ? `(${STATE.errorQuestions.size})` : '';
+}
+
+// ============ 搜索 ============
+function onSearch() {
+  STATE.searchQuery = document.getElementById('searchInput').value.trim();
+  if (STATE.currentTab !== 'read') {
+    switchTab('read');
+  }
+  renderContent();
+}
+
+// ============ 主题 ============
+function toggleTheme() {
+  STATE.theme = STATE.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  saveState();
+}
+
+// ============ 错题导出 ============
+function exportErrorsCSV() {
+  const errors = KB_DATA.quizzes.filter((_, i) => STATE.errorQuestions.has(i));
+  if (errors.length === 0) {
+    showToast('暂无错题可导出');
+    return;
+  }
+  const labels = ['A','B','C','D'];
+  let csv = '\uFEFF序号,题目,选项A,选项B,选项C,选项D,正确答案,你的答案,解析\n';
+  errors.forEach((q, idx) => {
+    const qi = KB_DATA.quizzes.indexOf(q);
+    const yourAnswer = STATE.quizAnswers[qi] !== undefined ? labels[STATE.quizAnswers[qi]] : '未答';
+    const correctAnswer = labels[q.answer];
+    const stem = q.stem.replace(/"/g, '""');
+    const opts = q.options.map(o => o.replace(/"/g, '""'));
+    const analysis = q.analysis.replace(/<[^>]*>/g, '').replace(/"/g, '""');
+    csv += `${idx + 1},"${stem}","${opts[0] || ''}","${opts[1] || ''}","${opts[2] || ''}","${opts[3] || ''}","${correctAnswer}","${yourAnswer}","${analysis}"\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '信息技术_错题导出.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============ 移动端 ============
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ============ Toast ============
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.getElementById('toastContainer').appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+// ============ 启动 ============
+document.addEventListener('DOMContentLoaded', function() {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+});
+// 兜底：如果DOMContentLoaded已触发
+if (document.readyState !== 'loading') {
+  try { init(); } catch(e) { console.error('初始化失败:', e); }
+}
+</script>
+</body>
+</html>
